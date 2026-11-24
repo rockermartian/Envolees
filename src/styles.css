@@ -1,0 +1,29 @@
+/* Styles de la version web : ceux de l'application de bureau (Tailwind, thème) + quelques réglages web. */
+@import "../../index.css";
+
+/* Interface ordinateur : les boutons de fenêtre d'Electron (réduire / agrandir / fermer) n'ont pas
+   de sens dans un navigateur, qui a les siens. */
+html[data-ui="desktop"] div.flex:has(> div > button > svg > rect[width="10"][height="1"]) {
+  display: none;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+/* Interface mobile */
+html[data-ui="mobile"] {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+html[data-ui="mobile"] body {
+  font-family: 'Poppins', system-ui, sans-serif;
+  background: #f1f5f9;
+}
+html[data-ui="mobile"].dark body {
+  background: #18181b;
+}
+
+@media print {
+  #platform-root { display: none !important; }
+}
