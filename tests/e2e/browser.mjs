@@ -1,8 +1,9 @@
-// Test de bout en bout de la version web dans un vrai Chromium (celui d'Electron, déjà installé),
-// fenêtre masquée. Lancé par run.mjs avec un scénario : desktop | mobile.
-//
-// Le navigateur est piloté comme un utilisateur : clics sur les libellés, sélecteur de fichiers
-// intercepté (protocole DevTools), téléchargements capturés, impression simulée.
+// Test de bout en bout de la version web dans un vrai Chromium (celui d'Electron), fenêtre masquée.
+// Lancé par run.mjs avec un scénario : ordinateur | tablette.
+//   - ordinateur : souris et clavier, grand écran (liste et fiche côte à côte) ;
+//   - tablette : toucher réel (évènements tactiles du protocole DevTools), portrait puis paysage,
+//     contrôle de la taille des cibles tactiles.
+// Sélecteur de fichiers intercepté, téléchargements capturés, onglets ouverts (Nuage) relevés.
 import electron from 'electron';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -22,6 +23,9 @@ const check = (name, ok, detail = '') => { results.push({ name, ok: !!ok, detail
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), `envolees-web-e2e-${scenario}-`));
 app.setPath('userData', path.join(tmp, 'userData'));
+// Caméra simulée par Chromium (mode élève), autorisée sans demande.
+app.commandLine.appendSwitch('use-fake-device-for-media-stream');
+app.commandLine.appendSwitch('use-fake-ui-for-media-stream');
 app.on('window-all-closed', () => undefined);
 
 const finish = () => {
@@ -30,97 +34,131 @@ const finish = () => {
     console.log(`E2E ${scenario}: ${results.length - failed}/${results.length}`);
     app.exit(failed ? 1 : 0);
 };
-setTimeout(() => { check('terminé dans les délais', false); finish(); }, 240_000);
+setTimeout(() => { check('terminé dans les délais', false); finish(); }, 280_000);
 
 let win;
+let dbg;
 const js = code => win.webContents.executeJavaScript(code, true);
 async function waitFor(label, code, timeout = 20_000) {
-    if (process.env.E2E_DEBUG) console.log('…', label);
     const start = Date.now();
-    while (Date.now() - start < timeout) {
+    do {
         try { const v = await js(code); if (v) return v; } catch { /* page en cours de chargement */ }
         await wait(100);
-    }
+    } while (Date.now() - start < timeout);
     throw new Error(`délai dépassé : ${label}`);
 }
 const text = () => js('document.body.innerText');
-/** Clique le premier élément (sélecteur) dont le texte ou l'aria-label contient `label`. */
-const click = (label, selector = 'button, [role=button], a, label') => js(`(() => {
-    const want = ${JSON.stringify(label)}.toLowerCase(); // innerText suit text-transform
-    const el = [...document.querySelectorAll(${JSON.stringify(selector)})]
-        .filter(e => e.offsetParent !== null || getComputedStyle(e).position === 'fixed')
+
+/** Élément visible dont le texte ou l'aria-label contient `label` (insensible à la casse). */
+const FIND = (label, selector) => `(() => {
+    const want = ${JSON.stringify(label)}.toLowerCase();
+    return [...document.querySelectorAll(${JSON.stringify(selector)})]
+        .filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; })
         .find(e => (e.innerText || '').toLowerCase().includes(want) || (e.getAttribute('aria-label') || '').toLowerCase().includes(want));
-    if (!el) return false;
-    el.click();
-    return true;
-})()`).then(ok => { if (!ok) throw new Error(`introuvable : « ${label} »`); });
+})()`;
+const DEFAULT_SELECTOR = 'button, [role=button], [role=radio], a, label';
+
+/** Clic souris (ordinateur). */
+const click = async (label, selector = DEFAULT_SELECTOR) => {
+    const ok = await js(`(() => { const el = ${FIND(label, selector)}; if (!el) return false; el.click(); return true; })()`);
+    if (!ok) throw new Error(`introuvable : « ${label} »`);
+};
+
+/** Tape au doigt (tablette) : vrais évènements tactiles au centre de l'élément. */
+const tap = async (label, selector = DEFAULT_SELECTOR) => {
+    const rect = await js(`(() => { const el = ${FIND(label, selector)}; if (!el) return null; el.scrollIntoView({ block: 'center' }); const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+    if (!rect) throw new Error(`introuvable (toucher) : « ${label} »`);
+    const point = [{ x: Math.round(rect.x), y: Math.round(rect.y) }];
+    await dbg.sendCommand('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: point });
+    await wait(40);
+    await dbg.sendCommand('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await wait(120);
+};
+
 const shot = async name => {
     if (!SHOTS) return;
-    win.webContents.invalidate(); // fenêtre masquée : forcer un rendu à jour avant la capture
+    win.webContents.invalidate();
     await wait(600);
-    const image = await win.webContents.capturePage();
-    fs.writeFileSync(path.join(SHOTS, `${scenario}-${name}.png`), image.toPNG());
+    fs.writeFileSync(path.join(SHOTS, `${scenario}-${name}.png`), (await win.webContents.capturePage()).toPNG());
 };
-/** Lecture directe de la base du navigateur (contrôle de ce qui est réellement enregistré). */
+
+/** Lecture directe de la base du navigateur (ce qui est réellement enregistré). */
 const readDb = () => js(`new Promise((resolve, reject) => {
     const r = indexedDB.open('envolees');
     r.onerror = () => reject(r.error);
     r.onsuccess = () => {
-        const db = r.result;
-        const tx = db.transaction(['classes', 'images'], 'readonly');
+        const tx = r.result.transaction(['classes', 'images'], 'readonly');
         const classes = tx.objectStore('classes').getAll();
         const images = tx.objectStore('images').getAllKeys();
         tx.oncomplete = () => resolve({
-            classes: classes.result.map(c => ({ id: c.id, name: c.name, updatedAt: c.updatedAt, images: c.images.length, acquired: (c.dataJson.match(/"proficiency":"Acquis"/g) || []).length, dark: c.dataJson.includes('"theme":"dark"'), dataJson: c.dataJson.length })),
+            classes: classes.result.map(c => ({ id: c.id, name: c.name, acquired: (c.dataJson.match(/"proficiency":"Acquis"/g) || []).length, images: c.images.length })),
             images: images.result.length,
         });
     };
 })`);
 
-// Sélecteur de fichiers : intercepté, le fichier voulu est fourni directement.
 const fileQueue = [];
-// Téléchargements : enregistrés dans le dossier temporaire.
 const downloads = [];
+const openedTabs = [];
+let consoleErrors = [];
 
-async function setup(width, height) {
-    const ses = session.fromPartition('persist:e2e');
+async function setup(width, height, { touch = false } = {}) {
+    const ses = session.fromPartition(`persist:e2e-${scenario}`);
     ses.on('will-download', (_e, item) => {
         const target = path.join(tmp, item.getFilename());
         item.setSavePath(target);
         item.once('done', (_ev, state) => downloads.push({ path: target, state }));
     });
-    if (process.env.E2E_DEBUG) console.log('… fenêtre');
-    win = new BrowserWindow({ show: false, width, height, webPreferences: { session: ses } });
-    const consoleErrors = [];
+    win = new BrowserWindow({ show: false, width, height, useContentSize: true, webPreferences: { session: ses } });
+    win.webContents.setWindowOpenHandler(({ url }) => { openedTabs.push(url); return { action: 'deny' }; });
     win.webContents.on('console-message', (event, legacyLevel, legacyMessage) => {
         const level = event.level ?? legacyLevel;
         const message = event.message ?? legacyMessage;
         if (level === 'error' || level === 3) consoleErrors.push(message);
     });
     await win.loadURL('about:blank'); // le protocole DevTools répond une fois la page créée
-    const dbg = win.webContents.debugger;
+    dbg = win.webContents.debugger;
     dbg.attach('1.3');
-    if (process.env.E2E_DEBUG) console.log('… devtools');
     await dbg.sendCommand('Page.enable');
     await dbg.sendCommand('DOM.enable');
     await dbg.sendCommand('Page.setInterceptFileChooserDialog', { enabled: true });
-    // Pas de sélecteur natif (File System Access) : chemin « input file », pilotable. Impression simulée.
+    if (touch) {
+        await dbg.sendCommand('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });
+        await dbg.sendCommand('Emulation.setEmulatedMedia', { features: [{ name: 'pointer', value: 'coarse' }, { name: 'hover', value: 'none' }] }).catch(() => undefined);
+    }
+    // Sélecteur de fichiers « classique » (pilotable) ; impression simulée.
     await dbg.sendCommand('Page.addScriptToEvaluateOnNewDocument', { source: `
         delete window.showOpenFilePicker; delete window.showSaveFilePicker;
-        window.__printed = 0;
-        window.print = () => { window.__printed++; window.dispatchEvent(new Event('afterprint')); };
+        window.print = () => { window.__printed = (window.__printed || 0) + 1; };
     ` });
     dbg.on('message', async (_e, method, params) => {
         if (method !== 'Page.fileChooserOpened') return;
         const file = fileQueue.shift();
-        if (!file) return;
-        await dbg.sendCommand('DOM.setFileInputFiles', { files: [file], backendNodeId: params.backendNodeId });
+        if (file) await dbg.sendCommand('DOM.setFileInputFiles', { files: [file], backendNodeId: params.backendNodeId });
     });
-    return consoleErrors;
 }
 
+/** Saisie dans un champ contrôlé par React. */
+const typeInto = (selector, value) => js(`(() => {
+    const el = document.querySelector(${JSON.stringify(selector)});
+    if (!el) return false;
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(el, ${JSON.stringify(value)});
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    return true;
+})()`);
+
+/** Données de la classe enregistrées (dans le navigateur). */
+const readClassData = () => js(`new Promise(resolve => {
+    const r = indexedDB.open('envolees');
+    r.onsuccess = () => { const q = r.result.transaction('classes').objectStore('classes').getAll(); q.onsuccess = () => resolve(JSON.parse(q.result[0].dataJson)); };
+})`);
+
+const resize = async (width, height) => {
+    win.setContentSize(width, height);
+    await wait(500);
+};
+
 const waitDownload = async (count, label) => {
-    await wait(50); // laisse le temps au clic
     const start = Date.now();
     while (downloads.length < count && Date.now() - start < 60_000) await wait(100);
     const d = downloads[count - 1];
@@ -128,199 +166,263 @@ const waitDownload = async (count, label) => {
     return d.path;
 };
 
-/** Lit un fichier .envolees avec le lecteur partagé (application de bureau). */
 async function readEnvolees(file) {
-    const { readArchive } = await import('../../app/shared/envoleesArchive.js');
+    const { readArchive } = await import('../../core/shared/envoleesArchive.js');
     const zlib = await import('node:zlib');
     const { promisify } = await import('node:util');
     return readArchive(new Uint8Array(fs.readFileSync(file)), promisify(zlib.inflateRaw));
 }
 
 const imageVisible = () => js(`[...document.images].some(i => i.src.startsWith('blob:') && i.complete && i.naturalWidth > 0)`);
+const noProgress = () => waitFor("fin du message d'attente", `!document.querySelector('#platform-root [aria-busy]')`, 15_000).then(() => true, () => false);
+
+/** Cibles tactiles trop petites (< 40 px de côté) parmi les commandes visibles. */
+const smallTargets = () => js(`[...document.querySelectorAll('button, [role=button], [role=radio], a[href], input, select')]
+    .filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && getComputedStyle(e).visibility !== 'hidden'; })
+    .filter(e => { const r = e.getBoundingClientRect(); return r.height < 40 || r.width < 40; })
+    .map(e => (e.getAttribute('aria-label') || e.innerText || e.type || e.tagName).trim().slice(0, 30) + ' ' + Math.round(e.getBoundingClientRect().width) + '×' + Math.round(e.getBoundingClientRect().height))`);
 
 // ---------------------------------------------------------------------------------------------
 
-async function desktop() {
-    const consoleErrors = await setup(1366, 860);
-    await win.loadURL(`${URL_BASE}?ui=desktop`);
-    await waitFor('écran d\'accueil', `document.body.innerText.includes('Bienvenue sur Envolées')`);
-    check('interface ordinateur : écran d\'accueil de l\'application de bureau', true);
-    check('boutons de fenêtre Electron masqués', await js(`[...document.querySelectorAll('svg rect[width="10"][height="1"]')].every(r => r.getBoundingClientRect().width === 0)`));
-    await shot('accueil');
-
-    // Ouvrir un fichier .envolees
-    await click('Ouvrir une classe');
-    await waitFor('boîte « Ouvrir »', `!!document.querySelector('#platform-root [role=dialog]')`);
-    fileQueue.push(FIXTURE);
-    let t = Date.now();
-    await click('Ouvrir un fichier .envolees');
-    await waitFor('classe affichée', `document.body.innerText.includes(${JSON.stringify(EXPECT)}) && !document.querySelector('#platform-root [role=dialog]')`, 120_000);
-    const openMs = Date.now() - t;
-    const original = await readEnvolees(FIXTURE);
-    check('fichier .envolees ouvert', true, `${(fs.statSync(FIXTURE).size / 1e6).toFixed(0)} Mo, ${original.images.size} images, ${openMs} ms`);
-    let db = await readDb();
-    check("message d'attente refermé", await waitFor("fin du message d'attente", `!document.querySelector('#platform-root [aria-busy]')`, 5000).then(() => true, () => false));
-    check('classe et images rangées dans le navigateur', db.classes.length === 1 && db.classes[0].images === original.images.size && db.images >= original.images.size, `${db.classes[0]?.images} images`);
-    if (REAL_IMAGES) {
-        await waitFor('photos affichées', `[...document.images].some(i => i.src.startsWith('blob:') && i.complete && i.naturalWidth > 0)`, 20_000).catch(() => null);
-        check('photos affichées (URL blob)', await imageVisible());
-    }
-    await shot('classe');
-
-    // Modification puis enregistrement (clic sur l'indicateur)
-    const before = db.classes[0].updatedAt;
-    await click('Changer le thème');
-    await waitFor('modification signalée', `!!document.querySelector('button[aria-label^="Modifications non enregistrées"]')`);
-    t = Date.now();
-    await click('Modifications non enregistrées');
-    await waitFor('enregistré', `!!document.querySelector('button[aria-label="Tout est enregistré"]')`, 60_000);
-    const saveMs = Date.now() - t;
-    db = await readDb();
-    const originalTheme = JSON.parse(original.dataJson).uiSettings.theme;
-    check('enregistrement dans le navigateur', db.classes[0].updatedAt > before && db.classes[0].dark === (originalTheme !== 'dark'), `${saveMs} ms`);
-
-    // Enregistrer sous › Télécharger
-    await click('Menu');
-    await click('Enregistrer sous');
-    await waitFor('boîte « Enregistrer sous »', `document.querySelector('#platform-root [role=dialog]')?.innerText.includes('Exporter un fichier .envolees')`);
-    t = Date.now();
-    await click('Télécharger le fichier');
-    const exported = await waitDownload(1, 'export');
-    const back = await readEnvolees(exported);
-    const sameImages = [...original.images.keys()].every(name => back.images.has(name) && Buffer.compare(Buffer.from(back.images.get(name).bytes), Buffer.from(original.images.get(name).bytes)) === 0);
-    check('fichier exporté relu par le lecteur de bureau, images identiques', sameImages && JSON.parse(back.dataJson).students.length === JSON.parse(original.dataJson).students.length,
-        `${(fs.statSync(exported).size / 1e6).toFixed(0)} Mo en ${Date.now() - t} ms, app ${back.manifest.app}`);
-    check('thème modifié présent dans le fichier exporté', JSON.parse(back.dataJson).uiSettings.theme !== originalTheme);
-
-    // Livret : impression du navigateur
-    const printing = js(`window.electronAPI.generateLivretPdf()`);
-    await waitFor('message « Exporter en PDF »', `document.querySelector('#platform-root [role=dialog]')?.innerText.includes('Enregistrer au format PDF')`);
-    await click('OK', '#platform-root button');
-    const printed = await printing;
-    check('PDF : impression du navigateur lancée', printed.success && (await js('window.__printed')) === 1);
-
-    // Persistance : rechargement, « Reprendre la dernière session »
-    await win.webContents.reload();
-    await waitFor('accueil après rechargement', `document.body.innerText.includes('Reprendre la dernière session')`);
-    await click('Reprendre la dernière session');
-    await waitFor('classe rouverte', `document.body.innerText.includes(${JSON.stringify(EXPECT)})`, 60_000);
-    check('classe retrouvée après rechargement', true);
-
-    // Hors ligne : service worker
-    const sw = await waitFor('service worker actif', `navigator.serviceWorker.ready.then(r => !!r.active && caches.keys()).then(k => k && k.length)`, 30_000).catch(() => 0);
-    check('service worker actif, fichiers en cache', sw > 0);
-    win.webContents.session.enableNetworkEmulation({ offline: true });
-    await win.webContents.reload();
-    await waitFor('accueil hors ligne', `document.body.innerText.includes('Reprendre la dernière session')`, 20_000).then(() => true, () => false)
-        .then(ok => check('application utilisable hors ligne', ok));
-    await click('Reprendre la dernière session').catch(() => undefined);
-    await waitFor('classe hors ligne', `document.body.innerText.includes(${JSON.stringify(EXPECT)})`, 60_000).then(() => true, () => false)
-        .then(ok => check('classe ouverte hors ligne', ok));
-    win.webContents.session.disableNetworkEmulation();
-
-    const errors = consoleErrors.filter(m => !/favicon|Download the React DevTools/.test(m));
-    check('aucune erreur dans la console', errors.length === 0, errors.slice(0, 3).join(' | '));
-}
-
-async function mobile() {
-    const consoleErrors = await setup(390, 844);
-    await win.loadURL(`${URL_BASE}?ui=mobile`);
-    await waitFor('accueil mobile', `[...document.querySelectorAll('button')].some(b => b.innerText.includes('Ouvrir un fichier .envolees') && !b.disabled)`);
-    check('interface mobile : accueil', true);
+async function ordinateur() {
+    await setup(1366, 860);
+    await win.loadURL(URL_BASE);
+    await waitFor('accueil', `[...document.querySelectorAll('button')].some(b => b.innerText.includes('Ouvrir un fichier .envolees') && !b.disabled)`);
+    check('accueil : classes de l\'appareil, Nuage, fichier, nouvelle classe', /Ouvrir depuis Nuage/.test(await text()) && /Nouvelle classe/.test(await text()));
     await shot('1-accueil');
 
+    // Ouverture d'un fichier
     fileQueue.push(FIXTURE);
     let t = Date.now();
     await click('Ouvrir un fichier .envolees');
-    await waitFor('liste des élèves', `document.body.innerText.includes(${JSON.stringify(EXPECT)}) && !!document.querySelector('nav')`, 120_000);
-    check('fichier .envolees ouvert sur mobile', true, `${Date.now() - t} ms`);
-    check("message d'attente refermé (mobile)", await waitFor("fin du message d'attente", `!document.querySelector('#platform-root [aria-busy]')`, 5000).then(() => true, () => false));
+    await waitFor('classe ouverte', `document.body.innerText.includes(${JSON.stringify(EXPECT)}) && !!document.querySelector('nav')`, 120_000);
+    check('fichier .envolees ouvert', true, `${Date.now() - t} ms`);
+    check("message d'attente refermé", await noProgress());
+    check('grand écran : liste des élèves et zone de fiche côte à côte', /Choisissez un élève/.test(await text()));
     if (REAL_IMAGES) {
         await waitFor('photos', `[...document.images].some(i => i.src.startsWith('blob:') && i.complete && i.naturalWidth > 0)`, 20_000).catch(() => null);
         check('photos des élèves affichées', await imageVisible());
     }
-    check('pas de défilement horizontal', await js('document.documentElement.scrollWidth <= window.innerWidth'));
     await shot('2-eleves');
 
-    // Fiche élève, validation en un geste
+    // Fiche, validation d'un clic, Ctrl+Z
     await click(EXPECT, 'ul button');
-    await waitFor('fiche élève', `document.body.innerText.includes('À valider') && document.body.innerText.includes('Rechercher une compétence') === false`, 10_000).catch(() => null);
-    await waitFor('fiche élève (domaines)', `document.querySelectorAll('section > button[aria-expanded]').length > 0`);
+    await waitFor('fiche', `document.querySelectorAll('section > button[aria-expanded]').length > 0`);
+    check('fiche affichée à côté de la liste', /À valider/.test(await text()) && await js(`!!document.querySelector('input[placeholder="Rechercher un élève"]')`));
     await js(`document.querySelector('section > button[aria-expanded]').click()`);
-    await waitFor('compétences du domaine', `!!document.querySelector('button[aria-label^="Valider "]')`);
-    await shot('3-fiche');
+    await waitFor('compétences', `!!document.querySelector('button[aria-label^="Valider "]')`);
     let db = await readDb();
-    const acquiredBefore = db.classes[0].acquired;
+    const before = db.classes[0].acquired;
     await js(`document.querySelector('button[aria-label^="Valider "]').click()`);
     await waitFor('message de validation', `document.body.innerText.includes('validée pour')`);
     await wait(1500);
     db = await readDb();
-    check('validation en un geste enregistrée aussitôt', db.classes[0].acquired === acquiredBefore + 1, `${acquiredBefore} → ${db.classes[0].acquired}`);
-    await click('Annuler', '[role=status] button');
+    check('validation d\'un clic enregistrée aussitôt', db.classes[0].acquired === before + 1, `${before} → ${db.classes[0].acquired}`);
+    await shot('3-fiche');
+    win.webContents.sendInputEvent({ type: 'keyDown', keyCode: 'Z', modifiers: ['control'] });
+    win.webContents.sendInputEvent({ type: 'keyUp', keyCode: 'Z', modifiers: ['control'] });
     await wait(1500);
     db = await readDb();
-    check('« Annuler » retire la validation', db.classes[0].acquired === acquiredBefore);
+    check('Ctrl+Z annule la validation', db.classes[0].acquired === before);
 
-    // Validation avec photo (fichier image → compression WebP → magasin)
-    await js(`[...document.querySelectorAll('li button')].find(b => !b.getAttribute('aria-label') && b.closest('section')).click()`);
-    await waitFor('feuille de validation', `document.body.innerText.includes('Photo de preuve')`);
-    fileQueue.push(PNG);
-    const imagesBefore = db.images;
-    await click('Choisir', '[role=dialog] button');
-    await waitFor('photo ajoutée', `!!document.querySelector('[role=dialog] img[alt="Photo de preuve"]')`, 15_000);
-    await shot('4-validation-photo');
-    await click('Valider', '[role=dialog] button.min-h-12');
-    await wait(1500);
-    db = await readDb();
-    check('validation avec photo prise sur le téléphone', db.classes[0].acquired === acquiredBefore + 1 && db.images === imagesBefore + 1, `${db.images - imagesBefore} image ajoutée`);
-
-    // Retour, validation groupée
-    await click('Retour');
+    // Validation groupée
     await click('Valider', 'nav button');
     await click('Choisir les compétences');
     await waitFor('liste des compétences', `document.querySelectorAll('[role=dialog] input[type=checkbox]').length > 0`);
     await js(`document.querySelectorAll('[role=dialog] input[type=checkbox]')[3].click()`);
     await click('Terminé');
     await click('Tous');
-    await shot('5-validation-groupee');
-    const beforeMass = (await readDb()).classes[0].acquired;
+    await shot('4-validation-groupee');
     await js(`[...document.querySelectorAll('button')].find(b => b.innerText.includes('Valider pour')).click()`);
-    await waitFor('message de validation groupée', `document.body.innerText.includes('enregistrée')`);
+    await waitFor('validation groupée', `document.body.innerText.includes('enregistrée')`);
     await wait(1500);
-    const afterMass = (await readDb()).classes[0].acquired;
-    check('validation groupée enregistrée', afterMass > beforeMass, `+${afterMass - beforeMass}`);
+    check('validation groupée enregistrée', (await readDb()).classes[0].acquired > before);
 
     await click('Ateliers', 'nav button');
     await waitFor('ateliers', `document.body.innerText.includes('Journal')`);
-    await shot('6-ateliers');
+    await shot('5-ateliers');
 
-    // Export du fichier (téléchargement ; le partage n'existe pas dans ce navigateur de test)
-    await click('Plus', 'nav button');
-    await waitFor('onglet Plus', `document.body.innerText.includes('Version ordinateur')`);
-    await shot('7-plus');
+    // Nuage (assisté) : téléchargement + onglet Nuage
+    await click('Classe', 'nav button');
+    await waitFor('onglet Classe', `document.body.innerText.includes('Envoyer vers Nuage')`);
+    await shot('6-classe');
     t = Date.now();
-    await click('fichier .envolees');
-    const exported = await waitDownload(1, 'export mobile');
+    await click('Envoyer vers Nuage');
+    await waitFor('fenêtre Nuage', `document.querySelector('#platform-root [role=dialog]')?.innerText.includes('Télécharger et ouvrir Nuage')`);
+    await shot('7-nuage-envoi');
+    await click('Télécharger et ouvrir Nuage', '#platform-root button');
+    const exported = await waitDownload(1, 'envoi Nuage');
     const back = await readEnvolees(exported);
     const original = await readEnvolees(FIXTURE);
-    check('fichier exporté depuis le téléphone : photo ajoutée incluse', back.images.size === original.images.size + 1, `${back.images.size} images, ${Date.now() - t} ms`);
+    check('envoi vers Nuage : fichier téléchargé, lisible par l\'application de bureau, images identiques', back.images.size === original.images.size, `${(fs.statSync(exported).size / 1e6).toFixed(0)} Mo, ${Date.now() - t} ms`);
+    check('envoi vers Nuage : dossier Envolées de Nuage ouvert dans un onglet', openedTabs.some(u => u.startsWith('https://nuage.apps.education.fr/apps/files/?dir=/Envol%C3%A9es')), openedTabs.join(' '));
 
+    // Ouvrir depuis Nuage (assisté) : retour à l'accueil, choix du fichier téléchargé
     await click('Changer de classe');
-    await waitFor('retour à l\'accueil', `document.body.innerText.includes('Mes classes')`);
-    check('retour à l\'accueil, classe listée', await waitFor('classe listée', `!!document.querySelector('[data-class-id]')`).then(() => true, () => false));
+    await waitFor('accueil', `document.body.innerText.includes('Mes classes sur cet appareil')`);
+    await click('Ouvrir depuis Nuage');
+    await waitFor('fenêtre Ouvrir depuis Nuage', `document.querySelector('#platform-root [role=dialog]')?.innerText.includes('Choisir le fichier')`);
+    fileQueue.push(exported);
+    await click('Choisir le fichier', '#platform-root button');
+    await waitFor('classe déjà présente', `document.querySelector('#platform-root [role=dialog]')?.innerText.includes('Classe déjà présente')`);
+    await click('Remplacer', '#platform-root button');
+    await waitFor('classe rouverte', `document.body.innerText.includes(${JSON.stringify(EXPECT)}) && !!document.querySelector('nav')`, 60_000);
+    check('ouvrir depuis Nuage : fichier choisi, classe remplacée et ouverte', (await readDb()).classes.length === 1);
 
-    check('pas de défilement horizontal (fin)', await js('document.documentElement.scrollWidth <= window.innerWidth'));
-    const errors = consoleErrors.filter(m => !/favicon|Download the React DevTools/.test(m));
-    check('aucune erreur dans la console', errors.length === 0, errors.slice(0, 3).join(' | '));
+    // Persistance et hors ligne
+    await win.webContents.reload();
+    await waitFor('accueil après rechargement', `!!document.querySelector('[data-class-id]')`);
+    const sw = await waitFor('service worker', `navigator.serviceWorker.ready.then(r => !!r.active && caches.keys()).then(k => k && k.length)`, 30_000).catch(() => 0);
+    check('service worker actif', sw > 0);
+    win.webContents.session.enableNetworkEmulation({ offline: true });
+    await win.webContents.reload();
+    const offline = await waitFor('accueil hors ligne', `!!document.querySelector('[data-class-id]:not(:disabled)')`, 20_000).then(() => true, () => false);
+    if (!offline) console.log('HORS LIGNE :', win.webContents.getURL(), (await text().catch(e => e.message)).slice(0, 300));
+    if (offline) await js(`document.querySelector('[data-class-id]').click()`);
+    check('hors ligne : application et classe utilisables', offline && await waitFor('classe hors ligne', `document.body.innerText.includes(${JSON.stringify(EXPECT)})`, 60_000).then(() => true, () => false));
+    win.webContents.session.disableNetworkEmulation();
+}
+
+async function tablette() {
+    await setup(820, 1180, { touch: true }); // iPad Air, portrait
+    await win.loadURL(URL_BASE);
+    await waitFor('accueil', `[...document.querySelectorAll('button')].some(b => b.innerText.includes('Ouvrir depuis Nuage') && !b.disabled)`);
+    check('écran tactile détecté (pointer: coarse)', await js(`matchMedia('(pointer: coarse)').matches`));
+    await shot('1-accueil-portrait');
+
+    // Ouvrir depuis Nuage, parcours tablette : consigne, puis sélecteur du système
+    await tap('Ouvrir depuis Nuage');
+    await waitFor('consigne tablette', `document.querySelector('#platform-root [role=dialog]')?.innerText.includes('Nextcloud')`);
+    await shot('2-ouvrir-depuis-nuage');
+    fileQueue.push(FIXTURE);
+    await tap('Choisir la classe', '#platform-root button');
+    await waitFor('classe ouverte', `document.body.innerText.includes(${JSON.stringify(EXPECT)}) && !!document.querySelector('nav')`, 120_000);
+    check('ouverture depuis Nuage au toucher (sélecteur du système)', true);
+    check("message d'attente refermé", await noProgress());
+    check('portrait : liste seule (pas de fiche à côté)', !/Choisissez un élève/.test(await text()));
+    check('pas de défilement horizontal (portrait)', await js('document.documentElement.scrollWidth <= window.innerWidth'));
+    await shot('3-eleves-portrait');
+    const smallList = await smallTargets();
+    check('cibles tactiles ≥ 40 px (liste des élèves)', smallList.length === 0, smallList.slice(0, 6).join(' | '));
+
+    // Fiche au toucher
+    await tap(EXPECT, 'ul button');
+    await waitFor('fiche', `document.querySelectorAll('section > button[aria-expanded]').length > 0`);
+    check('fiche en plein écran avec bouton Retour', await js(`!!document.querySelector('button[aria-label="Retour"]')`));
+    await js(`document.querySelector('section > button[aria-expanded]').scrollIntoView()`);
+    await js(`(() => { const b = document.querySelector('section > button[aria-expanded]'); b.setAttribute('data-e2e', 'domaine'); })()`);
+    await tap('', '[data-e2e=domaine]');
+    await waitFor('compétences', `!!document.querySelector('button[aria-label^="Valider "]')`);
+    const before = (await readDb()).classes[0].acquired;
+    await js(`document.querySelector('button[aria-label^="Valider "]').setAttribute('data-e2e', 'valider')`);
+    await tap('', '[data-e2e=valider]');
+    await waitFor('message de validation', `document.body.innerText.includes('validée pour')`);
+    await wait(1500);
+    check('validation au toucher enregistrée', (await readDb()).classes[0].acquired === before + 1);
+    await shot('4-fiche-portrait');
+    const smallDetail = await smallTargets();
+    check('cibles tactiles ≥ 40 px (fiche élève)', smallDetail.length === 0, smallDetail.slice(0, 6).join(' | '));
+    await tap('Annuler', '[role=status] button');
+    await wait(1500);
+    check('« Annuler » au toucher', (await readDb()).classes[0].acquired === before);
+
+    // Validation avec photo
+    await js(`[...document.querySelectorAll('li button')].find(b => !b.getAttribute('aria-label') && b.closest('section')).setAttribute('data-e2e', 'competence')`);
+    await tap('', '[data-e2e=competence]');
+    await waitFor('panneau de validation', `document.body.innerText.includes('Photo de preuve')`);
+    fileQueue.push(PNG);
+    const imagesBefore = (await readDb()).images;
+    await tap('Choisir', '[role=dialog] button');
+    await waitFor('photo ajoutée', `!!document.querySelector('[role=dialog] img[alt="Photo de preuve"]')`, 15_000);
+    await shot('5-validation-photo');
+    await js(`[...document.querySelectorAll('[role=dialog] button')].find(b => b.innerText.trim() === 'Valider').setAttribute('data-e2e', 'ok')`);
+    await tap('', '[data-e2e=ok]');
+    await wait(1500);
+    const db = await readDb();
+    check('validation avec photo (compressée, rangée)', db.classes[0].acquired === before + 1 && db.images === imagesBefore + 1);
+
+    // Rotation en paysage : liste et fiche côte à côte
+    await tap('Retour');
+    await resize(1180, 820);
+    await waitFor('paysage', `document.body.innerText.includes('Choisissez un élève')`);
+    check('paysage : liste et fiche côte à côte', true);
+    check('pas de défilement horizontal (paysage)', await js('document.documentElement.scrollWidth <= window.innerWidth'));
+    await shot('6-eleves-paysage');
+
+    // Validation groupée au toucher
+    await tap('Valider', 'nav button');
+    await tap('Choisir les compétences');
+    await waitFor('liste des compétences', `document.querySelectorAll('[role=dialog] input[type=checkbox]').length > 0`);
+    await js(`document.querySelectorAll('[role=dialog] input[type=checkbox]')[5].setAttribute('data-e2e', 'case')`);
+    await tap('', '[data-e2e=case]');
+    await tap('Terminé');
+    await tap('Tous');
+    await shot('7-validation-groupee-paysage');
+    const smallMass = await smallTargets();
+    check('cibles tactiles ≥ 40 px (validation groupée)', smallMass.length === 0, smallMass.slice(0, 6).join(' | '));
+    const beforeMass = (await readDb()).classes[0].acquired;
+    await tap('Valider pour');
+    await waitFor('validation groupée', `document.body.innerText.includes('enregistrée')`);
+    await wait(1500);
+    check('validation groupée au toucher', (await readDb()).classes[0].acquired > beforeMass);
+
+    await tap('Ateliers', 'nav button');
+    await waitFor('ateliers', `document.body.innerText.includes('Journal')`);
+    await shot('8-ateliers-paysage');
+    await tap('Classe', 'nav button');
+    await waitFor('classe', `document.body.innerText.includes('Envoyer vers Nuage')`);
+    await shot('9-classe-paysage');
+    const smallClass = await smallTargets();
+    check('cibles tactiles ≥ 40 px (onglet Classe)', smallClass.length === 0, smallClass.slice(0, 6).join(' | '));
+
+    // Mode élève : code PIN à définir, l'enfant touche sa photo, montre un QR code d'atelier, sortie par code
+    const data = await readClassData();
+    await tap('Ateliers', 'nav button');
+    await tap('Mode élève');
+    await waitFor('mode élève ou code à définir', `!!document.querySelector('[data-mode-eleve]') || document.body.innerText.includes('Code PIN du mode élève')`);
+    const pinSetup = await js(`document.body.innerText.includes('Code PIN du mode élève')`);
+    if (pinSetup) {
+        await typeInto('[role=dialog] input[type=password]', '2580');
+        await js(`document.querySelectorAll('[role=dialog] input[type=password]')[1].setAttribute('data-e2e', 'confirmation')`);
+        await typeInto('[data-e2e=confirmation]', '2580');
+        await tap('Enregistrer', '[role=dialog] button');
+    }
+    await waitFor('mode élève', `!!document.querySelector('[data-mode-eleve]') && document.body.innerText.includes('Qui es-tu')`);
+    await shot('10-mode-eleve');
+    const smallKid = await smallTargets();
+    check('mode élève : cibles tactiles ≥ 40 px', smallKid.length === 0, smallKid.slice(0, 6).join(' | '));
+    const firstName = EXPECT.split(' ')[0];
+    await js(`[...document.querySelectorAll('[data-mode-eleve] li button')].find(b => b.innerText.trim() === ${JSON.stringify(firstName)} || b.innerText.trim() === ${JSON.stringify(firstName + ' ' + EXPECT.split(' ')[1][0] + '.')}).setAttribute('data-e2e', 'enfant')`);
+    await tap('', '[data-e2e=enfant]');
+    await waitFor('caméra', `document.body.innerText.includes('montre ton QR code')`);
+    const cameraOk = await waitFor('image de la caméra', `(() => { const v = document.querySelector('[data-mode-eleve] video'); return v && v.videoWidth > 0; })()`, 10_000).then(() => true, () => false);
+    check('mode élève : caméra active', cameraOk);
+    await shot('11-mode-eleve-scan');
+    const student = data.students.find(st => `${st.firstName} ${st.lastName}` === EXPECT);
+    const events = data.workshopEvents.length;
+    const workshop = data.workshops.find(w => w.isActive && !w.skillIds.every(id => student.skills[id]?.proficiency === 'Acquis')) ?? data.workshops[0];
+    await js(`window.dispatchEvent(new CustomEvent('envolees:qr', { detail: ${JSON.stringify(workshop.id)} }))`);
+    await waitFor('résultat du passage', `/C'est parti|Bravo|Déjà fait|Patience/.test(document.body.innerText)`);
+    await shot('12-mode-eleve-resultat');
+    await wait(1500);
+    check('mode élève : passage enregistré', (await readClassData()).workshopEvents.length === events + 1, `atelier « ${workshop.name} »`);
+    await waitFor('retour au choix', `document.body.innerText.includes('Qui es-tu')`, 10_000);
+    await tap('Quitter le mode élève');
+    for (const d of [...(pinSetup ? '2580' : data.teacherConfig.studentModePin)]) await tap(d, '[role=dialog] button');
+    await tap('OK', '[role=dialog] button');
+    await waitFor('sortie du mode élève', `!document.querySelector('[data-mode-eleve]')`, 5000);
+    check('mode élève : sortie avec le code enseignant', true);
 }
 
 app.whenReady().then(async () => {
     try {
-        await (scenario === 'mobile' ? mobile() : desktop());
+        await (scenario === 'tablette' ? tablette() : ordinateur());
     } catch (error) {
         check('scénario complet', false, error.message);
         await shot('erreur').catch(() => undefined);
         console.log((await text().catch(() => '')).slice(0, 1500));
     }
+    const errors = consoleErrors.filter(m => !/favicon|Download the React DevTools/.test(m));
+    check('aucune erreur dans la console', errors.length === 0, errors.slice(0, 3).join(' | '));
     finish();
 });

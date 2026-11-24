@@ -1,12 +1,15 @@
-// Point d'entrée de la version web.
+// Point d'entrée de la version web (ordinateur et tablette).
 import './styles.css';
-import { setImageBackend } from '../app/images/imageStore';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { setImageBackend } from '../core/images/imageStore';
 import { openDb } from './platform/db';
 import { mountPlatformHost } from './platform/dialogs';
 import { startLaunchQueue } from './platform/launch';
 import { registerServiceWorker } from './platform/updates';
 import { webImages } from './platform/webImages';
-import { resolveUiMode } from './uiMode';
+import App from './ui/App';
+import ErrorBoundary from './ui/ErrorBoundary';
 
 // Images des classes : dans IndexedDB (à poser avant tout affichage).
 setImageBackend(webImages);
@@ -17,27 +20,20 @@ registerServiceWorker();
 window.addEventListener('dragover', e => e.preventDefault());
 window.addEventListener('drop', e => e.preventDefault());
 
+if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.classList.add('dark');
 const launchFiles = startLaunchQueue();
-const mode = resolveUiMode();
-document.documentElement.dataset.ui = mode;
-
-const showFatal = (message: string) => {
-    const root = document.getElementById('root')!;
-    root.textContent = '';
-    const box = document.createElement('div');
-    box.className = 'h-full flex items-center justify-center p-6 text-center bg-slate-100 text-slate-700';
-    const p = document.createElement('p');
-    p.className = 'max-w-md';
-    p.textContent = message;
-    box.appendChild(p);
-    root.appendChild(box);
-};
+const root = document.getElementById('root')!;
 
 openDb()
-    .then(() => (mode === 'desktop'
-        ? import('./desktop/mountDesktop').then(m => m.mountDesktop(launchFiles))
-        : import('./mobile/mountMobile').then(m => m.mountMobile(launchFiles))))
+    .then(() => {
+        ReactDOM.createRoot(root).render(
+            <React.StrictMode>
+                <ErrorBoundary><App launchFiles={launchFiles} /></ErrorBoundary>
+            </React.StrictMode>,
+        );
+    })
     .catch(error => {
         console.error(error);
-        showFatal(`Envolées ne peut pas démarrer dans ce navigateur : ${error instanceof Error ? error.message : String(error)}`);
+        root.textContent = `Envolées ne peut pas démarrer dans ce navigateur : ${error instanceof Error ? error.message : String(error)}`;
+        root.style.padding = '2rem';
     });

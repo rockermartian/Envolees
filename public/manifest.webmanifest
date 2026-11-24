@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Envolées — suivi des élèves de maternelle",
   "short_name": "Envolées",
-  "description": "Suivi des compétences des élèves de maternelle. Fonctionne hors ligne ; les données restent sur l'appareil.",
+  "description": "Suivi des compétences des élèves de maternelle, sur ordinateur et tablette. Fonctionne hors ligne ; les données restent sur l'appareil.",
   "lang": "fr",
   "dir": "ltr",
   "start_url": "./",
@@ -11,24 +11,55 @@
   "orientation": "any",
   "background_color": "#f1f5f9",
   "theme_color": "#4f46e5",
-  "categories": ["education", "productivity"],
+  "categories": [
+    "education",
+    "productivity"
+  ],
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
-    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
   ],
   "file_handlers": [
     {
       "action": "./",
-      "accept": { "application/x-envolees": [".envolees"] },
-      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }],
+      "accept": {
+        "application/x-envolees": [
+          ".envolees"
+        ]
+      },
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ],
       "launch_type": "single-client"
     }
   ],
-  "launch_handler": { "client_mode": "focus-existing" },
-  "shortcuts": [
-    { "name": "Version mobile", "url": "./?ui=mobile", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Version ordinateur", "url": "./?ui=desktop", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
-  ]
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  }
 }

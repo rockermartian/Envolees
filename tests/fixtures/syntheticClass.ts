@@ -3,9 +3,9 @@
 // Les images sont des octets aléatoires de taille réaliste (photo WebP 500 px ≈ 37 Ko) :
 // incompressibles comme de vraies photos, et toutes distinctes.
 import { readFileSync } from 'node:fs';
-import { AppData, Domain, Proficiency, SchoolProgram, Section, Sex, WorkshopEvent } from '../../app/types';
-import { createEmptyAppData } from '../../app/fileFormat/defaults';
-import { computeImageRef } from '../../app/images/imageStore';
+import { AppData, Domain, Proficiency, SchoolProgram, Section, Sex, WorkshopEvent } from '../../core/types';
+import { createEmptyAppData } from '../../core/fileFormat/defaults';
+import { computeImageRef } from '../../core/images/imageStore';
 
 export const PROFILES = {
   moyen:      { students: 26, photosPerStudent: 20,  acquiredRatio: 0.30, workshops: 8,  eventsPerStudent: 40 },

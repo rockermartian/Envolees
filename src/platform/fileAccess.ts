@@ -55,13 +55,14 @@ export function pickWithInput(accept?: string, capture?: 'environment' | 'user')
     });
 }
 
-const isTouchDevice = () => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+/** Écran tactile principal (tablette). */
+export const isTouchDevice = () => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 
 /** Choisit un fichier .envolees. `handle` est fourni quand le fichier pourra être réécrit. */
-export async function pickEnvoleesFile(): Promise<{ file: File; handle?: LinkedFileHandle } | null> {
+export async function pickEnvoleesFile(pickerId = 'envolees-classes'): Promise<{ file: File; handle?: LinkedFileHandle } | null> {
     if (canLinkFiles()) {
         try {
-            const [handle] = await fsWindow().showOpenFilePicker!({ types: [ENVOLEES_TYPE], id: 'envolees-classes' });
+            const [handle] = await fsWindow().showOpenFilePicker!({ types: [ENVOLEES_TYPE], id: pickerId });
             return { file: await handle.getFile(), handle };
         } catch (error) {
             if (isAbort(error)) return null;
@@ -74,10 +75,10 @@ export async function pickEnvoleesFile(): Promise<{ file: File; handle?: LinkedF
 }
 
 /** Demande un emplacement pour un nouveau fichier lié (null si annulé ou impossible). */
-export async function pickSaveLocation(suggestedName: string): Promise<LinkedFileHandle | null> {
+export async function pickSaveLocation(suggestedName: string, pickerId = 'envolees-classes'): Promise<LinkedFileHandle | null> {
     if (!canLinkFiles()) return null;
     try {
-        return await fsWindow().showSaveFilePicker!({ types: [ENVOLEES_TYPE], suggestedName, id: 'envolees-classes' });
+        return await fsWindow().showSaveFilePicker!({ types: [ENVOLEES_TYPE], suggestedName, id: pickerId });
     } catch (error) {
         if (isAbort(error)) return null;
         throw error;

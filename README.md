@@ -1,125 +1,98 @@
-# Envolées — version web (ordinateur et mobile)
+# Envolées — version web (ordinateur et tablette)
 
-Application web **installable** (PWA) : elle fonctionne hors ligne et s'ajoute à l'écran d'accueil d'un téléphone ou au menu Démarrer. Les données restent sur l'appareil : rien n'est envoyé sur Internet.
+Application web **installable** (PWA) de suivi des compétences en maternelle, conçue pour le **toucher** (tablette Android, iPad) comme pour la souris et le clavier. Elle fonctionne hors ligne. Les données restent sur l'appareil et ne le quittent que si l'enseignant les envoie (Nuage, partage, fichier).
 
-Une seule application avec deux interfaces :
+Elle ouvre les mêmes fichiers `.envolees` que l'application Envolées pour ordinateur, dans les deux sens.
 
-| Interface | Pour | Contenu |
+## Fonctions
+
+| | Version web | Application pour ordinateur |
 |---|---|---|
-| **Ordinateur** | ordinateur, tablette | L'application de bureau complète (sa copie dans `app/`, sans modification) |
-| **Mobile** | téléphone, en classe | Élèves, validation en un geste (avec photo), validation groupée, passages d'atelier, export |
+| Élèves : liste, fiche, ajout et modification, photo (appareil photo de la tablette) | ✅ | ✅ |
+| Validation d'une compétence au toucher (date, section, photo de preuve), Annuler | ✅ | ✅ |
+| Validation groupée | ✅ | ✅ |
+| Passages d'atelier à valider, journal | ✅ | ✅ |
+| **Mode élève** (photo de l'enfant, QR code de l'atelier, code PIN pour sortir) | ✅ | ✅ |
+| Import d'un programme `.competences` | ✅ | ✅ |
+| **Nuage** : envoyer et ouvrir une classe | ✅ assisté (voir ci-dessous) | ✅ direct |
+| Édition du programme, création des ateliers et QR codes, rapports, livret PDF, groupes de soutien | — | ✅ |
 
-L'interface est choisie selon la largeur de l'écran (moins de 768 px : mobile). On peut changer à tout moment : « Version mobile » dans la boîte *Ouvrir une classe*, « Version ordinateur » dans l'onglet *Plus*, ou `?ui=mobile` / `?ui=desktop` dans l'adresse. Le choix est mémorisé.
+### Disposition
 
-## Pourquoi une seule application et pas deux dépôts
+- **Tablette en paysage, ordinateur :** rail de navigation à gauche ; liste des élèves et fiche côte à côte.
+- **Tablette en portrait :** la liste, puis la fiche en plein écran (bouton Retour).
+- Toutes les commandes font au moins 44 px, et aucune action n'apparaît seulement au survol de la souris.
 
-Les deux interfaces partagent tout : les données, le format `.envolees`, les règles métier, le stockage, le déploiement et l'installation. Deux dépôts doubleraient la maintenance sans rien apporter. Le code propre à chaque interface reste séparé (`src/desktop/`, `src/mobile/`), et le navigateur ne charge que l'interface affichée.
+## Nuage dans la version web
 
-## Un dossier autonome
+Nuage n'accepte pas, pour l'instant, les requêtes venant d'un autre site : il ne renvoie pas d'en-têtes CORS (vérifié le 24/11/2026). Un site web ne peut donc pas y écrire directement. La version web **assiste** l'enseignant :
 
-Ce dossier se suffit à lui-même : il peut devenir un dépôt GitHub à lui seul. Le code de l'application de bureau dont il a besoin y est **recopié** dans `app/`, avec les polices et le guide dans `public/`. Rien n'est importé du dossier parent.
+| | Envoyer vers Nuage | Ouvrir depuis Nuage |
+|---|---|---|
+| **Tablette** | Le partage de la tablette s'ouvre. On choisit l'application **Nextcloud** (connectée à Nuage), puis le dossier « Envolées ». | Le sélecteur de fichiers de la tablette s'ouvre. Nextcloud y apparaît comme un emplacement. |
+| **Ordinateur** | Le fichier est téléchargé et Nuage s'ouvre dans un onglet : il suffit d'y déposer le fichier. Avec Chrome ou Edge, la classe peut aussi être enregistrée directement dans le dossier Nuage synchronisé de l'ordinateur (client Nextcloud). | Nuage s'ouvre dans un onglet pour télécharger la classe, puis on choisit le fichier. On peut aussi la choisir directement dans le dossier synchronisé. |
 
-- **Ne modifiez pas `app/`** : le code se modifie dans le projet Electron.
-- Après une modification de l'application de bureau, lancez `npm run sync` dans `web_app/`, puis committez. La commande recopie `app/`, les polices, le guide et le programme de test, et aligne la version et les dépendances sur le projet Electron.
-  - Si `web_app/` est encore dans le projet Electron : `npm run sync`.
-  - Sinon : `npm run sync -- <chemin du projet Electron>`.
+**Préparer une tablette une fois pour toutes :** installez l'application **Nextcloud** (App Store ou Google Play). Connectez-la avec l'adresse `nuage.apps.education.fr` et votre identifiant académique.
+
+L'application pour ordinateur, elle, envoie directement : connexion par le navigateur, puis Menu › Envoyer vers Nuage.
+
+Pour obtenir l'envoi direct dans la version web, une demande est prête à envoyer à l'équipe apps.education.fr : [docs/demande-nuage-cors.md](docs/demande-nuage-cors.md). Le client Nuage partagé (`core/shared/nuageClient.js`) fonctionne déjà dans un navigateur : il ne reste qu'à brancher l'interface quand l'autorisation sera donnée.
+
+## Données et sauvegarde
+
+- Chaque classe est enregistrée **dans le navigateur de l'appareil** (IndexedDB), à chaque modification. Il n'y a pas de bouton « Enregistrer ».
+- 3 copies de sécurité sont gardées par classe.
+- L'onglet **Classe** indique la date de la dernière sauvegarde (Nuage ou fichier) et si la classe a été modifiée depuis.
+- **Sur iPad, installez l'application** (Safari › Partager › « Sur l'écran d'accueil »). Sinon, Safari efface les données d'un site après 7 jours sans visite. L'application le rappelle sur l'écran d'accueil.
+- Une classe ne s'ouvre que dans un seul onglet à la fois.
 
 ## Commandes
 
 Dans ce dossier : `npm install` une fois, puis :
 
 ```bash
-npm run dev        # serveur de développement (http://localhost:5173)
-npm run build      # version de production dans web_app/dist
-npm run preview    # sert le build (pour tester l'installation et le hors-ligne)
+npm run dev        # serveur de développement
+npm run build      # version de production dans dist/
 npm run check      # types + tests unitaires
-npm run test:e2e   # build + tests de bout en bout dans Chromium (Electron) : ordinateur puis mobile
-npm run icons      # régénère les icônes PNG à partir de public/icons/icon.svg
-npm run sync       # recopie le code de l'application de bureau dans app/
+npm run test:e2e   # build + tests de bout en bout dans Chromium (voir « Tests »)
+npm run sync       # met à jour core/ depuis le projet Electron
+npm run icons      # régénère les icônes PNG
 ```
 
-`test:e2e` et `icons` se servent d'Electron comme navigateur piloté. Electron n'est pas une dépendance de la version web : ces deux commandes l'utilisent s'il est installé (ici, ou dans le projet Electron voisin). Sinon : `npm install --no-save electron`, ou `ELECTRON_PATH=<exécutable>`.
+## Code partagé avec l'application pour ordinateur (`core/`)
 
-`test:e2e` utilise `../classe-test-lourde.envolees` s'il existe, sinon une classe générée. `E2E_FILE=<fichier>` choisit une autre classe, et `E2E_SHOTS=<dossier>` enregistre des captures d'écran.
+`core/` est une **copie générée** du code partagé avec le projet Electron :
+- règles métier (`domain/`) ;
+- format des fichiers (`fileFormat/`, `shared/`) ;
+- client Nuage, images, types.
 
-## Déploiement sur GitHub Pages
+Le projet Electron reste la référence. L'interface web, elle, est distincte et ne copie aucun composant de l'application de bureau. Après une modification du code partagé, lancez `npm run sync` (projet Electron dans le dossier parent), ou `npm run sync -- <chemin>`. Ne modifiez pas `core/` à la main.
 
-1. Créez un dépôt GitHub et envoyez-y **le contenu de ce dossier**, à la racine du dépôt, sur la branche `main`. Le dossier caché `.github/` doit être inclus.
-2. Dans le dépôt, allez dans **Settings › Pages › Source** et choisissez « **GitHub Actions** ».
-3. Chaque envoi sur `main` lance [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) : il installe les dépendances (`npm ci`), vérifie (types et tests), construit puis publie. L'adresse est `https://<compte>.github.io/<dépôt>/`.
+## Déploiement (GitHub Pages)
 
-Le glisser-déposer sur github.com ne transfère pas toujours les dossiers cachés. Si `.github/` manque, utilisez Git ou GitHub Desktop, ou créez le fichier sur github.com (Add file › Create new file › `.github/workflows/deploy.yml`) et collez-y son contenu.
+Ce dossier se publie seul : son contenu est la racine du dépôt GitHub.
+1. Envoyez-le sur la branche `main`.
+2. Le workflow `.github/workflows/deploy.yml` vérifie le code, le construit et le publie.
 
-Les chemins sont relatifs (`base: './'`), donc l'application fonctionne à la racine d'un domaine comme dans un sous-dossier. Une nouvelle version publiée affiche un bandeau « Recharger » : elle n'est jamais appliquée pendant une saisie.
+Réglage unique du dépôt : Settings › Pages › Source : « GitHub Actions ».
 
-**Navigateurs** : Chrome et Edge 103 ou plus, Firefox 113 ou plus, Safari 16.4 ou plus (iPhone et iPad : iOS 16.4 ou plus).
-
-**Installer** : dans Chrome ou Edge, utilisez l'icône d'installation de la barre d'adresse. Sur Android, menu › *Installer l'application*. Sur iPhone et iPad, dans Safari : Partager › *Sur l'écran d'accueil*.
-
-## Où sont les données, et comment passer d'un appareil à l'autre
-
-- Chaque classe est enregistrée **dans le navigateur de l'appareil** (IndexedDB). Les images sont stockées une seule fois, même si plusieurs classes les partagent.
-- L'interface ordinateur enregistre comme l'application de bureau : enregistrement automatique (30 s après la dernière modification) et indicateur cliquable. L'interface mobile enregistre chaque modification en moins d'une seconde, et immédiatement quand l'application passe en arrière-plan.
-- **Copies de sécurité** : comme sur l'application de bureau, 3 copies par classe, au plus une toutes les 30 minutes. Dans l'interface ordinateur : Réglages › « Ouvrir le dossier des copies de sécurité ».
-- **Changer d'appareil** : le fichier `.envolees` est le même que celui de l'application de bureau, dans les deux sens. On l'exporte (ordinateur : Menu › Enregistrer sous ; mobile : Plus › Exporter ou Partager), puis on l'ouvre sur l'autre appareil. Si une classe du même nom existe déjà, l'application propose de la remplacer (l'ancienne version est gardée en copie de sécurité) ou de garder les deux.
-- **Fichier lié** (Chrome et Edge sur ordinateur) : une classe peut être liée à un fichier `.envolees` de l'ordinateur, réécrit à chaque enregistrement comme dans l'application de bureau. Si ce fichier est dans un dossier synchronisé (OneDrive, Drive…), il sert de sauvegarde. Une fois l'application installée, un double-clic sur un `.envolees` l'ouvre dans Envolées.
-- Une classe ne s'ouvre que dans un seul onglet à la fois : deux onglets s'écraseraient mutuellement.
-
-⚠️ Un navigateur peut effacer les données d'un site dans de rares cas (manque de place, « effacer les données de navigation »). L'application demande au navigateur de les protéger (Plus › Stockage), mais **exporter régulièrement le fichier `.envolees`** reste la vraie sauvegarde. Chaque classe indique sa date de dernier export et si elle a été modifiée depuis.
-
-## Différences avec l'application de bureau
-
-| Fonction | Version web |
-|---|---|
-| Livret en PDF | Passe par l'impression du navigateur : choisir « Enregistrer au format PDF ». Même mise en page, car ce sont les mêmes styles d'impression. |
-| Export de tous les livrets | Une boîte d'impression par élève, avec le nom du fichier déjà proposé. Pour tout exporter d'un coup dans un dossier, utiliser l'application de bureau. |
-| Fichier `.envolees` réécrit à chaque enregistrement | Chrome et Edge sur ordinateur seulement. Ailleurs, export manuel. |
-| Fermeture avec modifications non enregistrées | Le navigateur demande confirmation, et la fenêtre « Enregistrer avant de quitter ? » de l'application s'affiche. |
-| Mode élève (QR codes) | Identique. La caméra demande l'autorisation du navigateur (HTTPS, assuré par GitHub Pages). |
-| Photos HEIC d'iPhone | L'appareil photo, ouvert depuis l'application, fournit du JPEG. Une image HEIC choisie dans la galerie peut être refusée (même message que sur ordinateur). |
-
-## Architecture
-
-```
-web_app/
-├── .github/workflows/deploy.yml    Déploiement sur GitHub Pages
-├── index.html, vite.config.ts      Build : service worker généré, CSP
-├── app/                            Copie de l'application de bureau (générée par npm run sync)
-├── public/                         manifest.webmanifest, icônes, polices, guide
-├── scripts/                        sync-desktop.mjs, make-icons.mjs, find-electron.mjs
-├── src/
-│   ├── main.tsx                    Démarrage : stockage des images, choix de l'interface
-│   ├── uiMode.ts                   Ordinateur / mobile
-│   ├── sw.js                       Service worker (hors ligne, mises à jour)
-│   ├── platform/                   Ce que fait le processus principal d'Electron, version navigateur
-│   │   ├── db.ts                   IndexedDB
-│   │   ├── webImages.ts            Images (ImageBackend de images/imageStore.ts)
-│   │   ├── archive.ts              Lecture/écriture .envolees avec shared/envoleesArchive.js
-│   │   ├── library.ts              Classes du navigateur, copies de sécurité, ménage des images
-│   │   ├── session.ts              Classe ouverte (un onglet à la fois), import, enregistrement
-│   │   ├── fileAccess.ts           Fichiers : sélection, fichier lié, téléchargement, partage
-│   │   ├── dialogs.tsx             Boîtes de dialogue (à la place des fenêtres natives)
-│   │   └── ClassLibrary.tsx        Liste des classes
-│   ├── desktop/
-│   │   ├── electronBridge.tsx      window.electronAPI réalisé avec le navigateur
-│   │   └── mountDesktop.tsx        Monte App.tsx tel quel
-│   └── mobile/                     Interface mobile (écrans, modèle testé, enregistrement continu)
-└── tests/                          Vitest (archive, modèle), fixtures/ (générateur de classes,
-                                    programme 2025), e2e/ (Chromium d'Electron)
-```
-
-**Le code de bureau est repris tel quel.** La seule transformation de la copie : `__APP_VERSION__` devient `import.meta.env.VITE_APP_VERSION`. L'interface ordinateur ne parle au système que par `window.electronAPI` (voir `electron/preload.js` dans le projet Electron) : la version web fournit la même interface (`src/desktop/electronBridge.tsx`) et pose un stockage d'images navigateur (`setImageBackend`). L'interface mobile appelle directement les modules métier (`domain/`, `fileFormat/`) : mêmes règles, mêmes données, mêmes tests.
-
-Performances, mesurées sur la classe de test de 76 Mo (2 147 photos) dans Chromium :
-- ouverture : environ 1,5 s (les photos ne sont pas recopiées en mémoire, ce sont des tranches du fichier) ;
-- enregistrement dans le navigateur : environ 0,1 s ;
-- export du fichier : environ 1,5 s.
-
-L'archive est assemblée à partir des images déjà stockées, sans les relire. La classe synthétique de 170 Mo s'écrit en 0,06 s et se relit en 0,35 s (test unitaire).
+Une nouvelle version s'annonce par un bandeau « Recharger ». Elle n'est jamais appliquée pendant une saisie.
 
 ## Tests
 
-- `npm run check` : 14 tests unitaires, dont la compatibilité des fichiers dans les deux sens avec l'application de bureau et la performance sur la classe de 170 Mo.
-- `npm run test:e2e` : 28 vérifications dans un vrai Chromium, l'application étant servie sous un sous-chemin comme sur GitHub Pages.
-  - Ordinateur : ouverture, photos, enregistrement, export relu par le lecteur de bureau (images identiques octet par octet), impression, rechargement, fonctionnement hors ligne.
-  - Mobile : ouverture, validation en un geste, Annuler, photo, validation groupée, export, absence de défilement horizontal, console sans erreur.
+- **Tests unitaires** (`npm run check`) : compatibilité des fichiers avec l'application de bureau, performance sur une classe de 170 Mo, calculs de l'interface (dont « Tom L. » / « Tom V. » pour les prénoms identiques).
+- **Tests de bout en bout** (`npm run test:e2e`), dans le Chromium d'Electron. Electron est utilisé s'il est installé ici ou dans le projet voisin ; sinon `npm install --no-save electron`.
+  - **Ordinateur (souris, clavier) :**
+    - ouverture d'un fichier, photos, validation, Ctrl+Z, validation groupée ;
+    - envoi vers Nuage (fichier téléchargé, puis relu à l'identique par le lecteur de bureau) ;
+    - ouverture depuis Nuage ;
+    - hors ligne.
+  - **Tablette (événements tactiles réels, portrait puis paysage) :**
+    - parcours tablette d'ouverture depuis Nuage ;
+    - validation au toucher, photo ;
+    - mode élève (caméra simulée, QR code, pavé PIN) ;
+    - mesure de la taille de toutes les cibles tactiles.
+
+**À vérifier sur appareil réel** (non automatisable) : caméra et partage vers l'application Nextcloud sur un vrai iPad et une vraie tablette Android.
+
+Navigateurs : Chrome et Edge 103 ou plus, Firefox 113 ou plus, Safari et iPadOS 16.4 ou plus.

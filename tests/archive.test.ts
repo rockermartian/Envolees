@@ -3,10 +3,10 @@ import JSZip from 'jszip';
 import { promisify } from 'node:util';
 import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
-import { buildArchive, readArchive } from '../app/shared/envoleesArchive.js';
-import { crc32 } from '../app/shared/zip.js';
-import { imageFileName } from '../app/images/imageStore';
-import { collectImageRefs, parseOpenedData, prepareForSave } from '../app/fileFormat/fileIO';
+import { buildArchive, readArchive } from '../core/shared/envoleesArchive.js';
+import { crc32 } from '../core/shared/zip.js';
+import { imageFileName } from '../core/images/imageStore';
+import { collectImageRefs, parseOpenedData, prepareForSave } from '../core/fileFormat/fileIO';
 import { generateClass } from './fixtures/syntheticClass';
 import { buildEnvoleesBlob, readEnvoleesFile, type ArchiveImageBlob } from '../src/platform/archive';
 

@@ -5,9 +5,9 @@ import { writeFileSync } from 'node:fs';
 import { promisify } from 'node:util';
 import zlib from 'node:zlib';
 import { generateClass, ProfileName } from './syntheticClass';
-import { buildArchive } from '../../app/shared/envoleesArchive.js';
-import { prepareForSave } from '../../app/fileFormat/fileIO';
-import { imageFileName } from '../../app/images/imageStore';
+import { buildArchive } from '../../core/shared/envoleesArchive.js';
+import { prepareForSave } from '../../core/fileFormat/fileIO';
+import { imageFileName } from '../../core/images/imageStore';
 
 const [profile, outFile, projectRoot] = process.argv.slice(2);
 const { data, images } = await generateClass(profile as ProfileName, projectRoot);

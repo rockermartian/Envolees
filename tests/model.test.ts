@@ -1,13 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { fileURLToPath } from 'node:url';
-import { createEmptyAppData } from '../app/fileFormat/defaults';
-import { normalizePrograms } from '../app/fileFormat/normalize';
+import { createEmptyAppData } from '../core/fileFormat/defaults';
+import { normalizePrograms } from '../core/fileFormat/normalize';
 import { loadProgram } from './fixtures/syntheticClass';
-import { Proficiency, Section, Sex, type AppData, type Student } from '../app/types';
-import { activePrograms, countAcquired, flattenSkills, fold, groupBy, initials, matchesQuery, pendingPasses, sortStudents } from '../src/mobile/model';
+import { Proficiency, Section, Sex, type AppData, type Student } from '../core/types';
+import { activePrograms, countAcquired, flattenSkills, fold, groupBy, initials, matchesQuery, pendingPasses, shortNames, sortStudents } from '../src/ui/model';
 import { envoleesFileName } from '../src/platform/fileAccess';
 import { imageNamesOf } from '../src/platform/library';
-import { autoUiMode } from '../src/uiMode';
 
 const ROOT = fileURLToPath(new URL('./fixtures', import.meta.url));
 const student = (id: string, firstName: string, extra: Partial<Student> = {}): Student =>
@@ -78,9 +77,5 @@ describe('plateforme web', () => {
     it('nom de fichier .envolees sûr', () => {
         expect(envoleesFileName('Classe MS/GS : 2026')).toBe('Classe MS_GS _ 2026.envolees');
         expect(envoleesFileName('   ')).toBe('classe.envolees');
-    });
-
-    it('interface par défaut : ordinateur hors navigateur (pas de matchMedia)', () => {
-        expect(autoUiMode()).toBe('desktop');
     });
 });

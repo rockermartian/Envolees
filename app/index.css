@@ -1,4 +1,0 @@
-@import "tailwindcss";
-
-/* Dark mode based on .dark class on <html> (mirrors the CDN darkMode: 'class' config) */
-@custom-variant dark (&:where(.dark, .dark *));

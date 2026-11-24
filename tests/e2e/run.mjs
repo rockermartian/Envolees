@@ -1,6 +1,6 @@
 // Lance les tests de bout en bout de la version web (après `vite build`) : npm run test:e2e
 //   - sert dist/ sous un sous-chemin, comme GitHub Pages (https://<compte>.github.io/<dépôt>/) ;
-//   - ouvre l'application dans le Chromium d'Electron : interface ordinateur, puis interface mobile.
+//   - ouvre l'application dans le Chromium d'Electron : ordinateur (souris), puis tablette (toucher).
 // Fichier de classe : E2E_FILE, sinon ../classe-test-lourde.envolees (projet Electron) s'il existe
 // (vraies photos), sinon une classe synthétique générée.
 // Captures d'écran : E2E_SHOTS=<dossier>.
@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import zlib from 'node:zlib';
 import { build } from 'esbuild';
-import { readArchive } from '../../app/shared/envoleesArchive.js';
+import { readArchive } from '../../core/shared/envoleesArchive.js';
 import { findElectron } from '../../scripts/find-electron.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -63,7 +63,7 @@ delete env.ELECTRON_RUN_AS_NODE; // défini dans les terminaux VS Code : Electro
 if (env.E2E_SHOTS) fs.mkdirSync(env.E2E_SHOTS, { recursive: true });
 
 let failed = 0;
-for (const scenario of ['desktop', 'mobile']) {
+for (const scenario of (process.env.E2E_ONLY ? process.env.E2E_ONLY.split(',') : ['ordinateur', 'tablette'])) {
     const res = await new Promise(resolve => {
         const child = spawn(electronPath, [path.join(here, 'browser.mjs'), scenario], { env });
         let out = '';

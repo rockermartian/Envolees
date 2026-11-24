@@ -4,8 +4,8 @@
 // L'interface ne manipule que des références `img:<empreinte>.<ext>` ; pour l'affichage, chaque image
 // chargée reçoit une URL blob, créée à la demande. Les Blob relus depuis IndexedDB sont adossés au
 // stockage du navigateur : charger une classe de 4 000 photos ne les met pas en mémoire.
-import { crc32 } from '../../app/shared/zip.js';
-import { computeImageRef, imageFileName, mimeFromName, type ImageBackend } from '../../app/images/imageStore';
+import { crc32 } from '../../core/shared/zip.js';
+import { computeImageRef, imageFileName, mimeFromName, type ImageBackend } from '../../core/images/imageStore';
 import { STORES, promisify, transaction } from './db';
 
 export interface StoredImageEntry {
