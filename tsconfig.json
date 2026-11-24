@@ -1,5 +1,5 @@
 {
-  // Mêmes options que l'application de bureau (dont le code partagé est recopié dans core/).
+  // Mêmes options que l'application de bureau (dont le code est recopié dans app/).
   "compilerOptions": {
     "target": "ES2022",
     "useDefineForClassFields": false,
@@ -15,5 +15,5 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["core/**/*.ts", "core/**/*.tsx", "src/**/*.ts", "src/**/*.tsx", "tests/**/*.ts", "vite.config.ts", "vitest.config.ts"]
+  "include": ["app/**/*.ts", "app/**/*.tsx", "src/**/*.ts", "src/**/*.tsx", "tests/**/*.ts", "vite.config.ts", "vitest.config.ts"]
 }

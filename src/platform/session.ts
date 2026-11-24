@@ -1,7 +1,7 @@
 // Classe ouverte dans cet onglet (les deux interfaces passent par ici).
 import React from 'react';
-import { parseOpenedData } from '../../core/fileFormat/fileIO';
-import { toast } from '../../core/utils/toast';
+import { parseOpenedData } from '../../app/fileFormat/fileIO';
+import { toast } from '../../app/utils/toast';
 import { askChoice, showMessage, withProgress } from './dialogs';
 import { formatDateTime } from './exporting';
 import { pickEnvoleesFile, type LinkedFileHandle } from './fileAccess';

@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import zlib from 'node:zlib';
 import { build } from 'esbuild';
-import { readArchive } from '../../core/shared/envoleesArchive.js';
+import { readArchive } from '../../app/shared/envoleesArchive.js';
 import { findElectron } from '../../scripts/find-electron.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -73,7 +73,7 @@ for (const scenario of (process.env.E2E_ONLY ? process.env.E2E_ONLY.split(',') :
         const timer = setTimeout(() => { out += '\nKO  délai global dépassé'; child.kill(); }, 300_000);
         child.on('close', status => { clearTimeout(timer); resolve({ status, out }); });
     });
-    const lines = res.out.split(/\r?\n/).filter(l => /^(OK|KO|E2E)/.test(l));
+    const lines = res.out.split(/\r?\n/).filter(l => /^(OK|KO|E2E|--- |    (petite|cachée|déborde))/.test(l));
     console.log(lines.join('\n') || `E2E ${scenario}: aucun résultat\n${res.out.slice(-3000)}`);
     if (res.status !== 0 || !lines.length) {
         failed++;

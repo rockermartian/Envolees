@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Envolées — Guide d'utilisation</title>
+  <!-- Aucune ressource distante : le guide fonctionne hors ligne et ne contacte aucun serveur. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'" />
+  <script>
+    // Applique le thème avant le rendu (évite tout clignotement).
+    // L'application transmet son thème via l'URL (?theme=dark|light) et fait foi à l'ouverture.
+    (function () {
+      var p = new URLSearchParams(window.location.search).get('theme');
+      var saved = localStorage.getItem('envolees-guide-theme');
+      document.documentElement.dataset.theme = (p === 'dark' || p === 'light') ? p : (saved || 'light');
+    })();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-400: #60a5fa;
+      --blue-500: #3b82f6;
+      --blue-600: #2563eb;
+      --blue-100: #dbeafe;
+      --blue-50:  #eff6ff;
+
+      --bg:        #f1f5f9;
+      --bg-card:   #ffffff;
+      --bg-sidebar:#ffffff;
+      --border:    #e2e8f0;
+      --text:      #1e293b;
+      --text-muted:#64748b;
+      --text-light:#94a3b8;
+      --nav-active:#eff6ff;
+      --nav-hover: #f8fafc;
+      --badge-bg:  #dbeafe;
+      --badge-text:#1d4ed8;
+      --tip-bg:    #eff6ff;
+      --tip-border:#bfdbfe;
+      --warn-bg:   #fefce8;
+      --warn-border:#fde68a;
+      --warn-text: #92400e;
+      --code-bg:   #f1f5f9;
+      --btnpic-bg: #e2e8f0;
+      --btnpic-fg: #475569;
+      --shadow:    0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -1px rgba(0,0,0,.04);
+    }
+
+    html[data-theme="dark"] {
+      --bg:        #18181b;
+      --bg-card:   #27272a;
+      --bg-sidebar:#1f1f23;
+      --border:    #3f3f46;
+      --text:      #f4f4f5;
+      --text-muted:#a1a1aa;
+      --text-light:#71717a;
+      --nav-active:#1e3a5f;
+      --nav-hover: #2e2e33;
+      --badge-bg:  #1e3a5f;
+      --badge-text:#93c5fd;
+      --tip-bg:    #1a2e4a;
+      --tip-border:#1d4ed8;
+      --warn-bg:   #2d2006;
+      --warn-border:#92400e;
+      --warn-text: #fcd34d;
+      --code-bg:   #18181b;
+      --btnpic-bg: #3f3f46;
+      --btnpic-fg: #d4d4d8;
+      --shadow:    0 1px 3px rgba(0,0,0,.3);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,.4);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Poppins', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+    }
+
+    /* ─── Icons ─── */
+    .ic { width: 1.15em; height: 1.15em; display: inline-block; vertical-align: -0.18em; flex-shrink: 0; }
+    .c-blue   { color: #3b82f6; }
+    .c-green  { color: #16a34a; }
+    .c-emerald{ color: #10b981; }
+    .c-red    { color: #ef4444; }
+    .c-amber  { color: #d97706; }
+    .c-indigo { color: #6366f1; }
+    .c-pink   { color: #ec4899; }
+    .c-purple { color: #a855f7; }
+    .c-slate  { color: var(--text-muted); }
+
+    /* A little square that mimics a toolbar button in the app */
+    .btnpic {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 7px;
+      background: var(--btnpic-bg); color: var(--btnpic-fg);
+      vertical-align: middle; flex-shrink: 0;
+    }
+    .btnpic .ic { width: 18px; height: 18px; vertical-align: 0; }
+    .btnpic.blue  { background: #3b82f6; color: #fff; }
+    .btnpic.green { background: #22c55e; color: #fff; }
+
+    /* Color dot */
+    .color-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 5px; }
+
+    /* ─── Layout ─── */
+    .layout { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 268px; flex-shrink: 0;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      position: fixed; top: 0; left: 0; bottom: 0;
+      overflow-y: auto; display: flex; flex-direction: column;
+      z-index: 100; box-shadow: var(--shadow);
+    }
+    .sidebar-header {
+      padding: 24px 20px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .logo {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .logo .ic { width: 22px; height: 22px; color: #fff; }
+    .sidebar-title { font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.2; }
+    .sidebar-subtitle { font-size: 11px; color: var(--text-muted); font-weight: 400; }
+
+    .sidebar-nav { flex: 1; padding: 12px 12px 20px; }
+    .nav-section { margin-bottom: 4px; }
+    .nav-section-label {
+      font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--text-light); padding: 12px 8px 4px;
+    }
+    .nav-link {
+      display: flex; align-items: center; gap: 9px; padding: 7px 10px; border-radius: 8px;
+      text-decoration: none; color: var(--text-muted); font-size: 13.5px; font-weight: 500;
+      transition: background .15s, color .15s; cursor: pointer;
+    }
+    .nav-link:hover { background: var(--nav-hover); color: var(--text); }
+    .nav-link.active { background: var(--nav-active); color: var(--blue-500); }
+    .nav-link .ic { width: 17px; height: 17px; opacity: .85; }
+
+    .theme-toggle {
+      padding: 14px 20px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .theme-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .toggle-btn {
+      display: flex; align-items: center; gap: 6px; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px 4px 6px;
+      cursor: pointer; font-size: 12px; color: var(--text-muted); font-family: inherit; font-weight: 500;
+      transition: background .2s, border-color .2s;
+    }
+    .toggle-btn:hover { border-color: var(--blue-500); color: var(--blue-500); }
+    .toggle-btn .ic { width: 15px; height: 15px; }
+
+    .main { margin-left: 268px; flex: 1; min-width: 0; }
+
+    .hero {
+      background: linear-gradient(135deg, var(--blue-600) 0%, #1d4ed8 50%, #1e40af 100%);
+      padding: 52px 60px; color: #fff; position: relative; overflow: hidden;
+    }
+    .hero::before { content:''; position:absolute; top:-40px; right:-40px; width:300px; height:300px; background:rgba(255,255,255,.05); border-radius:50%; }
+    .hero::after  { content:''; position:absolute; bottom:-60px; right:80px; width:200px; height:200px; background:rgba(255,255,255,.04); border-radius:50%; }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.15);
+      border:1px solid rgba(255,255,255,.25); border-radius:20px; padding:4px 12px; font-size:12px; font-weight:500; margin-bottom:16px;
+    }
+    .hero-badge .ic { width: 13px; height: 13px; }
+    .hero h1 { font-size: 34px; font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
+    .hero p { font-size: 16px; opacity: .9; max-width: 580px; line-height: 1.6; }
+    .hero-cards { display:flex; gap:12px; margin-top:30px; flex-wrap:wrap; }
+    .hero-card {
+      background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); border-radius:10px;
+      padding:11px 15px; font-size:13px; display:flex; align-items:center; gap:8px; font-weight:500;
+    }
+    .hero-card .ic { width: 16px; height: 16px; opacity: .9; }
+
+    .content { padding: 44px 60px; max-width: 920px; }
+    section { margin-bottom: 52px; scroll-margin-top: 20px; }
+    .section-tag {
+      display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600;
+      text-transform:uppercase; letter-spacing:.08em; color:var(--blue-500); margin-bottom:6px;
+    }
+    .section-tag .ic { width: 13px; height: 13px; }
+    h2 { font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
+    .section-intro { color: var(--text-muted); font-size: 15px; margin-bottom: 26px; max-width: 680px; }
+    h3 { font-size: 17px; font-weight: 600; color: var(--text); margin: 28px 0 10px; line-height: 1.3; display: flex; align-items: center; gap: 9px; }
+    h3 .ic { width: 20px; height: 20px; color: var(--blue-500); }
+    h4 { font-size: 14px; font-weight: 600; color: var(--text); margin: 20px 0 8px; }
+    p { color: var(--text-muted); margin-bottom: 12px; }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { color: var(--text-muted); padding-left: 20px; margin-bottom: 12px; }
+    li { margin-bottom: 6px; }
+    strong { color: var(--text); font-weight: 600; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 38px 0; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 18px 22px; margin-bottom: 16px; box-shadow: var(--shadow);
+    }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .tab-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 16px 18px; box-shadow: var(--shadow); display: flex; gap: 13px; align-items: flex-start;
+      text-decoration: none; transition: border-color .2s, box-shadow .2s;
+    }
+    .tab-card:hover { border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(59,130,246,.1), var(--shadow-md); }
+    .tab-card-icon {
+      width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; background: var(--blue-50); color: var(--blue-500);
+    }
+    html[data-theme="dark"] .tab-card-icon { background: rgba(59,130,246,.15); }
+    .tab-card-icon .ic { width: 19px; height: 19px; }
+    .tab-card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .tab-card-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.4; }
+
+    .feature-list { list-style: none; padding: 0; margin: 0 0 12px; }
+    .feature-list li { position: relative; padding: 8px 0 8px 18px; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 14px; }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list li::before { content:''; position:absolute; left:0; top:16px; width:6px; height:6px; border-radius:50%; background:var(--blue-500); }
+
+    .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 16px; box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--bg-card); }
+    thead tr { background: var(--bg); border-bottom: 1px solid var(--border); }
+    th { text-align: left; padding: 10px 16px; font-weight: 600; color: var(--text); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
+    td { padding: 10px 16px; color: var(--text-muted); border-bottom: 1px solid var(--border); vertical-align: top; }
+    td .ic { vertical-align: -0.2em; }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--nav-hover); }
+    .cell-btn { white-space: nowrap; }
+
+    .tip, .warning { position: relative; border-radius: 10px; padding: 14px 16px 14px 46px; margin-bottom: 16px; font-size: 13.5px; }
+    .tip { background: var(--tip-bg); border: 1px solid var(--tip-border); color: var(--text-muted); }
+    .warning { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text); }
+    .tip .ic, .warning .ic { position: absolute; left: 15px; top: 15px; width: 19px; height: 19px; }
+    .tip .ic { color: var(--blue-500); }
+
+    .badge { display:inline-flex; align-items:center; gap:4px; background:var(--badge-bg); color:var(--badge-text); font-size:11px; font-weight:600; padding:2px 8px; border-radius:20px; }
+    .badge .ic { width: 12px; height: 12px; }
+    .badge-green  { background:#dcfce7; color:#15803d; }
+    .badge-orange { background:#ffedd5; color:#c2410c; }
+    .badge-red    { background:#fee2e2; color:#b91c1c; }
+    html[data-theme="dark"] .badge-green  { background:#14532d; color:#4ade80; }
+    html[data-theme="dark"] .badge-orange { background:#431407; color:#fb923c; }
+    html[data-theme="dark"] .badge-red    { background:#450a0a; color:#f87171; }
+
+    kbd {
+      display:inline-flex; align-items:center; justify-content:center; background:var(--bg);
+      border:1px solid var(--border); border-bottom-width:2px; border-radius:5px; padding:1px 7px;
+      font-size:12px; font-family:inherit; font-weight:600; color:var(--text); white-space:nowrap;
+    }
+    code { background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:12.5px; font-family:'Cascadia Code','Fira Code',monospace; color:var(--blue-500); }
+
+    .steps { counter-reset: step; list-style: none; padding: 0; margin: 0 0 16px; }
+    .steps li { counter-increment: step; position: relative; padding-left: 42px; min-height: 28px; margin-bottom: 14px; font-size: 14px; color: var(--text-muted); }
+    .steps li::before {
+      content: counter(step); position: absolute; left: 0; top: -2px; width: 28px; height: 28px; border-radius: 50%;
+      background: var(--blue-500); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+
+    .shortcut-grid { display: grid; grid-template-columns: auto 1fr; gap: 10px 20px; align-items: center; }
+    .shortcut-desc { font-size: 13.5px; color: var(--text-muted); }
+
+    .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px 0 16px; font-size: 13px; }
+    .flow-step { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-weight: 500; color: var(--text); font-size: 13px; white-space: nowrap; }
+    .flow-arrow { color: var(--blue-500); font-size: 18px; font-weight: 700; }
+
+    .legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px 16px; margin-bottom: 16px; }
+    .legend-item { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--text-muted); }
+    .legend-item strong { color: var(--text); }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .hero, .content { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ SVG SPRITE : icônes réelles de l'application ═══ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!-- Navigation / sections -->
+  <symbol id="ic-smile" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></symbol>
+  <symbol id="ic-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></symbol>
+  <symbol id="ic-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"/></symbol>
+  <symbol id="ic-window" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9h18"/></symbol>
+  <symbol id="ic-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></symbol>
+  <symbol id="ic-skills" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></symbol>
+  <symbol id="ic-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="ic-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></symbol>
+  <symbol id="ic-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></symbol>
+  <symbol id="ic-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="ic-keyboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></symbol>
+  <symbol id="ic-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></symbol>
+  <symbol id="ic-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+  <symbol id="ic-package" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></symbol>
+
+  <!-- Actions réelles -->
+  <symbol id="ic-import" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></symbol>
+  <symbol id="ic-export" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/></symbol>
+  <symbol id="ic-bolt" viewBox="0 0 20 20" fill="currentColor"><path d="M11.983 1.907a.75.75 0 00-1.292-.657l-8.5 9.5A.75.75 0 002.75 12h6.572l-1.305 6.093a.75.75 0 001.292.657l8.5-9.5A.75.75 0 0017.25 8h-6.572l1.305-6.093z"/></symbol>
+  <symbol id="ic-cap" viewBox="0 0 24 24" fill="currentColor"><path d="M11.7 2.805a.75.75 0 01.6 0A60.65 60.65 0 0122.83 8.72a.75.75 0 01-.231 1.337 49.949 49.949 0 00-9.902 3.912l-.003.002-.34.18a.75.75 0 01-.707 0A50.009 50.009 0 007.5 12.174v-.224c0-.131.067-.248.172-.311a54.614 54.614 0 014.653-2.52.75.75 0 00-.65-1.352 56.129 56.129 0 00-4.78 2.589 1.858 1.858 0 00-.859 1.228 49.803 49.803 0 00-4.634-1.527.75.75 0 01-.231-1.337A60.653 60.653 0 0111.7 2.805z"/><path d="M13.06 15.473a48.45 48.45 0 017.666-3.282c.134 1.414.22 2.843.255 4.285a.75.75 0 01-.46.71 47.878 47.878 0 00-8.105 4.342.75.75 0 01-.832 0 47.877 47.877 0 00-8.104-4.342.75.75 0 01-.461-.71c.035-1.442.121-2.87.255-4.286A48.4 48.4 0 016 13.18v1.27a1.5 1.5 0 00-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.661a6.729 6.729 0 00.551-1.608 1.5 1.5 0 00.14-2.67v-.645a48.549 48.549 0 013.44 1.668 2.25 2.25 0 002.12 0z"/><path d="M4.462 19.462c.42-.419.753-.89 1-1.394.453.213.902.434 1.347.661a6.743 6.743 0 01-1.286 1.794.75.75 0 11-1.06-1.06z"/></symbol>
+  <symbol id="ic-plus" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"/></symbol>
+  <symbol id="ic-pencil" viewBox="0 0 20 20" fill="currentColor"><path d="m2.695 14.762-1.262 3.155a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.885L17.5 5.5a2.121 2.121 0 0 0-3-3L3.58 13.42a4 4 0 0 0-.885 1.343Z"/></symbol>
+  <symbol id="ic-trash" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.58.22-2.365.468a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193v-.443A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd"/></symbol>
+  <symbol id="ic-eye" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/><path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.257 0-7.893-2.66-9.336-6.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" clip-rule="evenodd"/></symbol>
+  <symbol id="ic-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.243 4.243L6.228 6.228"/></symbol>
+  <symbol id="ic-copy" viewBox="0 0 20 20" fill="currentColor"><path d="M7 3.5A1.5 1.5 0 0 1 8.5 2h3.879a1.5 1.5 0 0 1 1.06.44l3.122 3.12A1.5 1.5 0 0 1 17 6.622V12.5a1.5 1.5 0 0 1-1.5 1.5h-1v-3.379a3 3 0 0 0-.879-2.121L10.5 5.379A3 3 0 0 0 8.379 4.5H7v-1Z"/><path d="M4.5 6A1.5 1.5 0 0 0 3 7.5v9A1.5 1.5 0 0 0 4.5 18h7a1.5 1.5 0 0 0 1.5-1.5v-5.879a1.5 1.5 0 0 0-.44-1.06L9.44 6.439A1.5 1.5 0 0 0 8.378 6H4.5Z"/></symbol>
+  <symbol id="ic-search" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11ZM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9Z" clip-rule="evenodd"/></symbol>
+  <symbol id="ic-folder-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="9" y1="13" x2="15" y2="13"/></symbol>
+  <symbol id="ic-save" viewBox="0 -960 960 960" fill="currentColor"><path d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"/></symbol>
+  <symbol id="ic-x-circle" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd"/></symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="ic-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></symbol>
+  <symbol id="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.752 15.002A9.72 9.72 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></symbol>
+  <symbol id="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></symbol>
+  <symbol id="ic-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"/></symbol>
+  <symbol id="ic-redo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3"/></symbol>
+  <symbol id="ic-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></symbol>
+  <symbol id="ic-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></symbol>
+  <symbol id="ic-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="ic-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></symbol>
+  <symbol id="ic-doc-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></symbol>
+  <symbol id="ic-folder-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></symbol>
+  <symbol id="ic-doc-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></symbol>
+  <symbol id="ic-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></symbol>
+  <symbol id="ic-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></symbol>
+  <symbol id="ic-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h.01M21 17v4"/></symbol>
+  <symbol id="ic-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+  <symbol id="ic-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+</svg>
+
+<div class="layout">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo"><svg class="ic"><use href="#ic-smile"/></svg></div>
+      <div>
+        <div class="sidebar-title">Envolées</div>
+        <div class="sidebar-subtitle">Guide d'utilisation</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Démarrage</div>
+        <a href="#intro" class="nav-link"><svg class="ic"><use href="#ic-home"/></svg> Présentation</a>
+        <a href="#fichiers" class="nav-link"><svg class="ic"><use href="#ic-file"/></svg> Gestion des fichiers</a>
+        <a href="#interface" class="nav-link"><svg class="ic"><use href="#ic-window"/></svg> La barre de titre</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Les onglets</div>
+        <a href="#classe" class="nav-link"><svg class="ic"><use href="#ic-users"/></svg> Classe</a>
+        <a href="#competences" class="nav-link"><svg class="ic"><use href="#ic-skills"/></svg> Compétences</a>
+        <a href="#ateliers" class="nav-link"><svg class="ic"><use href="#ic-package"/></svg> Ateliers</a>
+        <a href="#mode-eleve" class="nav-link"><svg class="ic"><use href="#ic-monitor"/></svg> Mode Élève</a>
+        <a href="#rapports" class="nav-link"><svg class="ic"><use href="#ic-chart"/></svg> Rapports</a>
+        <a href="#livret" class="nav-link"><svg class="ic"><use href="#ic-book"/></svg> Livret</a>
+        <a href="#parametres" class="nav-link"><svg class="ic"><use href="#ic-gear"/></svg> Paramètres</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Référence</div>
+        <a href="#raccourcis" class="nav-link"><svg class="ic"><use href="#ic-keyboard"/></svg> Raccourcis clavier</a>
+        <a href="#conseils" class="nav-link"><svg class="ic"><use href="#ic-bulb"/></svg> Conseils &amp; astuces</a>
+        <a href="#aide" class="nav-link"><svg class="ic"><use href="#ic-help"/></svg> Ouvrir ce guide</a>
+      </div>
+    </nav>
+
+    <div class="theme-toggle">
+      <span class="theme-label">Apparence</span>
+      <button class="toggle-btn" onclick="toggleTheme()" id="themeBtn">
+        <svg class="ic" id="themeIcon"><use href="#ic-moon"/></svg>
+        <span id="themeLabel">Sombre</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="main">
+
+    <div class="hero">
+      <div class="hero-badge"><svg class="ic"><use href="#ic-book"/></svg> Guide d'utilisation — v1.0</div>
+      <h1>Bienvenue dans Envolées</h1>
+      <p>Votre outil de suivi des compétences pour la maternelle. Ce guide vous accompagne pas à pas, onglet par onglet. Prenez le temps qu'il vous faut : rien ne presse, et rien n'est irréversible tant que vous n'enregistrez pas.</p>
+      <div class="hero-cards">
+        <div class="hero-card"><svg class="ic"><use href="#ic-users"/></svg> Suivi des élèves</div>
+        <div class="hero-card"><svg class="ic"><use href="#ic-book"/></svg> Livrets PDF</div>
+        <div class="hero-card"><svg class="ic"><use href="#ic-qr"/></svg> Ateliers &amp; QR codes</div>
+        <div class="hero-card"><svg class="ic"><use href="#ic-monitor"/></svg> Mode Élève</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ═══ PRÉSENTATION ═══ -->
+      <section id="intro">
+        <div class="section-tag"><svg class="ic"><use href="#ic-home"/></svg> Présentation</div>
+        <h2>Qu'est-ce qu'Envolées ?</h2>
+        <p class="section-intro">Envolées est une application installée sur votre ordinateur, pensée pour les enseignants de maternelle. Elle vous permet de gérer vos élèves, de suivre l'acquisition de leurs compétences et de créer des livrets de suivi en PDF. Toutes vos données restent chez vous, dans un seul fichier que vous maîtrisez entièrement.</p>
+
+        <p>L'application s'organise autour de <strong>six onglets</strong>, affichés au centre de la barre du haut, et d'un écran de <strong>Paramètres</strong> accessible par le menu. Les onglets sont de simples libellés texte ; l'onglet actif s'affiche en <strong style="color:#3b82f6">bleu</strong>.</p>
+
+        <div class="card-grid">
+          <a href="#classe" class="tab-card">
+            <div class="tab-card-icon"><svg class="ic"><use href="#ic-users"/></svg></div>
+            <div><div class="tab-card-title">Classe</div><div class="tab-card-desc">Gérer les élèves et valider leurs compétences</div></div>
+          </a>
+          <a href="#competences" class="tab-card">
+            <div class="tab-card-icon"><svg class="ic"><use href="#ic-skills"/></svg></div>
+            <div><div class="tab-card-title">Compétences</div><div class="tab-card-desc">Personnaliser le référentiel pédagogique</div></div>
+          </a>
+          <a href="#ateliers" class="tab-card">
+            <div class="tab-card-icon"><svg class="ic"><use href="#ic-package"/></svg></div>
+            <div><div class="tab-card-title">Ateliers</div><div class="tab-card-desc">Créer des ateliers autonomes avec QR codes</div></div>
+          </a>
+          <a href="#mode-eleve" class="tab-card">
+            <div class="tab-card-icon"><svg class="ic"><use href="#ic-monitor"/></svg></div>
+            <div><div class="tab-card-title">Mode Élève</div><div class="tab-card-desc">Écran simplifié pour scanner les QR codes</div></div>
+          </a>
+          <a href="#rapports" class="tab-card">
+            <div class="tab-card-icon"><svg class="ic"><use href="#ic-chart"/></svg></div>
+            <div><div class="tab-card-title">Rapports</div><div class="tab-card-desc">Valider les passages aux ateliers</div></div>
+          </a>
+          <a href="#livret" class="tab-card">
+            <div class="tab-card-icon"><svg class="ic"><use href="#ic-book"/></svg></div>
+            <div><div class="tab-card-title">Livret</div><div class="tab-card-desc">Configurer et exporter les livrets en PDF</div></div>
+          </a>
+        </div>
+
+        <h3><svg class="ic"><use href="#ic-bulb"/></svg> Par où commencer ?</h3>
+        <ol class="steps">
+          <li>Au lancement, l'écran d'accueil propose <strong>Créer une nouvelle classe</strong> ou <strong>Ouvrir une classe</strong> existante.</li>
+          <li>Cliquez sur <strong>Créer une nouvelle classe</strong> : l'application vous demande aussitôt où enregistrer votre fichier <code>.envolees</code>.</li>
+          <li>Dans l'onglet <strong>Classe</strong>, ajoutez vos élèves avec le bouton <span class="btnpic blue"><svg class="ic"><use href="#ic-plus"/></svg></span>.</li>
+          <li>Dans l'onglet <strong>Compétences</strong>, vérifiez le référentiel (un programme 2024 est fourni par défaut).</li>
+          <li>Sélectionnez un élève et validez ses compétences au fil de l'année.</li>
+          <li>Au moment des bilans, préparez et exportez les livrets depuis l'onglet <strong>Livret</strong>.</li>
+        </ol>
+
+        <div class="tip"><svg class="ic"><use href="#ic-info"/></svg> Vous pouvez rouvrir ce guide à tout moment avec le bouton <span class="btnpic"><svg class="ic"><use href="#ic-help"/></svg></span> situé en haut à droite. Il s'ouvre dans une fenêtre séparée, dans le même thème (clair ou sombre) que l'application.</div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ FICHIERS ═══ -->
+      <section id="fichiers">
+        <div class="section-tag"><svg class="ic"><use href="#ic-file"/></svg> Démarrage</div>
+        <h2>Gestion des fichiers</h2>
+        <p class="section-intro">Toutes vos données tiennent dans un seul fichier <code>.envolees</code>, que vous pouvez enregistrer, ouvrir et partager librement.</p>
+
+        <h3><svg class="ic"><use href="#ic-file"/></svg> Le fichier <code>.envolees</code></h3>
+        <div class="card">
+          <p>Un fichier <code>.envolees</code> rassemble l'ensemble de votre travail : élèves, référentiel de compétences, ateliers, journal des passages, réglages du livret, signatures et photos. Il est <strong>autonome</strong> : copiez-le sur une clé USB ou envoyez-le à un collègue, il s'ouvrira à l'identique.</p>
+        </div>
+
+        <h3><svg class="ic"><use href="#ic-home"/></svg> Créer, ouvrir, enregistrer</h3>
+        <p>Ces actions se trouvent dans le bouton <strong>Menu</strong>, tout en haut à gauche :</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Entrée du menu</th><th>Effet</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Nouvelle Classe</strong></td><td>Crée un fichier vierge, puis demande où l'enregistrer.</td></tr>
+              <tr><td><strong>Ouvrir une Classe</strong></td><td>Ouvre un fichier <code>.envolees</code> existant.</td></tr>
+              <tr><td><strong>Enregistrer sous…</strong></td><td>Choisit l'emplacement et le nom du fichier (première sauvegarde ou copie).</td></tr>
+              <tr><td><strong>Envoyer vers Nuage</strong></td><td>Copie la classe dans le dossier <strong>Envolées</strong> de votre Nuage (voir ci-dessous).</td></tr>
+              <tr><td><strong>Ouvrir depuis Nuage</strong></td><td>Reprend une classe enregistrée dans Nuage, depuis cet ordinateur ou un autre appareil.</td></tr>
+              <tr><td><strong>Paramètres</strong></td><td>Ouvre les réglages (enregistrement automatique, copies de sécurité, Nuage, code PIN).</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3><svg class="ic"><use href="#ic-save"/></svg> L'indicateur de sauvegarde</h3>
+        <p>Juste à droite du menu, une petite <strong>disquette</strong> indique l'état de votre fichier — et sert de bouton pour enregistrer d'un clic :</p>
+        <div class="legend">
+          <div class="legend-item"><span class="btnpic"><svg class="ic c-red"><use href="#ic-save"/></svg></span> <span><strong>Disquette rouge</strong> — modifications non enregistrées («&nbsp;Cliquer pour sauvegarder&nbsp;»).</span></div>
+          <div class="legend-item"><span class="btnpic"><svg class="ic c-green"><use href="#ic-save"/></svg></span> <span><strong>Disquette verte</strong> — «&nbsp;Tout est enregistré&nbsp;».</span></div>
+          <div class="legend-item"><span class="btnpic"><svg class="ic c-slate"><use href="#ic-save"/></svg></span> <span><strong>Disquette grise animée</strong> — «&nbsp;Enregistrement…&nbsp;» en cours.</span></div>
+          <div class="legend-item"><span class="btnpic"><svg class="ic c-red"><use href="#ic-x-circle"/></svg></span> <span><strong>Croix rouge</strong> — «&nbsp;Erreur lors de la sauvegarde&nbsp;».</span></div>
+        </div>
+        <div class="tip"><svg class="ic"><use href="#ic-info"/></svg> La toute première sauvegarde passe par <strong>Menu → Enregistrer sous…</strong>. Ensuite, un clic sur la disquette enregistre directement dans le même fichier.</div>
+
+        <h3><svg class="ic"><use href="#ic-gear"/></svg> Sauvegarde automatique</h3>
+        <p>Votre travail est enregistré automatiquement <strong>30 secondes après chaque modification</strong>, en arrière-plan : vous pouvez continuer à travailler. Dans les <strong>Paramètres</strong>, le réglage « Au plus tard » (1 à 30 minutes, ou <strong>Désactivé</strong>) fixe le délai maximal pendant un travail continu.</p>
+        <div class="warning"><svg class="ic"><use href="#ic-warning"/></svg> L'auto-sauvegarde ne s'active qu'<strong>après une première sauvegarde manuelle</strong> (le fichier doit être lié à un emplacement). Pensez à faire «&nbsp;Enregistrer sous…&nbsp;» en début d'année.</div>
+
+        <h3><svg class="ic"><use href="#ic-export"/></svg> Nuage, le cloud de l'Éducation nationale</h3>
+        <p><strong>Nuage</strong> (apps.education.fr) est l'espace de stockage en ligne fourni aux enseignants par l'Éducation nationale. Envolées s'en sert pour <strong>sauvegarder</strong> une classe et la <strong>retrouver sur un autre appareil</strong> — autre ordinateur, ou tablette avec la version web d'Envolées.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Action</th><th>Ce qui se passe</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Menu → Envoyer vers Nuage</strong></td><td>La classe est d'abord enregistrée sur l'ordinateur, puis copiée dans le dossier <strong>Envolées</strong> de votre Nuage. Une version déjà présente est remplacée ; Nuage garde l'historique des versions du fichier.</td></tr>
+              <tr><td><strong>Menu → Ouvrir depuis Nuage</strong> (ou sur l'écran d'accueil)</td><td>Choisissez une classe dans votre Nuage : elle est enregistrée sur l'ordinateur (vous choisissez où), puis ouverte.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>La <strong>première fois</strong>, la page de connexion de Nuage s'ouvre dans votre navigateur : connectez-vous avec votre identifiant académique, puis <strong>autorisez l'accès</strong> à Envolées. C'est tout : les fois suivantes, l'envoi est direct. Envolées n'a jamais votre mot de passe : Nuage lui donne une clé propre à cet ordinateur, rangée de façon chiffrée.</p>
+        <div class="tip"><svg class="ic"><use href="#ic-info"/></svg> Pour retirer l'accès : <strong>Paramètres → Nuage → Se déconnecter de Nuage</strong> (la clé est aussi supprimée dans Nuage), ou dans Nuage lui-même : Paramètres → Sécurité → « Envolées ».</div>
+
+        <h3><svg class="ic"><use href="#ic-undo"/></svg> Annuler / Rétablir</h3>
+        <p>L'application garde en mémoire vos <strong>12 dernières modifications</strong>. Annulez avec <span class="btnpic"><svg class="ic"><use href="#ic-undo"/></svg></span> (<kbd>Ctrl</kbd>+<kbd>Z</kbd>) et rétablissez avec <span class="btnpic"><svg class="ic"><use href="#ic-redo"/></svg></span> (<kbd>Ctrl</kbd>+<kbd>Y</kbd>). Les deux flèches se trouvent dans la barre du haut.</p>
+        <div class="warning"><svg class="ic"><use href="#ic-warning"/></svg> À la fermeture, si des modifications n'ont pas été enregistrées, une fenêtre vous propose <strong>Enregistrer et quitter</strong>, <strong>Quitter sans enregistrer</strong> ou <strong>Annuler</strong>.</div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ BARRE DE TITRE ═══ -->
+      <section id="interface">
+        <div class="section-tag"><svg class="ic"><use href="#ic-window"/></svg> Démarrage</div>
+        <h2>La barre de titre</h2>
+        <p class="section-intro">La bande tout en haut réunit la navigation et les commandes principales. Elle se lit de gauche à droite.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Zone</th><th>Contenu</th></tr></thead>
+            <tbody>
+              <tr><td><strong>À gauche</strong></td><td>Le titre <strong>Envolées</strong>, le bouton <strong>Menu</strong>, la disquette de sauvegarde, puis <span class="btnpic"><svg class="ic"><use href="#ic-undo"/></svg></span> <span class="btnpic"><svg class="ic"><use href="#ic-redo"/></svg></span> Annuler / Rétablir.</td></tr>
+              <tr><td><strong>Au centre</strong></td><td>Les six onglets : <strong>Classe</strong>, <strong>Compétences</strong>, <strong>Ateliers</strong>, <strong>Mode Élève</strong>, <strong>Rapports</strong>, <strong>Livret</strong>.</td></tr>
+              <tr><td><strong>À droite</strong></td><td>Le bouton de thème <span class="btnpic"><svg class="ic"><use href="#ic-moon"/></svg></span> / <span class="btnpic"><svg class="ic"><use href="#ic-sun"/></svg></span> (infobulle «&nbsp;Changer le thème&nbsp;»), le bouton d'aide <span class="btnpic"><svg class="ic"><use href="#ic-help"/></svg></span>, puis Réduire / Agrandir / Fermer.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>L'onglet <strong>Mode Élève</strong> demande une confirmation avant de basculer en plein écran. L'écran <strong>Paramètres</strong> n'est pas dans la barre : on l'ouvre par <strong>Menu → Paramètres</strong>.</p>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ CLASSE ═══ -->
+      <section id="classe">
+        <div class="section-tag"><svg class="ic"><use href="#ic-users"/></svg> Onglet</div>
+        <h2>Classe</h2>
+        <p class="section-intro">C'est le cœur de l'application. À gauche, la liste de vos élèves ; à droite, la fiche de l'élève sélectionné — ou, si aucun élève n'est choisi, la synthèse de la classe.</p>
+
+        <h3><svg class="ic"><use href="#ic-users"/></svg> La liste des élèves</h3>
+        <p>Les élèves sont regroupés par section (repliable) et triés par nom. Chaque ligne montre la photo, le nom et l'âge, avec une <strong>barre de couleur à gauche selon l'âge réel</strong> :</p>
+        <div class="legend">
+          <div class="legend-item"><span class="color-dot" style="background:#ec4899"></span> <strong>Rose</strong> — moins de 4 ans</div>
+          <div class="legend-item"><span class="color-dot" style="background:#22c55e"></span> <strong>Vert</strong> — 4 ans</div>
+          <div class="legend-item"><span class="color-dot" style="background:#3b82f6"></span> <strong>Bleu</strong> — 5 ans et plus</div>
+        </div>
+        <p>Les boutons en haut de la liste :</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Bouton</th><th>Rôle</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-btn"><span class="btnpic"><svg class="ic c-amber"><use href="#ic-bolt"/></svg></span> Valider en masse</td><td>Ouvre l'assistant de validation en masse (plusieurs élèves × plusieurs compétences).</td></tr>
+              <tr><td class="cell-btn"><span class="btnpic"><svg class="ic c-indigo"><use href="#ic-cap"/></svg></span> Promouvoir</td><td>«&nbsp;Promouvoir les élèves à la section suivante&nbsp;» (fin d'année).</td></tr>
+              <tr><td class="cell-btn"><span class="btnpic"><svg class="ic"><use href="#ic-import"/></svg></span> Importer</td><td>«&nbsp;Importer des élèves&nbsp;» depuis un fichier <code>.eleves</code>.</td></tr>
+              <tr><td class="cell-btn"><span class="btnpic"><svg class="ic"><use href="#ic-export"/></svg></span> Exporter</td><td>«&nbsp;Exporter les élèves (sélectionnés ou tous)&nbsp;» vers un fichier <code>.eleves</code>.</td></tr>
+              <tr><td class="cell-btn"><span class="btnpic blue"><svg class="ic"><use href="#ic-plus"/></svg></span> Ajouter</td><td>Ouvre le formulaire de création d'un élève.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3><svg class="ic"><use href="#ic-plus"/></svg> Ajouter ou modifier un élève</h3>
+        <ol class="steps">
+          <li>Cliquez sur <span class="btnpic blue"><svg class="ic"><use href="#ic-plus"/></svg></span> (ou sur le crayon <span class="btnpic"><svg class="ic"><use href="#ic-pencil"/></svg></span> d'une ligne pour modifier).</li>
+          <li>Renseignez le <strong>Prénom</strong>, le <strong>Nom</strong> et la <strong>Date de naissance</strong>.</li>
+          <li>Choisissez la <strong>Section</strong> et le <strong>Sexe</strong>.</li>
+          <li>Ajoutez une <strong>photo</strong> (facultatif) : un outil de recadrage carré vous aide à centrer le visage (molette pour zoomer), puis <strong>Confirmer</strong>.</li>
+          <li>Renseignez si besoin l'<strong>INE</strong> et l'<strong>email de contact</strong> du parent (pour mémoire).</li>
+          <li>Cliquez sur <strong>Enregistrer</strong>.</li>
+        </ol>
+
+        <h3><svg class="ic"><use href="#ic-skills"/></svg> Valider une compétence</h3>
+        <p>Sur la fiche d'un élève, chaque compétence porte un badge de statut, coloré et cliquable :</p>
+        <div class="legend">
+          <div class="legend-item"><span class="badge badge-green"><svg class="ic"><use href="#ic-check"/></svg> Acquis</span> <span>compétence maîtrisée (vert).</span></div>
+          <div class="legend-item"><span class="badge badge-red"><svg class="ic"><use href="#ic-x"/></svg> Non acquis</span> <span>pas encore acquise (rouge).</span></div>
+        </div>
+        <ol class="steps">
+          <li>Cliquez sur le badge <strong>Non acquis</strong> : la fenêtre «&nbsp;Valider la compétence&nbsp;» s'ouvre.</li>
+          <li>La <strong>date</strong> est pré-remplie à aujourd'hui — ajustez-la si besoin.</li>
+          <li>Ajoutez éventuellement une <strong>photo de preuve</strong> (le travail de l'élève, une observation…).</li>
+          <li>Cliquez sur <strong>Enregistrer</strong> : la compétence passe à <strong>Acquis</strong>, avec sa date et, le cas échéant, sa photo.</li>
+        </ol>
+        <p>Pour modifier une date ou une photo, cliquez sur le crayon <span class="btnpic"><svg class="ic"><use href="#ic-pencil"/></svg></span> de la compétence. Pour annuler une acquisition, cliquez sur le badge <strong>Acquis</strong> : une confirmation prévient que la date et la photo seront effacées.</p>
+
+        <h4>Valider un domaine entier</h4>
+        <p>Au survol de l'en-tête d'un domaine, un bouton <strong style="color:#16a34a">Tout valider</strong> (vert) applique une même date — et une photo optionnelle — à <strong>toutes</strong> les compétences du domaine. À l'inverse, <strong style="color:#ef4444">Tout dévalider</strong> (rouge) les repasse en «&nbsp;Non acquis&nbsp;» après confirmation.</p>
+
+        <h3><svg class="ic c-amber"><use href="#ic-bolt"/></svg> Validation en masse</h3>
+        <p>Le bouton <span class="btnpic"><svg class="ic c-amber"><use href="#ic-bolt"/></svg></span> <strong>Valider en masse</strong> ouvre un assistant en 3 étapes, idéal pour saisir vite de nombreuses acquisitions :</p>
+        <div class="flow">
+          <div class="flow-step">1 · Élèves</div><div class="flow-arrow">→</div>
+          <div class="flow-step">2 · Compétences</div><div class="flow-arrow">→</div>
+          <div class="flow-step">3 · Date &amp; photos</div>
+        </div>
+        <p>Vous choisissez les élèves, puis les compétences, puis une <strong>date commune</strong> et le mode de photo (aucune, une commune, une par élève, ou une par compétence). Un récapitulatif indique le nombre total de validations avant de confirmer.</p>
+
+        <h3><svg class="ic"><use href="#ic-chart"/></svg> Synthèse de la classe</h3>
+        <p>Quand aucun élève n'est sélectionné, le panneau de droite affiche la <strong>Synthèse de la classe</strong>, filtrable par section :</p>
+        <ul class="feature-list">
+          <li><strong>Progression globale</strong> — moyenne de compétences acquises, élève le plus et le moins avancé.</li>
+          <li><strong>Progression par domaine</strong> — taux moyen d'acquisition de chaque domaine.</li>
+          <li><strong>Top 10</strong> — les compétences les mieux maîtrisées par la classe.</li>
+          <li><strong>Groupes de soutien</strong> — <em>suggérés</em> (l'application liste les élèves les moins avancés sur les compétences que vous choisissez) ou <em>libres</em> (vous composez le groupe à la main).</li>
+        </ul>
+
+        <h3><svg class="ic"><use href="#ic-export"/></svg> Importer / exporter des élèves</h3>
+        <p>Le bouton <span class="btnpic"><svg class="ic"><use href="#ic-export"/></svg></span> ouvre la fenêtre «&nbsp;Exporter et Promouvoir&nbsp;» : cochez les élèves à exporter et, si vous le souhaitez, marquez-les pour une <strong>promotion</strong> (section augmentée d'un cran dans le fichier exporté). Le fichier produit porte l'extension <code>.eleves</code> et inclut les compétences acquises et leurs preuves.</p>
+        <p>À l'import <span class="btnpic"><svg class="ic"><use href="#ic-import"/></svg></span>, l'application distingue les <strong>nouveaux élèves</strong>, les <strong>mises à jour</strong> et les <strong>doublons possibles</strong> (même nom et date de naissance). Pour chaque doublon, vous choisissez : <strong>Fusionner</strong>, <strong>Ajouter comme nouveau</strong> ou <strong>Ignorer</strong>.</p>
+
+        <h3><svg class="ic c-indigo"><use href="#ic-cap"/></svg> Fin d'année — Promotion</h3>
+        <p>Le bouton <span class="btnpic"><svg class="ic c-indigo"><use href="#ic-cap"/></svg></span> ouvre «&nbsp;Promouvoir les élèves&nbsp;». Les élèves sélectionnés passent à la section suivante (TPS → PS → MS → GS). Les Grande Section ne sont pas promus : ils sont signalés «&nbsp;Passent en CP&nbsp;».</p>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ COMPÉTENCES ═══ -->
+      <section id="competences">
+        <div class="section-tag"><svg class="ic"><use href="#ic-skills"/></svg> Onglet</div>
+        <h2>Compétences</h2>
+        <p class="section-intro">Cet onglet vous laisse personnaliser le référentiel utilisé pour le suivi. Un programme conforme au programme officiel 2024 de la maternelle est fourni par défaut ; vous pouvez l'adapter librement.</p>
+
+        <h3><svg class="ic"><use href="#ic-skills"/></svg> La structure</h3>
+        <p>L'organisation va du plus général au plus précis : <strong>Programme</strong> → <strong>Domaines</strong> → <strong>Sous-domaines</strong> → <strong>Compétences</strong>. Chaque compétence possède un <strong>nom</strong>, une <strong>description</strong> optionnelle (consultable via la loupe <svg class="ic c-slate"><use href="#ic-search"/></svg>), une <strong>image</strong> facultative et un ou plusieurs <strong>âges de référence</strong> :</p>
+        <div class="legend">
+          <div class="legend-item"><span class="color-dot" style="background:#ec4899"></span> <strong>Rose</strong> — «&nbsp;Moins de 4 ans&nbsp;»</div>
+          <div class="legend-item"><span class="color-dot" style="background:#22c55e"></span> <strong>Vert</strong> — «&nbsp;À partir de 4 ans&nbsp;»</div>
+          <div class="legend-item"><span class="color-dot" style="background:#3b82f6"></span> <strong>Bleu</strong> — «&nbsp;À partir de 5 ans&nbsp;»</div>
+        </div>
+        <p>Les <strong>attendus de fin de maternelle</strong> se définissent au niveau d'un domaine (un attendu par ligne).</p>
+
+        <h3><svg class="ic"><use href="#ic-plus"/></svg> Créer et organiser</h3>
+        <ul class="feature-list">
+          <li><strong>Ajouter un programme</strong> avec le bouton bleu en haut à droite ; le dupliquer <span class="btnpic"><svg class="ic"><use href="#ic-copy"/></svg></span>, le renommer <span class="btnpic"><svg class="ic"><use href="#ic-pencil"/></svg></span>, le supprimer <span class="btnpic"><svg class="ic c-red"><use href="#ic-trash"/></svg></span> ou l'activer / désactiver <span class="btnpic"><svg class="ic"><use href="#ic-eye"/></svg></span> depuis son en-tête.</li>
+          <li><strong>Ajouter</strong> un domaine ou un sous-domaine <span class="btnpic"><svg class="ic"><use href="#ic-folder-plus"/></svg></span>, ou une compétence <span class="btnpic"><svg class="ic"><use href="#ic-plus"/></svg></span> ; <strong>modifier</strong> <span class="btnpic"><svg class="ic"><use href="#ic-pencil"/></svg></span> ou <strong>supprimer</strong> <span class="btnpic"><svg class="ic c-red"><use href="#ic-trash"/></svg></span> chaque élément.</li>
+          <li><strong>Réorganiser</strong> par glisser-déposer : déposez un élément avant, après ou à l'intérieur d'un autre.</li>
+          <li><strong>Rechercher</strong> dans le référentiel et basculer l'affichage entre <strong>Lignes</strong> et <strong>Colonnes</strong>.</li>
+          <li><strong>Sélection multiple</strong> (cases à cocher) : une barre apparaît en bas pour <strong>Déplacer</strong> ou <strong>Supprimer</strong> plusieurs éléments d'un coup.</li>
+        </ul>
+        <div class="tip"><svg class="ic"><use href="#ic-info"/></svg> Un programme <strong>désactivé</strong> <svg class="ic c-red"><use href="#ic-eye-off"/></svg> disparaît du suivi, du livret et des ateliers, mais reste conservé. Pratique pour mettre un référentiel de côté sans le perdre.</div>
+
+        <h3><svg class="ic"><use href="#ic-export"/></svg> Importer / exporter le référentiel</h3>
+        <p>Cochez des éléments puis cliquez sur <span class="btnpic"><svg class="ic"><use href="#ic-export"/></svg></span> <strong>Exporter</strong> : un fichier <code>.competences</code> est créé (avec les images). Le bouton <span class="btnpic"><svg class="ic"><use href="#ic-import"/></svg></span> <strong>Importer</strong> accepte les fichiers <code>.competences</code> et <code>.json</code>.</p>
+        <p>L'import est <strong>non destructif</strong> : si un programme ou un domaine du même identifiant existe déjà, les compétences sont <strong>fusionnées</strong> sans rien supprimer. Idéal pour partager un référentiel avec un collègue.</p>
+        <div class="warning"><svg class="ic"><use href="#ic-warning"/></svg> Supprimer une compétence (ou un domaine) du référentiel efface aussi les validations correspondantes chez <strong>tous les élèves</strong>. Cette action est irréversible (hors annulation immédiate <span class="btnpic"><svg class="ic"><use href="#ic-undo"/></svg></span>).</div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ ATELIERS ═══ -->
+      <section id="ateliers">
+        <div class="section-tag"><svg class="ic"><use href="#ic-package"/></svg> Onglet</div>
+        <h2>Ateliers</h2>
+        <p class="section-intro">Un atelier autonome regroupe des compétences travaillées lors d'une activité. Chaque atelier reçoit un QR code que les élèves scannent eux-mêmes en Mode Élève.</p>
+
+        <h3><svg class="ic"><use href="#ic-plus"/></svg> Créer un atelier</h3>
+        <ol class="steps">
+          <li>Cliquez sur <strong>Nouvel atelier</strong> <span class="btnpic blue"><svg class="ic"><use href="#ic-plus"/></svg></span>.</li>
+          <li>Donnez un <strong>nom</strong> (ex. «&nbsp;Puzzle des animaux&nbsp;») et, au besoin, une <strong>consigne</strong>.</li>
+          <li>Ajoutez une <strong>photo</strong> de l'atelier (optionnel) pour l'identifier facilement.</li>
+          <li>Sélectionnez les <strong>compétences travaillées</strong>.</li>
+          <li>Cliquez sur <strong>Enregistrer</strong>.</li>
+        </ol>
+
+        <h3><svg class="ic"><use href="#ic-pause"/></svg> État d'un atelier</h3>
+        <p>Le badge d'état de chaque carte est cliquable :</p>
+        <div class="legend">
+          <div class="legend-item"><span class="badge badge-green"><svg class="ic"><use href="#ic-check"/></svg> Actif</span> <span>l'atelier peut être scanné.</span></div>
+          <div class="legend-item"><span class="badge badge-orange"><svg class="ic"><use href="#ic-pause"/></svg> En pause</span> <span>le scan est ignoré (suspension temporaire).</span></div>
+        </div>
+
+        <h3><svg class="ic"><use href="#ic-qr"/></svg> Les QR codes</h3>
+        <p>Chaque atelier possède un QR code unique. Depuis la barre d'outils, vous pouvez :</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Bouton</th><th>Rôle</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-btn"><span class="btnpic"><svg class="ic"><use href="#ic-printer"/></svg></span> Imprimer les QR codes</td><td>Ouvre un aperçu A4 avec tous les QR codes. Réglez la <strong>taille globale</strong> au curseur, ou <strong>redimensionnez un QR</strong> en tirant son coin, puis imprimez.</td></tr>
+              <tr><td class="cell-btn"><span class="btnpic"><svg class="ic"><use href="#ic-download"/></svg></span> Exporter tous les QR codes</td><td>Télécharge un fichier <code>QRCodes_Autonomie.zip</code> contenant une image PNG par atelier (avec son nom).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Le QR code d'un atelier reste aussi affichable individuellement (via l'icône <svg class="ic c-slate"><use href="#ic-qr"/></svg> de sa carte), puis téléchargeable en image.</p>
+
+        <h3><svg class="ic"><use href="#ic-package"/></svg> Partager des ateliers (fichier <code>.atelier</code>)</h3>
+        <p>Vous pouvez transmettre des ateliers complets à un collègue — <strong>compétences liées, consigne, photos incluses</strong> — via un fichier <code>.atelier</code>. Deux boutons dans la barre d'outils :</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Bouton</th><th>Rôle</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-btn"><span class="btnpic"><svg class="ic"><use href="#ic-import"/></svg></span> Importer des ateliers</td><td>Ouvre un fichier <code>.atelier</code>. Une fenêtre liste les ateliers du fichier : cochez ceux à importer.</td></tr>
+              <tr><td class="cell-btn"><span class="btnpic"><svg class="ic"><use href="#ic-export"/></svg></span> Exporter des ateliers</td><td>Choisissez les ateliers à regrouper, puis enregistrez le fichier <code>.atelier</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>À l'import, l'application relie automatiquement les compétences de l'atelier à celles de votre référentiel (par identifiant, puis par nom). Les compétences qu'elle ne retrouve pas dans vos programmes sont <strong>signalées</strong> dans la fenêtre d'import. Si un atelier identique existe déjà, vous choisissez de le <strong>remplacer</strong> ou de l'<strong>importer en copie</strong>.</p>
+        <div class="tip"><svg class="ic"><use href="#ic-info"/></svg> Imprimez les QR codes en A5 ou A6, plastifiez-les et collez-les sur la boîte de l'atelier. Testez-les avec le Mode Élève avant de les déployer en classe.</div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ MODE ÉLÈVE ═══ -->
+      <section id="mode-eleve">
+        <div class="section-tag"><svg class="ic"><use href="#ic-monitor"/></svg> Onglet</div>
+        <h2>Mode Élève</h2>
+        <p class="section-intro">Une interface plein écran, colorée et simplifiée, pensée pour les enfants. Ils y signalent leur passage à un atelier en scannant son QR code avec la caméra de l'ordinateur.</p>
+
+        <h3><svg class="ic"><use href="#ic-lock"/></svg> Activation &amp; sortie</h3>
+        <p>Cliquez sur l'onglet <strong>Mode Élève</strong> : une fenêtre rappelle qu'un code PIN sera nécessaire pour ressortir. Confirmez, et l'application passe en <strong>plein écran</strong> (le thème clair est forcé pour la lisibilité).</p>
+        <div class="warning"><svg class="ic"><use href="#ic-warning"/></svg> La sortie est protégée par un <strong>code PIN de 4 à 8 chiffres</strong>, à choisir avant la première utilisation, via le bouton cadenas <span class="btnpic"><svg class="ic"><use href="#ic-lock"/></svg></span> en haut à droite. Après 5 erreurs, la saisie est bloquée quelques instants. Pendant le mode élève, la fenêtre ne peut pas être fermée.</div>
+
+        <h3><svg class="ic"><use href="#ic-camera"/></svg> Le parcours de l'élève</h3>
+        <ol class="steps">
+          <li>L'enfant trouve sa carte (photo + prénom) et clique dessus.</li>
+          <li>La caméra s'active ; il présente le QR code de l'atelier dans le cadre.</li>
+          <li>Un écran de retour s'affiche selon la situation, puis l'application revient d'elle-même à la liste des élèves après quelques secondes.</li>
+        </ol>
+
+        <h3><svg class="ic"><use href="#ic-qr"/></svg> Que se passe-t-il au scan ?</h3>
+        <p>La logique repose sur le <strong>nombre de passages dans la journée</strong> : un premier scan enregistre le passage, un second le valide.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Situation</th><th>Écran de l'élève</th><th>Effet</th></tr></thead>
+            <tbody>
+              <tr><td><strong>1<sup>er</sup> passage du jour</strong></td><td><svg class="ic c-emerald"><use href="#ic-check-circle"/></svg> Écran vert «&nbsp;Bravo … !&nbsp;»</td><td>Un passage <strong>en attente</strong> est créé : il apparaîtra dans l'onglet <strong>Rapports</strong> pour votre validation.</td></tr>
+              <tr><td><strong>2<sup>e</sup> passage du jour</strong></td><td><svg class="ic c-amber"><use href="#ic-trophy"/></svg> Écran doré «&nbsp;… est maintenant validé !&nbsp;»</td><td><strong>Validation automatique</strong> : les compétences liées à l'atelier passent à «&nbsp;Acquis&nbsp;».</td></tr>
+              <tr><td><strong>Atelier déjà tout acquis</strong></td><td><svg class="ic c-red"><use href="#ic-x-circle"/></svg> Écran rouge «&nbsp;Déjà réussi !&nbsp;»</td><td>Aucun nouvel enregistrement.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tip"><svg class="ic"><use href="#ic-info"/></svg> Si l'option <strong>Validation par code PIN</strong> est activée (Paramètres), le 2<sup>e</sup> scan demande le PIN avant de valider — une sécurité contre les validations involontaires.</div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ RAPPORTS ═══ -->
+      <section id="rapports">
+        <div class="section-tag"><svg class="ic"><use href="#ic-chart"/></svg> Onglet</div>
+        <h2>Rapports</h2>
+        <p class="section-intro">Cet onglet regroupe tous les passages enregistrés en Mode Élève. C'est ici que vous validez ou refusez les premiers passages pour mettre à jour les compétences.</p>
+
+        <div class="flow">
+          <div class="flow-step">Élève scanne</div><div class="flow-arrow">→</div>
+          <div class="flow-step">Passage «&nbsp;À traiter&nbsp;»</div><div class="flow-arrow">→</div>
+          <div class="flow-step">Vous validez</div><div class="flow-arrow">→</div>
+          <div class="flow-step">Compétences «&nbsp;Acquis&nbsp;»</div>
+        </div>
+
+        <h3><svg class="ic"><use href="#ic-check"/></svg> Onglet «&nbsp;À traiter&nbsp;»</h3>
+        <p>Liste les passages en attente. Pour chacun, l'application indique «&nbsp;Sera validé : N compétence(s)&nbsp;» et propose deux boutons :</p>
+        <div class="legend">
+          <div class="legend-item"><span class="badge" style="background:#2563eb;color:#fff"><svg class="ic"><use href="#ic-check"/></svg> Valider</span> <span>marque le passage réussi et fait passer les compétences à <strong>Acquis</strong>.</span></div>
+          <div class="legend-item"><span class="badge badge-red"><svg class="ic"><use href="#ic-x"/></svg> Refuser</span> <span>classe le passage refusé, <strong>sans</strong> modifier les compétences.</span></div>
+        </div>
+
+        <h3><svg class="ic"><use href="#ic-book"/></svg> Onglet «&nbsp;Journal&nbsp;»</h3>
+        <p>L'historique de tous les passages traités, en tableau (Élève, Section, Atelier, Date &amp; Heure, Résultat, Type). La colonne <strong>Résultat</strong> est un badge cliquable : passez un passage de <span class="badge badge-green">Réussi</span> à <span class="badge badge-red">Refusé</span> (ou l'inverse) pour corriger — les compétences de l'élève sont alors remises à jour automatiquement. La colonne <strong>Type</strong> distingue «&nbsp;Automatique (2<sup>e</sup> scan)&nbsp;» et «&nbsp;Manuel&nbsp;».</p>
+
+        <h3><svg class="ic"><use href="#ic-search"/></svg> Filtres et actions par lot</h3>
+        <p>Filtrez par <strong>élève</strong>, <strong>section</strong>, <strong>atelier</strong> et <strong>date</strong>. Dès qu'un filtre est actif, deux boutons traitent d'un coup l'ensemble filtré : <strong>Valider Sélection</strong> et <strong>Refuser Sélection</strong> (et <strong>Réinitialiser</strong> pour effacer les filtres).</p>
+        <div class="tip"><svg class="ic"><use href="#ic-info"/></svg> Astuce : filtrez par atelier (ou par date), puis cliquez sur <strong>Valider Sélection</strong> pour valider toute une séance en une seule action.</div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ LIVRET ═══ -->
+      <section id="livret">
+        <div class="section-tag"><svg class="ic"><use href="#ic-book"/></svg> Onglet</div>
+        <h2>Livret de suivi</h2>
+        <p class="section-intro">Cet onglet crée un livret de compétences personnalisé par élève, exportable en PDF (format A4). L'aperçu se met à jour en temps réel : chaque réglage s'y reflète immédiatement.</p>
+
+        <h3><svg class="ic"><use href="#ic-window"/></svg> Disposition</h3>
+        <p>Trois zones, de gauche à droite :</p>
+        <ul class="feature-list">
+          <li><strong>Élèves</strong> — la liste, avec une <strong style="color:#16a34a">coche verte</strong> par élève. Cochée, elle marque le livret comme <strong>validé</strong> : c'est la condition pour l'inclure dans les exports et envois groupés.</li>
+          <li><strong>Configuration</strong> — le panneau de réglages. Ses volets sont <strong>repliés par défaut</strong> ; ouvrez ceux qui vous intéressent. Leur état est mémorisé dans votre fichier.</li>
+          <li><strong>Aperçu</strong> — le livret en temps réel. Zoomez avec les boutons +/− ou <kbd>Ctrl</kbd>+<kbd>molette</kbd>.</li>
+        </ul>
+
+        <h3><svg class="ic"><use href="#ic-book"/></svg> Mise en page</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Mode</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Classique</strong></td><td>Compétences en cartes (avec photo de preuve). Un curseur règle le nombre de cartes par ligne (1 à 5).</td></tr>
+              <tr><td><strong>Compacte</strong></td><td>Compétences en liste avec leur date, sans photo. Plus dense.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Dans les deux modes, les compétences <strong>non validées</strong> (si vous les affichez) sont regroupées dans un bloc à part, signalé par une <strong>bande grise à gauche</strong> et le titre «&nbsp;Compétences non validées&nbsp;», pour les distinguer clairement des acquises.</p>
+
+        <h3><svg class="ic"><use href="#ic-search"/></svg> Filtre par période</h3>
+        <p>Les champs <strong>Du</strong> / <strong>Au</strong> n'affichent que les compétences <strong>acquises entre ces deux dates</strong> — parfait pour un bilan de trimestre. Un lien réinitialise les dates.</p>
+
+        <h3><svg class="ic c-green"><use href="#ic-eye"/></svg> Options d'affichage</h3>
+        <p>Chaque élément se montre ou se masque avec un bouton œil : <svg class="ic c-green"><use href="#ic-eye"/></svg> <strong style="color:#16a34a">vert = affiché</strong>, <svg class="ic c-red"><use href="#ic-eye-off"/></svg> <strong style="color:#ef4444">rouge = masqué</strong>.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Option</th><th>Effet sur le livret</th></tr></thead>
+            <tbody>
+              <tr><td>Introduction commune</td><td>Texte d'introduction identique pour tous.</td></tr>
+              <tr><td>Attendus en fin de maternelle</td><td>Affiche les attendus officiels sous chaque domaine.</td></tr>
+              <tr><td>Compétences non validées</td><td>Liste aussi les compétences non encore acquises (dans le bloc à bande grise).</td></tr>
+              <tr><td>Bilans par domaine</td><td>Zone de bilan par domaine, propre à chaque élève. Active la gestion des <strong>périodes</strong> (ci-dessous).</td></tr>
+              <tr><td>Commentaire général</td><td>Appréciation de l'enseignant·e, individuelle.</td></tr>
+              <tr><td>Commentaire de la Direction</td><td>Appréciation de la direction, individuelle.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Périodes de bilan</h4>
+        <p>Quand «&nbsp;Bilans par domaine&nbsp;» est actif, vous gérez une liste de <strong>périodes</strong> (par exemple les trimestres). Chaque période est <strong>numérotée automatiquement</strong> : laissez le nom vide et le livret affichera «&nbsp;Bilan de la Période 1&nbsp;», «&nbsp;Bilan de la Période 2&nbsp;»… Vous pouvez aussi saisir un nom personnalisé (ex. «&nbsp;Bilan de février&nbsp;»).</p>
+        <ul class="feature-list">
+          <li><strong>Ajouter</strong> une période avec «&nbsp;Ajouter une période&nbsp;».</li>
+          <li><strong>Supprimer</strong> une période avec la corbeille <span class="btnpic"><svg class="ic c-red"><use href="#ic-trash"/></svg></span>. Une confirmation prévient : les bilans déjà écrits pour cette période (chez tous les élèves) seront effacés, et les périodes suivantes renumérotées.</li>
+        </ul>
+
+        <h3><svg class="ic"><use href="#ic-pencil"/></svg> École, enseignant·e·s et direction</h3>
+        <p>Renseignez le <strong>nom de l'établissement</strong>, l'<strong>année scolaire</strong>, puis les <strong>enseignant·e·s</strong> et la <strong>direction</strong> (civilité, prénom, nom, signature).</p>
+        <ul class="feature-list">
+          <li>L'<strong>année scolaire</strong> est proposée automatiquement d'après la date du jour (une année va de septembre à l'été). Elle reste un simple champ que vous pouvez modifier.</li>
+          <li>La <strong>civilité</strong> est réglée sur «&nbsp;Monsieur&nbsp;» par défaut ; changez-la en un clic. Les intitulés du livret s'y adaptent («&nbsp;Appréciation de l'enseignant / de l'enseignante&nbsp;»).</li>
+          <li>Chaque <strong>signature</strong> s'ajoute sous forme d'image (PNG/JPG).</li>
+        </ul>
+
+        <h3><svg class="ic c-green"><use href="#ic-doc-down"/></svg> Exporter et envoyer</h3>
+        <p>Le bouton vert <strong>Action Livrets</strong>, en bas du panneau de configuration, regroupe toutes les sorties :</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Action</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-btn"><svg class="ic c-slate"><use href="#ic-doc-down"/></svg> Exporter ce livret</td><td>PDF de l'élève sélectionné.</td></tr>
+              <tr><td class="cell-btn"><svg class="ic c-slate"><use href="#ic-folder-down"/></svg> Exporter les livrets validés</td><td>Un PDF par élève coché, dans un dossier de votre choix.</td></tr>
+              <tr><td class="cell-btn"><svg class="ic c-slate"><use href="#ic-doc-text"/></svg> Exporter l'annexe commune</td><td>PDF commun contenant l'introduction et les attendus par domaine.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tip"><svg class="ic"><use href="#ic-info"/></svg> L'export et l'envoi groupés ne concernent que les élèves dont la <strong style="color:#16a34a">coche verte</strong> est active. Pensez à valider vos livrets au fur et à mesure.</div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ PARAMÈTRES ═══ -->
+      <section id="parametres">
+        <div class="section-tag"><svg class="ic"><use href="#ic-gear"/></svg> Réglages</div>
+        <h2>Paramètres</h2>
+        <p class="section-intro">Accessibles par <strong>Menu → Paramètres</strong>, ils regroupent l'enregistrement automatique, les copies de sécurité et la sécurité du Mode Élève.</p>
+
+        <h3><svg class="ic"><use href="#ic-save"/></svg> Sauvegarde automatique</h3>
+        <p>L'enregistrement a lieu 30 secondes après chaque modification et, pendant un travail continu, au plus tard selon le délai choisi : <strong>1, 5, 10, 15 ou 30 minutes</strong>, ou <strong>Désactivé</strong> (enregistrement manuel uniquement).</p>
+        <p><strong>Copies de sécurité</strong> : avant d'être écrasé, votre fichier est copié dans le dossier de l'application (au plus une fois toutes les 30 minutes) ; les 3 dernières copies de chaque classe sont conservées. Le bouton « Ouvrir le dossier des copies de sécurité » y donne accès.</p>
+
+        <h3><svg class="ic"><use href="#ic-lock"/></svg> Mode Élève (code PIN)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Réglage</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>Code PIN</td><td>Code de 4 à 8 chiffres requis pour <strong>quitter</strong> le Mode Élève, défini avant la première utilisation (bouton « Modifier le code »). Les codes évidents (0000, 1234…) sont refusés.</td></tr>
+              <tr><td>Délai entre deux scans</td><td>Temps minimal entre le 1<sup>er</sup> scan d'un atelier et le 2<sup>e</sup> (5 minutes par défaut).</td></tr>
+              <tr><td>Validation par code PIN</td><td>Si activé, le PIN est aussi requis pour valider un atelier au <strong>2<sup>e</sup> scan</strong>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ RACCOURCIS ═══ -->
+      <section id="raccourcis">
+        <div class="section-tag"><svg class="ic"><use href="#ic-keyboard"/></svg> Référence</div>
+        <h2>Raccourcis clavier</h2>
+        <p class="section-intro">Quelques raccourcis accélèrent le travail. Les actions sur les fichiers, elles, passent par le bouton <strong>Menu</strong> (il n'y a pas de raccourci de type Ctrl+S).</p>
+        <div class="card">
+          <div class="shortcut-grid">
+            <div><kbd>Ctrl</kbd>+<kbd>Z</kbd></div><div class="shortcut-desc">Annuler (jusqu'à 12 actions)</div>
+            <div><kbd>Ctrl</kbd>+<kbd>Y</kbd></div><div class="shortcut-desc">Rétablir</div>
+            <div><kbd>Ctrl</kbd>+<kbd>Maj</kbd>+<kbd>Z</kbd></div><div class="shortcut-desc">Rétablir (autre combinaison)</div>
+            <div><kbd>Ctrl</kbd>+<kbd>molette</kbd></div><div class="shortcut-desc">Zoomer / dézoomer l'aperçu du livret</div>
+          </div>
+        </div>
+        <div class="tip"><svg class="ic"><use href="#ic-info"/></svg> Les raccourcis d'annulation restent sans effet pendant que vous saisissez du texte dans un champ ou un commentaire.</div>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ CONSEILS ═══ -->
+      <section id="conseils">
+        <div class="section-tag"><svg class="ic"><use href="#ic-bulb"/></svg> Référence</div>
+        <h2>Conseils &amp; astuces</h2>
+
+        <h3><svg class="ic"><use href="#ic-home"/></svg> Bien démarrer l'année</h3>
+        <ol class="steps">
+          <li>Créez une nouvelle classe et enregistrez-la aussitôt à un endroit sûr.</li>
+          <li>Dans les Paramètres, réglez l'auto-sauvegarde (5 minutes est un bon compromis) et changez le code PIN du Mode Élève.</li>
+          <li>Ajoutez vos élèves avec leur photo.</li>
+          <li>Vérifiez le référentiel dans l'onglet Compétences.</li>
+          <li>Créez vos ateliers et imprimez leurs QR codes.</li>
+        </ol>
+
+        <h3><svg class="ic c-amber"><use href="#ic-bolt"/></svg> Gagner du temps</h3>
+        <ul class="feature-list">
+          <li>Utilisez <strong>Valider en masse</strong> pour une compétence travaillée en groupe.</li>
+          <li>Sur la fiche d'un élève, <strong>Tout valider</strong> applique une date commune à tout un domaine.</li>
+          <li>Dans les Rapports, filtrez par atelier puis validez la sélection pour traiter une séance entière.</li>
+        </ul>
+
+        <h3><svg class="ic"><use href="#ic-export"/></svg> Partager avec un collègue</h3>
+        <ul class="feature-list">
+          <li>Un <strong>référentiel</strong> : onglet Compétences → Exporter (<code>.competences</code>). L'import fusionne sans écraser.</li>
+          <li>Des <strong>ateliers</strong> : onglet Ateliers → Exporter des ateliers (<code>.atelier</code>), compétences et photos incluses.</li>
+          <li>Des <strong>élèves</strong> : onglet Classe → Exporter (<code>.eleves</code>).</li>
+        </ul>
+      </section>
+
+      <hr class="divider" />
+
+      <!-- ═══ AIDE ═══ -->
+      <section id="aide">
+        <div class="section-tag"><svg class="ic"><use href="#ic-help"/></svg> Référence</div>
+        <h2>Ouvrir ce guide</h2>
+        <p class="section-intro">Le bouton d'aide de la barre du haut ouvre ce guide à tout moment, sans interrompre votre travail.</p>
+        <div class="card">
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div class="tab-card-icon" style="width:44px;height:44px"><svg class="ic" style="width:22px;height:22px"><use href="#ic-help"/></svg></div>
+            <div>
+              <p style="font-weight:600; color:var(--text); margin-bottom:2px;">Bouton d'aide, en haut à droite</p>
+              <p style="margin:0;">Disponible en permanence, entre le bouton de thème et les commandes de fenêtre. Le guide s'ouvre dans une fenêtre séparée et adopte le <strong>même thème</strong> (clair ou sombre) que l'application.</p>
+            </div>
+          </div>
+        </div>
+        <div class="tip"><svg class="ic"><use href="#ic-info"/></svg> Vous pouvez continuer à travailler dans l'application pendant que vous lisez ce guide.</div>
+      </section>
+
+    </div><!-- /content -->
+  </main>
+</div>
+
+<script>
+  // Le thème est déjà appliqué depuis le <head> (via ?theme= transmis par l'application).
+  function updateThemeBtn() {
+    const isDark = document.documentElement.dataset.theme === 'dark';
+    document.getElementById('themeIcon').querySelector('use')
+      .setAttribute('href', isDark ? '#ic-sun' : '#ic-moon');
+    document.getElementById('themeLabel').textContent = isDark ? 'Clair' : 'Sombre';
+  }
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('envolees-guide-theme', html.dataset.theme);
+    updateThemeBtn();
+  }
+  updateThemeBtn();
+
+  // ─── Lien de navigation actif au défilement ───
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  function setActive() {
+    let current = '';
+    sections.forEach(s => { if (s.getBoundingClientRect().top <= 130) current = s.id; });
+    navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+  }
+  window.addEventListener('scroll', setActive, { passive: true });
+  setActive();
+</script>
+</body>
+</html>

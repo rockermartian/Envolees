@@ -1,74 +1,27 @@
-/* Version web d'Envolées : ordinateur et tablette, au doigt comme à la souris. */
-@import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
+/* Styles de la version web : ceux de l'application Envolées (Tailwind, thème, impression du livret),
+   plus quelques réglages propres au navigateur. Les adaptations tactiles sont dans l'application
+   elle-même (variantes pointer-coarse:), communes à l'ordinateur et à la tablette. */
+@import "../app/index.css";
+@import "../app/desktop-styles.css";
 
-/* Navigation : rail à gauche (tablette, ordinateur), barre en bas sur les écrans très étroits.
-   Les éléments fixés (messages, barres d'action) se placent avec ces deux variables. */
-:root {
-  --rail-w: 6rem;
-  --nav-h: 0px;
-}
-@media (max-width: 639px) {
-  :root { --rail-w: 0px; --nav-h: 4rem; }
+/* Les boutons de fenêtre d'Electron (réduire / agrandir / fermer) n'ont pas de sens dans un
+   navigateur, qui a les siens. */
+div.flex:has(> div > button > svg > rect[width="10"][height="1"]) {
+  display: none;
 }
 
 html, body, #root {
   height: 100%;
 }
+
+/* Tablette : pas de « tirer pour actualiser » au milieu d'une saisie, pas de reflet gris au toucher. */
 html {
-  -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
 body {
-  font-family: 'Poppins', system-ui, sans-serif;
-  background: #f1f5f9;
-  color: #0f172a;
-  overscroll-behavior: none; /* pas de « tirer pour actualiser » au milieu d'une saisie */
-}
-html.dark body {
-  background: #09090b;
-  color: #f4f4f5;
+  overscroll-behavior: none;
 }
 
-/* Toucher : pas de délai de double-tape ni de sélection de texte accidentelle sur les commandes. */
-button, [role="button"], a, label, input[type="checkbox"], input[type="radio"], select {
-  touch-action: manipulation;
+@media print {
+  #platform-root { display: none !important; }
 }
-button, [role="button"] {
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-/* Focus visible au clavier seulement. */
-:focus-visible {
-  outline: 3px solid #6366f1;
-  outline-offset: 2px;
-}
-
-/* Cases à cocher larges (cibles tactiles). */
-input[type="checkbox"] {
-  appearance: none;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 0.375rem;
-  border: 2px solid #94a3b8;
-  background: #fff;
-  display: inline-grid;
-  place-content: center;
-  flex-shrink: 0;
-  cursor: pointer;
-}
-html.dark input[type="checkbox"] { background: #27272a; border-color: #52525b; }
-input[type="checkbox"]:checked {
-  background: #4f46e5;
-  border-color: #4f46e5;
-}
-input[type="checkbox"]:checked::after {
-  content: "";
-  width: 0.75rem;
-  height: 0.4rem;
-  border: solid #fff;
-  border-width: 0 0 3px 3px;
-  transform: translateY(-1px) rotate(-45deg);
-}
-input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }

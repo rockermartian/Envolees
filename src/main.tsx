@@ -1,15 +1,13 @@
-// Point d'entrée de la version web (ordinateur et tablette).
+// Point d'entrée de la version web : l'application Envolées elle-même (App.tsx, recopiée dans app/),
+// avec le navigateur à la place d'Electron (voir desktop/electronBridge.tsx).
 import './styles.css';
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { setImageBackend } from '../core/images/imageStore';
+import { setImageBackend } from '../app/images/imageStore';
+import { mountDesktop } from './desktop/mountDesktop';
 import { openDb } from './platform/db';
 import { mountPlatformHost } from './platform/dialogs';
 import { startLaunchQueue } from './platform/launch';
 import { registerServiceWorker } from './platform/updates';
 import { webImages } from './platform/webImages';
-import App from './ui/App';
-import ErrorBoundary from './ui/ErrorBoundary';
 
 // Images des classes : dans IndexedDB (à poser avant tout affichage).
 setImageBackend(webImages);
@@ -20,20 +18,12 @@ registerServiceWorker();
 window.addEventListener('dragover', e => e.preventDefault());
 window.addEventListener('drop', e => e.preventDefault());
 
-if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.classList.add('dark');
 const launchFiles = startLaunchQueue();
-const root = document.getElementById('root')!;
-
 openDb()
-    .then(() => {
-        ReactDOM.createRoot(root).render(
-            <React.StrictMode>
-                <ErrorBoundary><App launchFiles={launchFiles} /></ErrorBoundary>
-            </React.StrictMode>,
-        );
-    })
+    .then(() => mountDesktop(launchFiles))
     .catch(error => {
         console.error(error);
+        const root = document.getElementById('root')!;
         root.textContent = `Envolées ne peut pas démarrer dans ce navigateur : ${error instanceof Error ? error.message : String(error)}`;
         root.style.padding = '2rem';
     });

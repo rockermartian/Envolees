@@ -1,98 +1,77 @@
 # Envolées — version web (ordinateur et tablette)
 
-Application web **installable** (PWA) de suivi des compétences en maternelle, conçue pour le **toucher** (tablette Android, iPad) comme pour la souris et le clavier. Elle fonctionne hors ligne. Les données restent sur l'appareil et ne le quittent que si l'enseignant les envoie (Nuage, partage, fichier).
+La version web **est l'application Envolées**. Elle a les mêmes écrans et les mêmes fonctions que l'application de bureau : classe, compétences, ateliers et QR codes, mode élève, rapports, livret, paramètres. Elle fonctionne dans un navigateur, sur ordinateur comme sur tablette (Android, iPad), et s'installe comme une application (PWA). Elle fonctionne hors ligne. Les données restent sur l'appareil.
 
-Elle ouvre les mêmes fichiers `.envolees` que l'application Envolées pour ordinateur, dans les deux sens.
+Elle ouvre les mêmes fichiers `.envolees` que l'application de bureau, dans les deux sens.
 
-## Fonctions
+## Utilisation au doigt
 
-| | Version web | Application pour ordinateur |
-|---|---|---|
-| Élèves : liste, fiche, ajout et modification, photo (appareil photo de la tablette) | ✅ | ✅ |
-| Validation d'une compétence au toucher (date, section, photo de preuve), Annuler | ✅ | ✅ |
-| Validation groupée | ✅ | ✅ |
-| Passages d'atelier à valider, journal | ✅ | ✅ |
-| **Mode élève** (photo de l'enfant, QR code de l'atelier, code PIN pour sortir) | ✅ | ✅ |
-| Import d'un programme `.competences` | ✅ | ✅ |
-| **Nuage** : envoyer et ouvrir une classe | ✅ assisté (voir ci-dessous) | ✅ direct |
-| Édition du programme, création des ateliers et QR codes, rapports, livret PDF, groupes de soutien | — | ✅ |
+Seule la façon d'utiliser l'application s'adapte au toucher, sans fonction ajoutée ni retirée. Ces réglages ne s'appliquent qu'aux écrans tactiles : à la souris, l'application est identique à la version de bureau.
 
-### Disposition
+- **Taille des commandes :** 40 px au moins au doigt, et 24 px pour les cases à cocher.
+- **Saisie :** texte des champs à 16 px, sinon l'iPad agrandit la page à chaque saisie.
+- **Actions habituellement révélées au survol de la souris :** elles restent visibles. Cela concerne :
+  - modifier ou supprimer un élève ;
+  - les actions de l'arbre des compétences ;
+  - les cases de sélection ;
+  - la suppression de la photo d'un atelier.
+- **Infobulles :** après un toucher, elles s'affichent brièvement puis disparaissent.
+- **Taille des QR codes :** la poignée de redimensionnement se manipule au doigt.
+- **Tablette en portrait :** les onglets passent sur une deuxième ligne. La fiche élève s'adapte à la largeur de l'écran.
+- **Réorganisation des compétences :** au doigt, on utilise les boutons Monter / Descendre et « Déplacer vers… » plutôt que le glisser-déposer.
 
-- **Tablette en paysage, ordinateur :** rail de navigation à gauche ; liste des élèves et fiche côte à côte.
-- **Tablette en portrait :** la liste, puis la fiche en plein écran (bouton Retour).
-- Toutes les commandes font au moins 44 px, et aucune action n'apparaît seulement au survol de la souris.
+Ces adaptations sont faites dans le code de l'application de bureau, avec les variantes Tailwind `pointer-coarse:` et `max-lg:`. Elles profitent aussi aux ordinateurs à écran tactile.
 
-## Nuage dans la version web
+## Ce qui diffère de l'application de bureau
 
-Nuage n'accepte pas, pour l'instant, les requêtes venant d'un autre site : il ne renvoie pas d'en-têtes CORS (vérifié le 24/11/2026). Un site web ne peut donc pas y écrire directement. La version web **assiste** l'enseignant :
+| Fonction | Version web |
+|---|---|
+| Enregistrement | Dans le navigateur de l'appareil (IndexedDB) ; 3 copies de sécurité. Avec Chrome et Edge sur ordinateur, la classe peut aussi être liée à un fichier `.envolees` réécrit à chaque enregistrement. |
+| Nuage | **Assisté.** Nuage n'accepte pas les requêtes venant d'un site (pas d'en-têtes CORS). Sur tablette, le menu ouvre le partage vers l'application Nextcloud, ou le sélecteur de fichiers du système. Sur ordinateur, il télécharge le fichier et ouvre Nuage dans un onglet. Une demande d'autorisation est prête : [docs/demande-nuage-cors.md](docs/demande-nuage-cors.md). |
+| Livret PDF | Impression du navigateur (« Enregistrer au format PDF ») ; export par lot : une impression par élève. |
+| Fermeture avec modifications | Confirmation du navigateur, puis la fenêtre « Enregistrer avant de quitter ? » de l'application. |
 
-| | Envoyer vers Nuage | Ouvrir depuis Nuage |
-|---|---|---|
-| **Tablette** | Le partage de la tablette s'ouvre. On choisit l'application **Nextcloud** (connectée à Nuage), puis le dossier « Envolées ». | Le sélecteur de fichiers de la tablette s'ouvre. Nextcloud y apparaît comme un emplacement. |
-| **Ordinateur** | Le fichier est téléchargé et Nuage s'ouvre dans un onglet : il suffit d'y déposer le fichier. Avec Chrome ou Edge, la classe peut aussi être enregistrée directement dans le dossier Nuage synchronisé de l'ordinateur (client Nextcloud). | Nuage s'ouvre dans un onglet pour télécharger la classe, puis on choisit le fichier. On peut aussi la choisir directement dans le dossier synchronisé. |
-
-**Préparer une tablette une fois pour toutes :** installez l'application **Nextcloud** (App Store ou Google Play). Connectez-la avec l'adresse `nuage.apps.education.fr` et votre identifiant académique.
-
-L'application pour ordinateur, elle, envoie directement : connexion par le navigateur, puis Menu › Envoyer vers Nuage.
-
-Pour obtenir l'envoi direct dans la version web, une demande est prête à envoyer à l'équipe apps.education.fr : [docs/demande-nuage-cors.md](docs/demande-nuage-cors.md). Le client Nuage partagé (`core/shared/nuageClient.js`) fonctionne déjà dans un navigateur : il ne reste qu'à brancher l'interface quand l'autorisation sera donnée.
-
-## Données et sauvegarde
-
-- Chaque classe est enregistrée **dans le navigateur de l'appareil** (IndexedDB), à chaque modification. Il n'y a pas de bouton « Enregistrer ».
-- 3 copies de sécurité sont gardées par classe.
-- L'onglet **Classe** indique la date de la dernière sauvegarde (Nuage ou fichier) et si la classe a été modifiée depuis.
-- **Sur iPad, installez l'application** (Safari › Partager › « Sur l'écran d'accueil »). Sinon, Safari efface les données d'un site après 7 jours sans visite. L'application le rappelle sur l'écran d'accueil.
-- Une classe ne s'ouvre que dans un seul onglet à la fois.
+**Sur iPad, installez l'application :** dans Safari, Partager › « Sur l'écran d'accueil ». Sinon, Safari efface les données d'un site après 7 jours sans visite.
 
 ## Commandes
 
-Dans ce dossier : `npm install` une fois, puis :
+Dans ce dossier, lancez `npm install` une fois, puis :
 
 ```bash
 npm run dev        # serveur de développement
 npm run build      # version de production dans dist/
 npm run check      # types + tests unitaires
-npm run test:e2e   # build + tests de bout en bout dans Chromium (voir « Tests »)
-npm run sync       # met à jour core/ depuis le projet Electron
-npm run icons      # régénère les icônes PNG
+npm run test:e2e   # build + tests de bout en bout (ordinateur, puis tablette au toucher)
+npm run sync       # met à jour app/ depuis le projet Electron
 ```
 
-## Code partagé avec l'application pour ordinateur (`core/`)
-
-`core/` est une **copie générée** du code partagé avec le projet Electron :
-- règles métier (`domain/`) ;
-- format des fichiers (`fileFormat/`, `shared/`) ;
-- client Nuage, images, types.
-
-Le projet Electron reste la référence. L'interface web, elle, est distincte et ne copie aucun composant de l'application de bureau. Après une modification du code partagé, lancez `npm run sync` (projet Electron dans le dossier parent), ou `npm run sync -- <chemin>`. Ne modifiez pas `core/` à la main.
+`app/` est une **copie générée** de l'application de bureau, produite par `npm run sync` : ne la modifiez pas. Toute modification de l'interface se fait dans le projet Electron, puis on relance `npm run sync`.
 
 ## Déploiement (GitHub Pages)
 
-Ce dossier se publie seul : son contenu est la racine du dépôt GitHub.
-1. Envoyez-le sur la branche `main`.
-2. Le workflow `.github/workflows/deploy.yml` vérifie le code, le construit et le publie.
+Ce dossier se publie seul : son contenu devient la racine du dépôt GitHub. Le workflow `.github/workflows/deploy.yml` vérifie, construit et publie à chaque envoi sur `main`. Une nouvelle version s'annonce par un bandeau « Recharger ».
 
-Réglage unique du dépôt : Settings › Pages › Source : « GitHub Actions ».
+## Tests de bout en bout
 
-Une nouvelle version s'annonce par un bandeau « Recharger ». Elle n'est jamais appliquée pendant une saisie.
+`npm run test:e2e` s'exécute dans le Chromium d'Electron.
 
-## Tests
+**Scénario ordinateur (souris) :**
+- ouverture d'une classe et affichage des photos ;
+- présence de tous les onglets ;
+- enregistrement ;
+- Nuage dans les deux sens ;
+- livret PDF ;
+- fonctionnement hors ligne.
 
-- **Tests unitaires** (`npm run check`) : compatibilité des fichiers avec l'application de bureau, performance sur une classe de 170 Mo, calculs de l'interface (dont « Tom L. » / « Tom V. » pour les prénoms identiques).
-- **Tests de bout en bout** (`npm run test:e2e`), dans le Chromium d'Electron. Electron est utilisé s'il est installé ici ou dans le projet voisin ; sinon `npm install --no-save electron`.
-  - **Ordinateur (souris, clavier) :**
-    - ouverture d'un fichier, photos, validation, Ctrl+Z, validation groupée ;
-    - envoi vers Nuage (fichier téléchargé, puis relu à l'identique par le lecteur de bureau) ;
-    - ouverture depuis Nuage ;
-    - hors ligne.
-  - **Tablette (événements tactiles réels, portrait puis paysage) :**
-    - parcours tablette d'ouverture depuis Nuage ;
-    - validation au toucher, photo ;
-    - mode élève (caméra simulée, QR code, pavé PIN) ;
-    - mesure de la taille de toutes les cibles tactiles.
+**Scénario tablette (événements tactiles réels, paysage puis portrait) :**
+- validation d'une compétence au doigt ;
+- mode élève (entrée, caméra simulée, sortie avec le code PIN) ;
+- sur chaque écran, en paysage et en portrait :
+  - aucune cible tactile de moins de 40 px ;
+  - aucune commande réservée au survol ;
+  - rien de coupé à droite ;
+  - tous les onglets visibles.
 
-**À vérifier sur appareil réel** (non automatisable) : caméra et partage vers l'application Nextcloud sur un vrai iPad et une vraie tablette Android.
+Le scénario `audit` (`E2E_ONLY=audit`) liste les défauts tactiles sans échouer. Ajoutez `E2E_TOUCH=0` pour comparer avec l'utilisation à la souris.
 
-Navigateurs : Chrome et Edge 103 ou plus, Firefox 113 ou plus, Safari et iPadOS 16.4 ou plus.
+Restent à vérifier sur un vrai iPad et une vraie tablette Android : la caméra du mode élève, le partage vers Nextcloud, le glisser-déposer.

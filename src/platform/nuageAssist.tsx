@@ -9,7 +9,7 @@
 //     enregistrement direct dans le dossier Nuage synchronisé de l'ordinateur (client Nextcloud).
 // Une demande d'autorisation (CORS) est adressée à apps.education.fr : voir docs/demande-nuage-cors.md.
 import React from 'react';
-import { NUAGE_FOLDER, NUAGE_URL } from '../../core/shared/nuageClient.js';
+import { NUAGE_FOLDER, NUAGE_URL } from '../../app/shared/nuageClient.js';
 import { askChoice, Button, Panel, showDialog } from './dialogs';
 import { canLinkFiles, canShareFile, downloadBlob, isTouchDevice, pickEnvoleesFile, pickSaveLocation, pickWithInput, shareFile, writeLinkedFile, type LinkedFileHandle } from './fileAccess';
 import { exportClass, markExported } from './library';

@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/* Dark mode based on .dark class on <html> (mirrors the CDN darkMode: 'class' config) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Écrans tactiles (tablette, ordinateur à écran tactile utilisé au doigt) ─────────────────────
+   Rien ne change à la souris : ces règles ne s'appliquent qu'avec un pointeur « grossier » (doigt).
+   - commandes d'au moins 40 px de côté (recommandation : 40 à 48 px pour un doigt) ;
+   - texte des champs à 16 px : en dessous, l'iPad zoome la page à chaque saisie ;
+   - pas de délai de double-tape sur les commandes. */
+@media (pointer: coarse) {
+  @layer base {
+    button, [role="button"], select, summary {
+      min-height: 40px;
+    }
+    /* Largeur minimale pour les boutons-icônes seulement : un bouton avec du texte garde la largeur
+       de son texte (sinon il pourrait rétrécir sous son contenu dans une barre d'onglets). */
+    button:has(> svg:only-child), [role="button"]:has(> svg:only-child), button:not(:has(*)):empty {
+      min-width: 40px;
+    }
+    input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), textarea {
+      min-height: 40px;
+    }
+  }
+  button, [role="button"], a, label, select, summary, input {
+    touch-action: manipulation;
+  }
+  html input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), html select, html textarea {
+    font-size: 16px;
+  }
+  html input[type="checkbox"], html input[type="radio"] {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+}

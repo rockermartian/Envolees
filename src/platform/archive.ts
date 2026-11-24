@@ -2,8 +2,8 @@
 // (shared/envoleesArchive.js). Deux différences, pour tenir sur un téléphone :
 //   - à l'ouverture, les images deviennent des tranches du fichier (Blob.slice) : aucune copie ;
 //   - à l'écriture, l'archive est un Blob composé des images déjà stockées : aucune image n'est relue.
-import { buildArchive, readArchive } from '../../core/shared/envoleesArchive.js';
-import { mimeFromName } from '../../core/images/imageStore';
+import { buildArchive, readArchive } from '../../app/shared/envoleesArchive.js';
+import { mimeFromName } from '../../app/images/imageStore';
 
 const pipe = async (bytes: Uint8Array, stream: CompressionStream | DecompressionStream): Promise<Uint8Array> =>
     new Uint8Array(await new Response(new Blob([bytes as BlobPart]).stream().pipeThrough(stream)).arrayBuffer());

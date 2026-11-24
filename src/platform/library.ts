@@ -6,7 +6,7 @@
 //
 // Copies de sécurité : comme l'application de bureau, 3 copies par classe, au plus une toutes les
 // 30 minutes, prises avant d'écraser la version précédente.
-import { imageFileName, isImageRef } from '../../core/images/imageStore';
+import { imageFileName, isImageRef } from '../../app/images/imageStore';
 import { buildEnvoleesBlob, readEnvoleesFile, type ArchiveImageBlob } from './archive';
 import { STORES, getAllValues, getSetting, getValue, promisify, setSetting, transaction } from './db';
 import { envoleesFileName, hasWritePermission, writeLinkedFile, type LinkedFileHandle } from './fileAccess';

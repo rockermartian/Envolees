@@ -1,5 +1,5 @@
-// Version web d'Envolées (PWA) pour ordinateur et tablette, interface tactile.
-// Projet autonome : le code partagé avec l'application de bureau est recopié dans core/ (npm run sync).
+// Version web d'Envolées (PWA) : l'application Envolées elle-même, sur ordinateur et tablette.
+// Projet autonome : le code de l'application de bureau est recopié dans app/ (npm run sync).
 import { createHash } from 'node:crypto'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import path from 'node:path'
@@ -83,7 +83,7 @@ export default defineConfig({
   },
   plugins: [react(), contentSecurityPolicy(), serviceWorker()],
   css: {
-    // Tailwind analyse src/ (interface) et core/.
+    // Tailwind analyse app/ (interface de l'application) et src/ (plateforme web).
     postcss: { plugins: [tailwindcss({ base: HERE })] },
   },
   build: {
