@@ -1,8 +1,8 @@
 // Liste des élèves de la classe.
 import React, { useMemo, useState } from 'react';
 import { ChevronRight, Plus, Users } from 'lucide-react';
-import { calculateAge, sectionOrder } from '../../../utils';
-import type { AppData, Section } from '../../../types';
+import { calculateAge, sectionOrder } from '../../app/utils';
+import type { AppData, Section } from '../../app/types';
 import { activePrograms, countAcquired, flattenSkills, matchesQuery, sortStudents, studentName } from './model';
 import { Avatar, Chip, EmptyState, ProgressBar, SearchInput } from './ui';
 

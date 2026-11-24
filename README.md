@@ -6,7 +6,7 @@ Une seule application avec deux interfaces :
 
 | Interface | Pour | Contenu |
 |---|---|---|
-| **Ordinateur** | ordinateur, tablette | L'application de bureau complète (`App.tsx` et `components/`), sans aucune modification |
+| **Ordinateur** | ordinateur, tablette | L'application de bureau complète (sa copie dans `app/`, sans modification) |
 | **Mobile** | téléphone, en classe | Élèves, validation en un geste (avec photo), validation groupée, passages d'atelier, export |
 
 L'interface est choisie selon la largeur de l'écran (moins de 768 px : mobile). On peut changer à tout moment : « Version mobile » dans la boîte *Ouvrir une classe*, « Version ordinateur » dans l'onglet *Plus*, ou `?ui=mobile` / `?ui=desktop` dans l'adresse. Le choix est mémorisé.
@@ -15,9 +15,18 @@ L'interface est choisie selon la largeur de l'écran (moins de 768 px : mobile).
 
 Les deux interfaces partagent tout : les données, le format `.envolees`, les règles métier, le stockage, le déploiement et l'installation. Deux dépôts doubleraient la maintenance sans rien apporter. Le code propre à chaque interface reste séparé (`src/desktop/`, `src/mobile/`), et le navigateur ne charge que l'interface affichée.
 
+## Un dossier autonome
+
+Ce dossier se suffit à lui-même : il peut devenir un dépôt GitHub à lui seul. Le code de l'application de bureau dont il a besoin y est **recopié** dans `app/`, avec les polices et le guide dans `public/`. Rien n'est importé du dossier parent.
+
+- **Ne modifiez pas `app/`** : le code se modifie dans le projet Electron.
+- Après une modification de l'application de bureau, lancez `npm run sync` dans `web_app/`, puis committez. La commande recopie `app/`, les polices, le guide et le programme de test, et aligne la version et les dépendances sur le projet Electron.
+  - Si `web_app/` est encore dans le projet Electron : `npm run sync`.
+  - Sinon : `npm run sync -- <chemin du projet Electron>`.
+
 ## Commandes
 
-Les dépendances sont celles du projet principal : lancez `npm install` **à la racine** une fois, puis, dans `web_app/` :
+Dans ce dossier : `npm install` une fois, puis :
 
 ```bash
 npm run dev        # serveur de développement (http://localhost:5173)
@@ -26,17 +35,22 @@ npm run preview    # sert le build (pour tester l'installation et le hors-ligne)
 npm run check      # types + tests unitaires
 npm run test:e2e   # build + tests de bout en bout dans Chromium (Electron) : ordinateur puis mobile
 npm run icons      # régénère les icônes PNG à partir de public/icons/icon.svg
+npm run sync       # recopie le code de l'application de bureau dans app/
 ```
 
-`test:e2e` utilise `classe-test-lourde.envolees` (à la racine) s'il existe, sinon une classe générée. `E2E_FILE=<fichier>` choisit une autre classe, et `E2E_SHOTS=<dossier>` enregistre des captures d'écran.
+`test:e2e` et `icons` se servent d'Electron comme navigateur piloté. Electron n'est pas une dépendance de la version web : ces deux commandes l'utilisent s'il est installé (ici, ou dans le projet Electron voisin). Sinon : `npm install --no-save electron`, ou `ELECTRON_PATH=<exécutable>`.
+
+`test:e2e` utilise `../classe-test-lourde.envolees` s'il existe, sinon une classe générée. `E2E_FILE=<fichier>` choisit une autre classe, et `E2E_SHOTS=<dossier>` enregistre des captures d'écran.
 
 ## Déploiement sur GitHub Pages
 
-1. Envoyez le projet sur GitHub, sur la branche `main`.
+1. Créez un dépôt GitHub et envoyez-y **le contenu de ce dossier**, à la racine du dépôt, sur la branche `main`. Le dossier caché `.github/` doit être inclus.
 2. Dans le dépôt, allez dans **Settings › Pages › Source** et choisissez « **GitHub Actions** ».
-3. Chaque envoi sur `main` lance [`.github/workflows/web-app.yml`](../.github/workflows/web-app.yml), qui vérifie (types et tests), construit puis publie. L'adresse est `https://<compte>.github.io/<dépôt>/`.
+3. Chaque envoi sur `main` lance [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) : il installe les dépendances (`npm ci`), vérifie (types et tests), construit puis publie. L'adresse est `https://<compte>.github.io/<dépôt>/`.
 
-Le fichier du workflow est le seul fichier ajouté hors de `web_app/` : GitHub impose cet emplacement. Les chemins sont relatifs (`base: './'`), donc l'application fonctionne à la racine d'un domaine comme dans un sous-dossier. Une nouvelle version publiée affiche un bandeau « Recharger » : elle n'est jamais appliquée pendant une saisie.
+Le glisser-déposer sur github.com ne transfère pas toujours les dossiers cachés. Si `.github/` manque, utilisez Git ou GitHub Desktop, ou créez le fichier sur github.com (Add file › Create new file › `.github/workflows/deploy.yml`) et collez-y son contenu.
+
+Les chemins sont relatifs (`base: './'`), donc l'application fonctionne à la racine d'un domaine comme dans un sous-dossier. Une nouvelle version publiée affiche un bandeau « Recharger » : elle n'est jamais appliquée pendant une saisie.
 
 **Navigateurs** : Chrome et Edge 103 ou plus, Firefox 113 ou plus, Safari 16.4 ou plus (iPhone et iPad : iOS 16.4 ou plus).
 
@@ -68,9 +82,11 @@ Le fichier du workflow est le seul fichier ajouté hors de `web_app/` : GitHub i
 
 ```
 web_app/
-├── index.html, vite.config.ts      Build : polices et guide repris du projet, styles de base repris
-│                                   d'index.html, service worker généré, CSP
-├── public/                         manifest.webmanifest, icônes
+├── .github/workflows/deploy.yml    Déploiement sur GitHub Pages
+├── index.html, vite.config.ts      Build : service worker généré, CSP
+├── app/                            Copie de l'application de bureau (générée par npm run sync)
+├── public/                         manifest.webmanifest, icônes, polices, guide
+├── scripts/                        sync-desktop.mjs, make-icons.mjs, find-electron.mjs
 ├── src/
 │   ├── main.tsx                    Démarrage : stockage des images, choix de l'interface
 │   ├── uiMode.ts                   Ordinateur / mobile
@@ -88,10 +104,11 @@ web_app/
 │   │   ├── electronBridge.tsx      window.electronAPI réalisé avec le navigateur
 │   │   └── mountDesktop.tsx        Monte App.tsx tel quel
 │   └── mobile/                     Interface mobile (écrans, modèle testé, enregistrement continu)
-└── tests/                          Vitest (archive, modèle) + e2e/ (Chromium d'Electron)
+└── tests/                          Vitest (archive, modèle), fixtures/ (générateur de classes,
+                                    programme 2025), e2e/ (Chromium d'Electron)
 ```
 
-**Aucun fichier du projet de bureau n'est modifié.** L'interface ordinateur ne parle au système que par `window.electronAPI` (voir `electron/preload.js`) : la version web fournit la même interface (`src/desktop/electronBridge.tsx`) et pose un stockage d'images navigateur (`setImageBackend`). L'interface mobile appelle directement les modules métier (`domain/`, `fileFormat/`) : mêmes règles, mêmes données, mêmes tests.
+**Le code de bureau est repris tel quel.** La seule transformation de la copie : `__APP_VERSION__` devient `import.meta.env.VITE_APP_VERSION`. L'interface ordinateur ne parle au système que par `window.electronAPI` (voir `electron/preload.js` dans le projet Electron) : la version web fournit la même interface (`src/desktop/electronBridge.tsx`) et pose un stockage d'images navigateur (`setImageBackend`). L'interface mobile appelle directement les modules métier (`domain/`, `fileFormat/`) : mêmes règles, mêmes données, mêmes tests.
 
 Performances, mesurées sur la classe de test de 76 Mo (2 147 photos) dans Chromium :
 - ouverture : environ 1,5 s (les photos ne sont pas recopiées en mémoire, ce sont des tranches du fichier) ;

@@ -1,5 +1,6 @@
 /* Styles de la version web : ceux de l'application de bureau (Tailwind, thème) + quelques réglages web. */
-@import "../../index.css";
+@import "../app/index.css";
+@import "../app/desktop-styles.css";
 
 /* Interface ordinateur : les boutons de fenêtre d'Electron (réduire / agrandir / fermer) n'ont pas
    de sens dans un navigateur, qui a les siens. */

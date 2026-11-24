@@ -4,9 +4,9 @@
 // moins d'une seconde après, et immédiatement quand l'application passe en arrière-plan (un téléphone
 // peut fermer un onglet caché à tout moment).
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { parseOpenedData, prepareForSave } from '../../../fileFormat/fileIO';
-import { pushHistory, redoHistory, undoHistory, type HistoryState, type UpdateOptions } from '../../../hooks/useUndoRedo';
-import type { AppData } from '../../../types';
+import { parseOpenedData, prepareForSave } from '../../app/fileFormat/fileIO';
+import { pushHistory, redoHistory, undoHistory, type HistoryState, type UpdateOptions } from '../../app/hooks/useUndoRedo';
+import type { AppData } from '../../app/types';
 import { describeError, saveCurrentClass } from '../platform/session';
 
 const SAVE_DELAY_MS = 700;

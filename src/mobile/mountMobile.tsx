@@ -1,7 +1,7 @@
 // Interface mobile (téléphone).
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import ErrorBoundary, { ErrorPanel } from '../../../components/ErrorBoundary';
+import ErrorBoundary, { ErrorPanel } from '../../app/components/ErrorBoundary';
 import type { LaunchedFile } from '../platform/launch';
 import MobileApp from './MobileApp';
 

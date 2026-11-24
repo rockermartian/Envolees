@@ -1,9 +1,9 @@
 // Import d'un programme de compétences (.competences), comme dans l'onglet Compétences sur ordinateur :
 // JSON (programme fourni) ou archive ZIP (data.json + illustrations).
 import JSZip from 'jszip';
-import { normalizePrograms } from '../../../fileFormat/normalize';
-import { importImageFromZip } from '../../../images/imageArchive';
-import type { Domain, SchoolProgram } from '../../../types';
+import { normalizePrograms } from '../../app/fileFormat/normalize';
+import { importImageFromZip } from '../../app/images/imageArchive';
+import type { Domain, SchoolProgram } from '../../app/types';
 
 export async function readProgramFile(file: Blob): Promise<SchoolProgram[]> {
     const buffer = await file.arrayBuffer();

@@ -1,9 +1,9 @@
 // Ajout et modification d'un élève (champs principaux ; le reste se règle sur ordinateur).
 import React, { useState } from 'react';
 import { Camera, ImagePlus } from 'lucide-react';
-import { addStudent, deleteStudent, updateStudentFields, type StudentFields } from '../../../domain/students';
-import { sectionOrder } from '../../../utils';
-import { Section, Sex, type Student } from '../../../types';
+import { addStudent, deleteStudent, updateStudentFields, type StudentFields } from '../../app/domain/students';
+import { sectionOrder } from '../../app/utils';
+import { Section, Sex, type Student } from '../../app/types';
 import { confirmAction } from '../platform/dialogs';
 import { pickPhoto } from './photos';
 import type { ClassDocument } from './useClassDocument';

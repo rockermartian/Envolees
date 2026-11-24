@@ -1,8 +1,8 @@
 // Interface mobile : accueil (classes de l'appareil) puis classe ouverte (élèves, validation, ateliers, plus).
 import React, { useEffect, useMemo, useState } from 'react';
 import { Ellipsis, ListChecks, Monitor, Redo2, Shapes, Undo2, Users } from 'lucide-react';
-import { createEmptyAppData } from '../../../fileFormat/defaults';
-import { prepareForSave } from '../../../fileFormat/fileIO';
+import { createEmptyAppData } from '../../app/fileFormat/defaults';
+import { prepareForSave } from '../../app/fileFormat/fileIO';
 import ClassLibrary from '../platform/ClassLibrary';
 import { askName, showMessage } from '../platform/dialogs';
 import { onLaterLaunch, type LaunchedFile } from '../platform/launch';

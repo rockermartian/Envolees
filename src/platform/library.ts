@@ -6,7 +6,7 @@
 //
 // Copies de sécurité : comme l'application de bureau, 3 copies par classe, au plus une toutes les
 // 30 minutes, prises avant d'écraser la version précédente.
-import { imageFileName, isImageRef } from '../../../images/imageStore';
+import { imageFileName, isImageRef } from '../../app/images/imageStore';
 import { buildEnvoleesBlob, readEnvoleesFile, type ArchiveImageBlob } from './archive';
 import { STORES, getAllValues, getSetting, getValue, promisify, setSetting, transaction } from './db';
 import { envoleesFileName, hasWritePermission, writeLinkedFile, type LinkedFileHandle } from './fileAccess';
@@ -173,7 +173,7 @@ export async function buildClassFile(dataJson: string, images: string[]): Promis
         if (entry) entries.push({ name, blob: entry.blob, crc32: entry.crc32 });
     }
     if (missing.length) console.warn(`${missing.length} image(s) absente(s) du fichier exporté`);
-    return buildEnvoleesBlob(dataJson, entries, `${__APP_VERSION__}-web`);
+    return buildEnvoleesBlob(dataJson, entries, `${import.meta.env.VITE_APP_VERSION}-web`);
 }
 
 export async function exportClass(id: string): Promise<{ blob: Blob; fileName: string; name: string }> {

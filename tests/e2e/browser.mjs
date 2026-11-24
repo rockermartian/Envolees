@@ -130,7 +130,7 @@ const waitDownload = async (count, label) => {
 
 /** Lit un fichier .envolees avec le lecteur partagé (application de bureau). */
 async function readEnvolees(file) {
-    const { readArchive } = await import('../../../shared/envoleesArchive.js');
+    const { readArchive } = await import('../../app/shared/envoleesArchive.js');
     const zlib = await import('node:zlib');
     const { promisify } = await import('node:util');
     return readArchive(new Uint8Array(fs.readFileSync(file)), promisify(zlib.inflateRaw));

@@ -1,0 +1,4167 @@
+[
+  {
+    "id": "prog_1763453818369",
+    "name": "Programme d’enseignement de l’école maternelle 2025",
+    "domains": [
+      {
+        "id": "dom_1763453862887",
+        "name": "D1. Développer et structurer le langage oral et écrit",
+        "expectations": [
+          "– Communiquer avec les adultes et avec les autres enfants par le langage, en se faisant comprendre.",
+          "– S’exprimer dans un langage oral syntaxiquement correct et précis.",
+          "– Utiliser le lexique appris en classe de façon appropriée.",
+          "– Reformuler son propos pour se faire mieux comprendre.",
+          "– Reformuler le propos d’autrui.",
+          "– Pratiquer divers usages de la langue orale : raconter, décrire, évoquer, expliquer, questionner, proposer des solutions, discuter un point de vue.",
+          "– Dire de mémoire et de manière expressive plusieurs comptines et poésies.",
+          "– Comprendre des textes écrits sans autre aide que le langage entendu.",
+          "– Manifester de la curiosité par rapport à la compréhension et à la production de l’écrit.",
+          "– Pouvoir redire les mots d’une phrase écrite après sa lecture par l’adulte, les mots du titre connu d’un livre ou d’un texte.",
+          "– Participer verbalement à la production d’un écrit. Savoir qu’on n’écrit pas comme on parle.",
+          "– Repérer des régularités dans la langue à l’oral en français (éventuellement dans une autre langue).",
+          "– Distinguer et manipuler des syllabes : scander les syllabes constitutives d'un mot, comprendre qu’on peut en supprimer, en ajouter, en inverser. – Repérer et produire des rimes, des assonances.",
+          "– Discriminer des sons (syllabes, sons-voyelles ; quelques sons-consonnes hors des consonnes occlusives) dans des mots ou dans des syllabes. – Reconnaître les lettres de l’alphabet, connaître leur nom, savoir que le nom d'une lettre peut être différent du son qu'elle transcrit.",
+          "– Connaître les correspondances entre les trois manières d’écrire les lettres : cursive, script, capitales d’imprimerie, et commencer à faire le lien avec le son qu’elles codent. Copier à l’aide d’un clavier.",
+          "– Reconnaître son prénom écrit en lettres capitales, en script ou en cursive. Connaître le nom des lettres qui le composent.",
+          "– Copier en cursive un mot ou une très courte phrase dont le sens est connu.",
+          "– Écrire son prénom en écriture cursive, sans modèle.",
+          "– Écrire seul un mot en utilisant des lettres ou groupes de lettres empruntés aux mots connus."
+        ],
+        "skills": [],
+        "subDomains": [
+          {
+            "id": "dom_1763454264313",
+            "name": "Acquérir le langage oral",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763454291230",
+                "name": "Enrichir son vocabulaire",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763469486785",
+                    "name": "Comprendre, mémoriser, réemployer les mots des corpus enseignés",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": "Avant 4 ans et à 4 ans: 2 par période\nA partir de 5 ans: 3 par période"
+                  },
+                  {
+                    "id": "skill_1763469496648",
+                    "name": "Organiser les mots en catégorie et en réseau",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763454298477",
+                "name": "Développer sa syntaxe",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763469533436",
+                    "name": "Diversifier les pronoms employés",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": "Avant 4 ans: il-elle/ils-elles, puis je\nA partir de 4 ans: tu, on\nA partir de 5 ans: nous, vous"
+                  },
+                  {
+                    "id": "skill_1763469643835",
+                    "name": "Construire à l’oral un système de temps de plus en plus efficace",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": "Avant 4 ans: Utiliser le présent puis en fin d’année, un système à trois temps : présent/passé composé/présent à valeur de futur proche (aller)\nA partir de 4 ans: utiliser l'imparfait et le passé composé, le conditionnel\nA partir de 5 ans:  un système à trois temps : imparfait/plus-que-parfait/imparfait à valeur de futur dans le passé (aller) ; le futur simple ; un système à deux temps futur/futur antérieur"
+                  },
+                  {
+                    "id": "skill_1763469725828",
+                    "name": "Formuler des énoncés de plus en plus complexes",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": "Avant 4 ans: premiers connecteurs : et/et puis\nA partir de 4 ans: nouveaux connecteurs temporels et spatiaux : d’abord/ensuite/après/pendant; afin de subordonner les propositions : parce que/que/qui\nA partir de 5 ans: e nouveaux introducteurs de complexité : où/quand/pour que/si/comme, etc"
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763454305268",
+                "name": "Articuler distinctement",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763469738458",
+                    "name": "Articuler distinctement les couples de consonnes proches suivants : t/k, f/s, m/n",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469746607",
+                    "name": "Distinguer et produire correctement les nasales : é/in, a/an, o/on",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469754659",
+                    "name": "Articuler distinctement les couples de consonnes proches suivants : f/v, s/z, p/b, t/d, k/g",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469788788",
+                    "name": "Prononcer correctement les couples de consonnes proches suivants : ch/s, ch/j, ch/z",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469799547",
+                    "name": "Prononcer correctement les doubles consonnes : br/cr/bl/pl/sl",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763454311910",
+                "name": "Produire des discours variés",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763469811397",
+                    "name": "Entrer en communication verbale avec un adulte ou un autre élève",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469817016",
+                    "name": "Dire ce qu’on fait",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469822982",
+                    "name": "Dire ce qu’on a fait et, peu à peu, ce qu’on va faire",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469828475",
+                    "name": "Prendre part à l’oralisation d’un court texte mémorisé",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469838592",
+                    "name": "Dire ce qu’on va faire",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469844468",
+                    "name": "Dire comment on a fait ou comment on va faire",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469850797",
+                    "name": "Oraliser un court texte mémorisé",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469855955",
+                    "name": "Participer à des échanges en restant dans le propos",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469868376",
+                    "name": "Décrire une action ou une activité qui a été menée par un autre élève",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469875157",
+                    "name": "Se faire comprendre, par le truchement du langage, d’un adulte qui ne connait rien à la situation évoquée",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469881144",
+                    "name": "Participer à une conversation avec un adulte ou des pairs et reformuler son propos s’il n’a pas été compris",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763469888217",
+                    "name": "Émettre une hypothèse",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              }
+            ]
+          },
+          {
+            "id": "dom_1763454274599",
+            "name": "Passer de l’oral à l’écrit : se préparer à apprendre à lire",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763454348659",
+                "name": "Acquérir les habiletés phonologiques et le principe alphabétique",
+                "expectations": [],
+                "skills": [],
+                "subDomains": [
+                  {
+                    "id": "dom_1763469938921",
+                    "name": "Ecouter, identifier, discriminer et reproduire des sons",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763469978271",
+                        "name": "Identifier les sons de la langue, lors de situations d’écoute proposées par le professeur",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763469986468",
+                        "name": "Identifier un mot donné à l’oral dans une phrase, dans un texte",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470022133",
+                        "name": "Utiliser la voix parlée, chantée et les possibilités vocales (imitation de sons, onomatopées) afin d’expérimenter différents sons.",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470027888",
+                        "name": "Entendre, discriminer des phonèmes",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470108610",
+                        "name": "Utiliser les possibilités sonores de la voix",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470116447",
+                        "name": "Augmenter sa mémoire auditive et sa capacité de concentration",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  },
+                  {
+                    "id": "dom_1763469954403",
+                    "name": "Manipuler des syllabes orales puis des phonèmes",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763469993593",
+                        "name": "Scander les syllabes d’un mot",
+                        "referenceAges": [
+                          "Moins de 4 ans",
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763469999187",
+                        "name": "Dire des comptines courtes comprenant des phonèmes proches",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470050521",
+                        "name": "Manipuler les syllabes d’un mot (ajout, suppression, permutation, répétition, fusion, substitution).",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470056763",
+                        "name": "Dire des comptines courtes comprenant des phonèmes proches.",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470123491",
+                        "name": "Supprimer, ajouter, remplacer, inverser, substituer, fusionner les syllabes d’un mot.",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470129948",
+                        "name": "Repérer et produire des rimes et des assonances",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470137800",
+                        "name": "Repérer et produire des rimes et des assonances",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  },
+                  {
+                    "id": "dom_1763469961840",
+                    "name": "Connaitre le nom des lettres",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763470008866",
+                        "name": "Reconnaitre et nommer certaines lettres de son prénom écrit en capitales",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470075644",
+                        "name": "Nommer les lettres de son prénom et quelques lettres de mots connus (le professeur nomme systématiquement les lettres)",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470081645",
+                        "name": "Connaitre la correspondance entre les lettres scriptes majuscules et minuscules et les lettres cursives minuscules.",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470146316",
+                        "name": "Connaitre le nom des lettres de l’alphabet",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470152377",
+                        "name": "Connaitre les différentes graphies d’une même lettre (majuscule lettre capitale ; minuscules scriptes ; cursives)",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470157540",
+                        "name": "Connaitre les différentes graphies d’une même lettre (majuscule lettre capitale ; minuscules scriptes ; cursives)",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  },
+                  {
+                    "id": "dom_1763470090980",
+                    "name": "Connaître le son des lettres",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763470099213",
+                        "name": "Donner les valeurs sonores de quelques lettres de mots simples connus",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470165942",
+                        "name": "Connaitre le nom des lettres de l’alphabet et leur valeur sonore hormis les occlusives",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470173643",
+                        "name": "Discriminer des mots auditivement proches",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  }
+                ]
+              },
+              {
+                "id": "dom_1763454356036",
+                "name": "S’éveiller à la diversité linguistique",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763470185383",
+                    "name": "Écouter des chants, des comptines, des histoires connues dans des versions en français et en langue étrangère",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470191547",
+                    "name": "Participer à des jeux dans une autre langue : jeux de doigts, rondes, jeux dansés, mimes, jeux de cour, jeux de cartes",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470196846",
+                    "name": "Comparer des histoires lues en français et dans une autre langue",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763454362059",
+                "name": "Écouter et comprendre différentes formes d’écrits",
+                "expectations": [],
+                "skills": [],
+                "subDomains": [
+                  {
+                    "id": "dom_1763470270251",
+                    "name": "Découvrir les supports de l’écrit",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763470285803",
+                        "name": "Repérer les outils fonctionnels utilisés quotidiennement en classe (étiquette du prénom, emploi du temps, affiches, etc.)",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470292125",
+                        "name": "Reconnaitre quelques écrits utilisés et produits en classe (comptines, recettes, carnet de lecteur)",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470325434",
+                        "name": "Reconnaitre, nommer et identifier la fonction de différents écrits rencontrés dans la vie courante",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470331534",
+                        "name": "Prendre conscience de la notion de destinataire et de contenu de la requête adressée par un écrit",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470351538",
+                        "name": "Identifier et utiliser quotidiennement des outils fonctionnels pour se repérer, s’organiser, ranger",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470381198",
+                        "name": "Différencier les types d’écrits et associer un écrit à un projet d’écriture ou de communication",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470395030",
+                        "name": "Repérer et dégager la structure et l’organisation (mise en page, typographie) de formes d’écrits fréquemment utilisés en classe (structure de la lettre, de la recette, du conte, d’un écrit documentaire, d’une notice de fabrication)",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  },
+                  {
+                    "id": "dom_1763470277606",
+                    "name": "Comprendre des textes lus par le professeur",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763470298646",
+                        "name": "Reconnaitre un personnage, le nommer et le situer dans les illustrations",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470304391",
+                        "name": "Comprendre des histoires où l’enchainement des actions peut être rattaché à des expériences connues de la vie quotidienne (le bain, le coucher, etc.)",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470363225",
+                        "name": "Identifier et décrire le personnage principal et les personnages secondaires",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470370020",
+                        "name": "Comprendre des histoires dont les actions sont organisées autour d’une structure répétitive (rencontres successives) et commencer à comprendre les informations implicites (émotions, états et sentiments des personnages)",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470403355",
+                        "name": "Construire les caractéristiques des personnages archétypaux (loup, princesse, ogre, sorcière, renard, fée, etc.)",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470413472",
+                        "name": "Comprendre des histoires où l’enchainement des actions est lié au destin de personnages centraux ou secondaires qui évoluent et interagissent, dans des lieux diversifiés",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470423667",
+                        "name": "Comprendre les émotions, les intentions et les sentiments qui animent les personnages",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470433975",
+                        "name": "Établir un lien entre la lecture effectuée et sa propre expérience.",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "dom_1763454281381",
+            "name": "Passer de l’oral à l’écrit : se préparer à apprendre à écrire",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763454373622",
+                "name": "Apprendre le geste d’écriture",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763470477271",
+                    "name": "Participer aux activités de motricité générale, de motricité fine et aux exercices de graphismes",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470489087",
+                    "name": "Guider son geste par le regard lorsqu’il trace ou écrit",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470497536",
+                    "name": "Prendre des repères spatiaux sur le support utilisé pour tracer",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470510578",
+                    "name": "Adopter une posture adaptée au geste d’écriture",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470520363",
+                    "name": "Adopter une préhension correcte du stylo et s’entrainer à ne pas le lever en écrivant",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470529815",
+                    "name": "Utiliser de façon coordonnée les quatre articulations qui servent à tenir et guider le crayon (épaule, coude, poignet, doigts).",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470536346",
+                    "name": "Tracer des lettres capitales",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470546643",
+                    "name": "S’initier aux tracés de l’écriture cursive",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470557712",
+                    "name": "Tenir correctement son stylo par la pince des doigts et utiliser de façon coordonnée les quatre articulations (épaule, coude, poignet, doigts)",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470566521",
+                    "name": "Travailler la ligature entre deux lettres",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763470573732",
+                    "name": "Tracer des lettres en écriture cursive, les enchainer",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763454379607",
+                "name": "Produire de premiers écrits",
+                "expectations": [],
+                "skills": [],
+                "subDomains": [
+                  {
+                    "id": "dom_1763470641345",
+                    "name": "Passer de l’oral à l’écrit",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763470681114",
+                        "name": "Percevoir que l’écrit encode l’oral",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470686170",
+                        "name": "Utiliser un support écrit connu",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470706732",
+                        "name": "Comprendre que lorsque l’adulte lit un même écrit plusieurs fois, ce qu’il lit est toujours identique",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470712410",
+                        "name": "Comprendre que l’écrit code des sons",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470717854",
+                        "name": "Proposer au professeur, lors d’une activité de dictée à l’adulte, le contenu d’un court message, stabiliser un énoncé oral et le mémoriser pour pouvoir ensuite le dicter au professeur",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470722885",
+                        "name": "Comparer la longueur d’un texte écrit et la durée du texte entendu",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470728553",
+                        "name": "Savoir que le sens de la lecture est de gauche à droite et de haut en bas",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470746569",
+                        "name": "Segmenter l’oral en mots, les mots en syllabes, quelques syllabes en phonèmes",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470752900",
+                        "name": "Comprendre que l’écrit encode l’oral et que les sons de la langue sont codés par des lettres",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470758390",
+                        "name": "Suivre la trace écrite des yeux lors d’une relecture par l’adulte d’un message produit lors d’une dictée à l’adulte",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  },
+                  {
+                    "id": "dom_1763470675603",
+                    "name": "Produire des écrits",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763470694316",
+                        "name": "Mimer la posture et les gestes d’écriture de l’adulte lors de la production de traces qui s’apparentent à de l’écriture",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470699711",
+                        "name": "Tracer volontairement des signes abstraits dont on comprend qu’il ne s’agit pas de dessins, mais de lettres",
+                        "referenceAges": [
+                          "Moins de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470737643",
+                        "name": "Chercher parmi les outils à sa disposition des modèles qui seront réutilisés dans un essai d’écriture",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470768225",
+                        "name": "Mémoriser la graphie d’un mot transparent, en s’appuyant sur la connaissance des lettres et la conscience phonologique et le retranscrire sur un support",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470773786",
+                        "name": "Réinvestir ses premières connaissances relatives au principe alphabétique pour produire un écrit",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470778737",
+                        "name": "Se repérer dans l’alphabet pour retrouver l’écriture d’une lettre nécessaire pour produire un écrit",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470785529",
+                        "name": "Mémoriser l’écriture de mots transparents ou de syllabes connues pour les réutiliser dans une production d’écrit",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470790819",
+                        "name": "Comprendre qu’il existe une norme pour écrire : ponctuation, majuscules, mise en page, etc",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763470795887",
+                        "name": "Persévérer pour mener la production d’écrit à son terme : préparation, énonciation et révision",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dom_1763453962479",
+        "name": "D2. Agir, s’exprimer, comprendre à travers l’activité physique",
+        "expectations": [
+          "– Courir, sauter, lancer de différentes façons, dans des espaces et avec des matériels variés, dans un but précis.",
+          "– Ajuster et enchaîner ses actions et ses déplacements en fonction d’obstacles à franchir ou de la trajectoire d’objets sur lesquels agir.",
+          "– Se déplacer avec aisance et en sécurité dans des environnements variés, naturels ou aménagés",
+          "– Construire et conserver une séquence d’actions et de déplacements, en relation avec d’autres partenaires, avec ou sans support musical.",
+          "– Coordonner ses gestes et ses déplacements avec ceux des autres, lors de rondes et jeux chantés.",
+          "– Coopérer, exercer des rôles différents complémentaires, s’opposer, élaborer des stratégies pour viser un but ou un effet commun."
+        ],
+        "skills": [],
+        "subDomains": [
+          {
+            "id": "dom_1763454784244",
+            "name": "Agir dans l’espace, dans la durée et sur les objets",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763471117422",
+                "name": "Courir",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763471248317",
+                    "name": "Réagir à un signal",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471264174",
+                    "name": "Courir dans un but (attraper, s'échapper, déplacer des objets)",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471284295",
+                    "name": "Courir vite en ligne droite",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471299745",
+                    "name": "Courir en évitant ou en franchissant des obstacles",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471309289",
+                    "name": "Courir en suivant un parcours",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471325439",
+                    "name": "Participer à une course de relais",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471333290",
+                    "name": "Courir longtemps",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763471120906",
+                "name": "Sauter",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763471348231",
+                    "name": "Enjamber un objet, un obstacle",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471357108",
+                    "name": "Sauter à pieds joints",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471366943",
+                    "name": "Sauter à cloche-pieds",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471373749",
+                    "name": "Enchaîner plusieurs sauts",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471379191",
+                    "name": "Sauter de haut",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471386331",
+                    "name": "Sauter loin",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471390813",
+                    "name": "Sauter loin",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763471123273",
+                "name": "Lancer",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763471411513",
+                    "name": "Faire rouler un ballon, une balle, un cerceau",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471421168",
+                    "name": "Lancer haut",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471426878",
+                    "name": "Lancer loin",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471444305",
+                    "name": "Lancer à quelqu'un",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471449585",
+                    "name": "Lancer précisément",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471455686",
+                    "name": "Attraper un objet",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              }
+            ]
+          },
+          {
+            "id": "dom_1763454794234",
+            "name": "Adapter ses équilibres et ses déplacements à des environnements ou des contraintes variés",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763471479621",
+                "name": "Grimper, s'équilibrer, rouler",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763471527724",
+                    "name": "Se déplacer de différentes façons, adapter son déplacement",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471538423",
+                    "name": "S'engager dans un parcours de motricité",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471560450",
+                    "name": "S'engager dans une activité d'équilibre",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471586416",
+                    "name": "Grimper, escalader, se suspendre, descendre",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471595574",
+                    "name": "Marcher en équilibre",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471617619",
+                    "name": "Oser se déséquilibrer pour montrer une action, pour réaliser une figure",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471636908",
+                    "name": "Effectuer une roulade avant",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471667923",
+                    "name": "Glisser sur un toboggan, sur une surface plane",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471679656",
+                    "name": "Se déplacer avec des échasses",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471700539",
+                    "name": "Passer sous un obstacle",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471776870",
+                    "name": "Entrer dans l'eau",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471835964",
+                    "name": "S'immerger",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471841267",
+                    "name": "Se déplacer dans l'eau",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763471572572",
+                "name": "Utiliser des engins roulants",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763471729195",
+                    "name": "Grimper sur un engin roulant",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471735797",
+                    "name": "Pédaler",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471741455",
+                    "name": "Utiliser un tricycle",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471753489",
+                    "name": "S'équilibrer, utiliser une trottinette",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471768469",
+                    "name": "S'équilibrer et utiliser une planche ou des patins à roulettes",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471803943",
+                    "name": "Utiliser un vélo avec des roulettes",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471818250",
+                    "name": "S'équilibrer et utiliser une draisienne",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763471825628",
+                    "name": "S'équilibrer et utiliser un vélo à deux roues",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763474706285",
+                "name": "S'orienter",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763474714187",
+                    "name": "Suivre un chemin précis, un itinéraire",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474738125",
+                    "name": "Repérer et s'orienter dans un lieu familier d'après une représentation ou des photos du lieu",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474744463",
+                    "name": "Suivre des repères",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474779649",
+                    "name": "Utiliser un plan",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474847827",
+                    "name": "Organiser sa recherche",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474912114",
+                    "name": "Retrouver des repères, des objets cachés",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763475004863",
+                    "name": "Eviter des obstacles dispersés dans l'espace",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              }
+            ]
+          },
+          {
+            "id": "dom_1763454800560",
+            "name": "Communiquer avec les autres au travers d’actions à visée expressive ou artistique",
+            "expectations": [],
+            "skills": [
+              {
+                "id": "skill_1763471874784",
+                "name": "Participer à un jeu dansé",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763471885795",
+                "name": "Arrêter son mouvement à un signal",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763471902214",
+                "name": "Prendre et garder sa place dans un \"petit train\", un cortège",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763471933439",
+                "name": "Se déplacer dans une farandole, une tresse",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763471970061",
+                "name": "Participer à une ronde simple ; se déplacer correctement dans une ronde",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763472071628",
+                "name": "Participer à une ronde complexe",
+                "referenceAges": [],
+                "image": null,
+                "description": "Changement d'allure et/ou de pas, rondes concentriques, rondes où on avance vers le centre"
+              },
+              {
+                "id": "skill_1763472093325",
+                "name": "Reproduire les mouvements d'un adulte ou d'un camarade",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763472111440",
+                "name": "Mémoriser et reproduire une courte danse",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763472158465",
+                "name": "Inventer des mouvements à partir d'objets (foulards, plumes, balles ...)",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763472175874",
+                "name": "Adapter, transformer ses mouvements selon l'énergie, la vitesse",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763472198355",
+                "name": "Adapter ses gestes et déplacements avec ceux de ses camarades",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763472203701",
+                "name": "Adapter ses gestes et déplacements avec la musique",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763472222880",
+                "name": "Oser danser devant des spectateurs",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              }
+            ],
+            "subDomains": []
+          },
+          {
+            "id": "dom_1763454807881",
+            "name": "Collaborer, coopérer, s’opposer",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763472273636",
+                "name": "Jouer avec des partenaires",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763472388602",
+                    "name": "Participer à un jeu collectif",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472403821",
+                    "name": "Comprendre et respecter les règles d'un jeu collectif",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472414596",
+                    "name": "Reconnaitre son équipe",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472440168",
+                    "name": "Mettre en oeuvre des stratégies, prendre des initiatives",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472459623",
+                    "name": "Exercer différents rôles",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472478258",
+                    "name": "Se repérer dans le terrain de jeu ; respecter les limites spatiales du terrain",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472626628",
+                    "name": "Prendre en compte l'autre dans un jeu de coopération",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763472372289",
+                "name": "S'opposer",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763472502657",
+                    "name": "Tirer, pousser, déplacer des objets",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472518329",
+                    "name": "Entrer en contact physique avec un adversaire",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472532805",
+                    "name": "Résister, échapper à un adversaire",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472544602",
+                    "name": "Attraper, immobiliser un adversaire",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472559732",
+                    "name": "S'opposer à un adversaire pour un objet",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472582682",
+                    "name": "Respecter les règles de sécurité pour ne pas se mettre en danger, mettre en danger son camarade",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472652161",
+                    "name": "Accepter l'issue du jeu",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472691638",
+                    "name": "Mettre en oeuvre des stratégies pour gagner",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dom_1763453976007",
+        "name": "D3. Agir, s’exprimer, comprendre à travers les activités artistiques",
+        "expectations": [
+          "– Choisir différents outils, médiums, supports en fonction d’un projet ou d’une consigne et les utiliser en adaptant son geste.",
+          "– Pratiquer le dessin pour représenter ou illustrer, en étant fidèle au réel ou à un modèle, ou en inventant.",
+          "– Réaliser une composition personnelle en reproduisant des graphismes. Créer des graphismes nouveaux.",
+          "– Réaliser des compositions plastiques, seul ou en petit groupe, en choisissant et combinant des matériaux, en réinvestissant des techniques et des procédés.",
+          "– Avoir mémorisé un répertoire varié de comptines et de chansons et les interpréter de manière expressive.",
+          "– Jouer avec sa voix pour explorer des variantes de timbre, d’intensité, de hauteur, de nuance.",
+          "– Repérer et reproduire, corporellement ou avec des instruments, des formules rythmiques simples.",
+          "– Décrire une image, parler d’un extrait musical et exprimer son ressenti ou sa compréhension en utilisant un vocabulaire adapté.",
+          "– Proposer des solutions dans des situations de projet, de création, de résolution de problèmes, avec son corps, sa voix ou des objets sonores."
+        ],
+        "skills": [],
+        "subDomains": [
+          {
+            "id": "dom_1763454957652",
+            "name": "Les productions plastiques et visuelles",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763454990692",
+                "name": "Dessiner",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763472769997",
+                    "name": "Laisser une trace avec l'intention de dessiner",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472829805",
+                    "name": "Utiliser différents outils et supports pour dessiner",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472843006",
+                    "name": "Dessiner quelque chose d'identifiable",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763472880570",
+                    "name": "Dessiner librement",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473071744",
+                    "name": "Dessiner à partir d'un modèle ; ce qu'on voit",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763454996279",
+                "name": "S’exercer au graphisme décoratif",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763473106534",
+                    "name": "Nommer les graphismes réalisés ou observés",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": [
+                  {
+                    "id": "dom_1763472904527",
+                    "name": "Tracer des graphismes simples",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763472927548",
+                        "name": "Tracer des lignes verticales",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763472936937",
+                        "name": "Tracer des lignes horizontales",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763472942852",
+                        "name": "Tracer des lignes obliques",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763472962157",
+                        "name": "Tracer des ronds",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  },
+                  {
+                    "id": "dom_1763472993978",
+                    "name": "Tracer des graphismes complexes",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763473007229",
+                        "name": "Tracer des lignes brisées",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763473014217",
+                        "name": "Tracer des lignes sinueuses",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763473022336",
+                        "name": "Tracer des cercles concentriques",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763473028645",
+                        "name": "Tracer des spirales",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763473033597",
+                        "name": "Tracer des ponts",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763473039554",
+                        "name": "Tracer des boucles",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763473046388",
+                        "name": "Combiner des graphismes",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  }
+                ]
+              },
+              {
+                "id": "dom_1763455002065",
+                "name": "Réaliser des compositions plastiques, planes et en volume",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763473517523",
+                    "name": "Utiliser différents outils et matériaux pour créer une production",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473530068",
+                    "name": "Laisser des traces avec ses mains, avec des outils",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473543229",
+                    "name": "Remplir une surface délimitée",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473556586",
+                    "name": "Colorier sans dépasser",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473595294",
+                    "name": "Décoller et coller des gommettes",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473601237",
+                    "name": "Déchirer du papier",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473608264",
+                    "name": "Réaliser un collage",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473631437",
+                    "name": "Créer une composition plane individuelle ou collective",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473653822",
+                    "name": "Modeler des boules",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473659812",
+                    "name": "Modeler des colombins",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473667066",
+                    "name": "Modeler à l'aide d'un modèle",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473685608",
+                    "name": "Créer une composition en volume individuelle ou collective",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763455007427",
+                "name": "Observer, comprendre et transformer des images",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763473749874",
+                    "name": "Connaître le nom des couleurs et les reconnaître",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473964492",
+                    "name": "Dire ce qu'on pense d'une composition réalisée par soi-même, un camarade ou un artiste",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473979235",
+                    "name": "Observer une image et la décrire, la commenter",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473988013",
+                    "name": "Connaître quelques oeuvres",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763473997239",
+                    "name": "Faire le lien entre plusieurs images",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474034723",
+                    "name": "S'inspirer de la démarche d'un artiste, d'une oeuvre ; suivre une consigne pour réaliser une composition",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474079511",
+                    "name": "Distinguer une photographie et une illustration",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474137768",
+                    "name": "Utiliser un vocabulaire précis",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              }
+            ]
+          },
+          {
+            "id": "dom_1763454969719",
+            "name": "Univers sonores",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763455016992",
+                "name": "Jouer avec sa voix et acquérir un répertoire de comptines et de chansons",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763474241529",
+                    "name": "Produire des sons avec sa bouche",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474269617",
+                    "name": "Produire des sons avec son corps",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474280481",
+                    "name": "Participer à des chants collectifs",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474293156",
+                    "name": "Moduler sa voix",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474299459",
+                    "name": "Chanter seul",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474313554",
+                    "name": "Interpréter un chant de manière expressive",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474339884",
+                    "name": "Mémoriser un répertoire de comptines, de chansons",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763455024254",
+                "name": "Explorer des instruments, utiliser les sonorités du corps",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763474358966",
+                    "name": "Explorer les possibilités sonores d'objets, d'insturments",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474370399",
+                    "name": "Utiliser des instruments à percussions",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474383859",
+                    "name": "Identifier les instruments de la classe",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474447906",
+                    "name": "Nommer des instruments de l'orchestre, du paysage musical",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474461343",
+                    "name": "Reproduire un rythme",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474479920",
+                    "name": "Faire des propositions de création musicale",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763455028240",
+                "name": "Affiner son écoute",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763474154078",
+                    "name": "Être attentif pour écouter",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474177305",
+                    "name": "Dire ce que l'on entend, identifier un son",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474194760",
+                    "name": "Utiliser un vocabulaire précis pour parler de musique",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474211934",
+                    "name": "Dire ce qu'on ressent, ce qu'on imagine après une écoute",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474220350",
+                    "name": "Connaître quelques oeuvres musicales",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              }
+            ]
+          },
+          {
+            "id": "dom_1763454978019",
+            "name": "Le spectacle vivant",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763455041249",
+                "name": "Pratiquer quelques activités des arts du spectacle vivant",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763474527760",
+                    "name": "Oser se mettre en scène face aux autres",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474539947",
+                    "name": "Se repérer et évoluer dans l'espace scénique",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474554947",
+                    "name": "Jouer, mimer une histoire",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474562392",
+                    "name": "Mimer des émotions",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474661057",
+                    "name": "Faire des propositions de mise en scène",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763474668770",
+                    "name": "Être un spectateur attentif",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dom_1763454005507",
+        "name": "D4. Acquérir les premiers outils mathématiques",
+        "expectations": [
+          "Découvrir les nombres et leurs utilisations : Ce qui est attendu des enfants en fin d’école maternelle",
+          "– Évaluer et comparer des collections d’objets avec des procédures numériques ou non numériques (perception immédiate, correspondance terme à terme, etc.).",
+          "– Réaliser une collection dont le cardinal est compris entre 1 et 10.",
+          "– Utiliser le dénombrement pour comparer deux quantités ou pour réaliser une collection de quantité égale à la collection proposée (quantités inférieures ou égales à 10).",
+          "– Utiliser le nombre pour exprimer la position d’un objet ou d’une personne dans un jeu, dans une situation organisée, sur un rang ou pour comparer des positions.",
+          "– Mobiliser des symboles analogiques (constellations, doigts), verbaux (mots-nombres) ou écrits (en chiffres), pour communiquer des informations orales et écrites sur une quantité, jusqu’à 10 au moins.",
+          "– Avoir compris que le cardinal ne change pas si on modifie la disposition spatiale ou la nature des éléments.",
+          "– Avoir compris que tout nombre s’obtient en ajoutant un au nombre précédent et que cela correspond à l’ajout d’une unité à la quantité précédente.",
+          "– Quantifier des collections jusqu’à dix au moins ; les composer et les décomposer par manipulations effectives puis mentales.",
+          "– Dire combien il faut ajouter ou enlever pour obtenir des quantités ne dépassant pas dix.",
+          "– Parler des nombres à l’aide de leur décomposition.",
+          "– Dire la suite des nombres jusqu’à trente. Dire la suite des nombres à partir d’un nombre donné (entre 1 et 30).",
+          "– Lire les nombres écrits en chiffres jusqu’à 10.",
+          "– Commencer à écrire les nombres en chiffres jusqu’à 10.",
+          "– Commencer à comparer deux nombres inférieurs ou égaux à 10 écrits en chiffres.",
+          "– Commencer à positionner des nombres les uns par rapport aux autres et à compléter une bande numérique lacunaire (les nombres en jeu sont inférieurs ou égaux à 10).",
+          "– Commencer à résoudre des problèmes de composition de deux collections, d’ajout ou de retrait, de produit ou de partage (les nombres en jeu sont tous inférieurs ou égaux à 10).",
+          "Explorer des formes, des grandeurs, des suites organisées : Ce qui est attendu des enfants en fin d’école maternelle",
+          "– Classer des objets en fonction de caractéristiques liées à leur forme.",
+          "– Reconnaître quelques solides (cube, pyramide, boule, cylindre).",
+          "– Savoir nommer quelques formes planes (carré, triangle, cercle ou disque, rectangle) et ce dans toutes leurs orientations et configurations.",
+          "– Classer ou ranger des objets selon un critère de longueur ou de masse ou de contenance.",
+          "– Reproduire un assemblage à partir d’un modèle (puzzle, pavage, assemblage de solides).",
+          "– Reproduire, dessiner des formes planes.",
+          "– Identifier une organisation régulière et poursuivre son application."
+        ],
+        "skills": [],
+        "subDomains": [
+          {
+            "id": "dom_1763455054631",
+            "name": "Découvrir les nombres",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763455082235",
+                "name": "Exprimer une quantité par un nombre",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763459833956",
+                    "name": "Comprendre qu’une quantité d’objets ne dépend ni de la nature de ces objets ni de leur organisation spatiale",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459848587",
+                    "name": "Comprendre que si on ajoute un objet à une collection, le nombre qui désigne sa quantité est le suivant dans la suite orale des noms des nombres",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459858604",
+                    "name": "Comprendre que dans la suite orale des noms des nombres, chaque nombre s’obtient en ajoutant un au nombre précédent",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459867394",
+                    "name": "Dénombrer une collection d’objets (jusqu’à trois, voire quatre)",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459874843",
+                    "name": "Constituer une collection (jusqu’à trois, voire quatre objets) d’un cardinal donné",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459882119",
+                    "name": "Comparer des quantités",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459890483",
+                    "name": "Composer et décomposer des nombres (deux, trois, voire quatre)",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459896482",
+                    "name": "Manipuler et verbaliser des compositions et des décompositions de nombres.",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": "Cela permet d’installer le fait que, dans une composition, l’ordre ne compte pas ; ces compositions et décompositions permettent de dénombrer plus efficacement que par le comptage un à un"
+                  },
+                  {
+                    "id": "skill_1763459902229",
+                    "name": "Associer une quantité, le nom d’un nombre et une écriture chiffrée",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459911607",
+                    "name": "Connaitre la comptine numérique de un à six",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459961489",
+                    "name": "Parcourir une collection en passant une et une seule fois par chacun de ses éléments",
+                    "referenceAges": [
+                      "A partir de 4 ans",
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459971432",
+                    "name": "Dénombrer une collection d’objets (jusqu’à six)",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459979494",
+                    "name": "Constituer une collection d’un cardinal donné (jusqu’à six objets)",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459985107",
+                    "name": "Comparer des quantités",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459990282",
+                    "name": "Composer et décomposer des nombres inférieurs ou égaux à six",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459997659",
+                    "name": "Manipuler et verbaliser des compositions et des décompositions de nombres. Cela permet d’installer le fait que, dans une composition, l’ordre ne compte pas ; ces compositions et décompositions permettent de dénombrer plus efficacement que par le comptage un à un",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460003010",
+                    "name": "Associer une quantité, le nom d’un nombre et une écriture chiffrée",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460010807",
+                    "name": "Écrire en chiffres les nombres de un à six",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460098106",
+                    "name": "Dénombrer une collection d’objets (jusqu’à dix, voire au-delà)",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460105660",
+                    "name": "Constituer une collection d’un cardinal donné (jusqu’à dix, voire au-delà)",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460118113",
+                    "name": "Comparer des quantités",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460124527",
+                    "name": "Composer et décomposer des nombres inférieurs ou égaux à dix, voire au-delà",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460130080",
+                    "name": "Manipuler et verbaliser des compositions et des décompositions de nombres. Cela permet d’installer le fait que, dans une composition, l’ordre ne compte pas",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460136437",
+                    "name": "Surcompter (c’est-à-dire compter de un en un à partir d’un nombre donné)",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460142475",
+                    "name": "Associer une quantité, le nom d’un nombre et une écriture chiffrée.",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460147315",
+                    "name": "Écrire en chiffres les nombres de un à dix",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460155481",
+                    "name": "Connaitre et utiliser la comptine numérique jusqu’à trente",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460539071",
+                    "name": "Connaitre la comptine numérique de un à douze",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763455088307",
+                "name": "Exprimer un rang ou une position par un nombre",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763460171754",
+                    "name": "Comprendre la notion de rang",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460177347",
+                    "name": "Déterminer l’effet d’un déplacement sur une position",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460184488",
+                    "name": "Se familiariser avec le début de la bande numérique",
+                    "referenceAges": [
+                      "A partir de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460211979",
+                    "name": "Comprendre la notion de rang d’un objet",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460218773",
+                    "name": "Déterminer l’effet d’un déplacement sur une position",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460223642",
+                    "name": "Comprendre le lien entre un ajout et un avancement et celui entre un retrait et un recul",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763460231661",
+                    "name": "Construire la bande numérique jusqu’à dix",
+                    "referenceAges": [
+                      "A partir de 5 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              }
+            ]
+          },
+          {
+            "id": "dom_1763455060337",
+            "name": "Utiliser les nombres pour résoudre des problèmes",
+            "expectations": [],
+            "skills": [
+              {
+                "id": "skill_1763460247795",
+                "name": "Recherche du tout ou d’une partie dans un problème de parties-tout",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460261182",
+                "name": "Rechercher le tout ou une partie dans un problème de parties-tout",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460266775",
+                "name": "Trouver une position finale à partir d’une position initiale et d’un déplacement sur une piste du type du jeu de l’oie ou sur la bande numérique",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460272949",
+                "name": "Trouver une position finale à partir d’une position initiale et d’un déplacement sur une piste du type du jeu de l’oie ou sur la bande numérique",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460278244",
+                "name": "Rechercher la valeur d’une part dans un problème de partage équitable",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460285141",
+                "name": "Déterminer le tout ou une partie dans un problème de parties-tout (d’abord deux parties, puis éventuellement trois).",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460292613",
+                "name": "Déterminer la quantité d’objets ayant été ajoutée ou retirée à une collection à partir de ses quantités initiale et finale",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460298870",
+                "name": "Déterminer la position finale (respectivement initiale) à partir de la position initiale (respectivement finale) et d’un déplacement sur une piste du type du jeu de l’oie ou sur la bande numérique",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460304394",
+                "name": "Déterminer le cardinal d’une collection à partir de celui d’une autre collection et de l’écart entre les deux",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460310104",
+                "name": "Déterminer le tout dans un problème de groupement d’objets.",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460314859",
+                "name": "Déterminer le tout dans un problème de groupement d’objets.",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              }
+            ],
+            "subDomains": []
+          },
+          {
+            "id": "dom_1763455064719",
+            "name": "Explorer les solides et les formes planes",
+            "expectations": [],
+            "skills": [
+              {
+                "id": "skill_1763460328843",
+                "name": "Reconnaitre, trier et classer des objets selon leur forme",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460334776",
+                "name": "Percevoir l’invariance de la forme d’un objet par rapport aux déplacements qu’il peut subir",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460340785",
+                "name": "Reproduire des assemblages de solides ou de formes planes",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460349381",
+                "name": "Reconnaitre et classer des solides (cube, boule, pyramide à base carrée, cylindre) et des formes géométriques planes (triangle, carré, disque)",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460354286",
+                "name": "Reproduire des assemblages de solides ou de formes planes (au maximum cinq).",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460364012",
+                "name": "Décrire quelques solides simples : cube, pavé, boule, pyramides à base carrée ou triangulaire, cylindre, cône",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460369915",
+                "name": "Reconnaitre, trier et classer des formes géométriques planes, indépendamment d’autres critères comme la couleur, la taille, l’orientation",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460375793",
+                "name": "Reconnaitre, trier et classer des formes géométriques planes, indépendamment d’autres critères comme la couleur, la taille, l’orientation",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460380400",
+                "name": "Reproduire des assemblages de solides (au maximum cinq) et de formes planes (au maximum huit)",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460386273",
+                "name": "S’approprier la règle comme outil de tracé",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              }
+            ],
+            "subDomains": []
+          },
+          {
+            "id": "dom_1763455068833",
+            "name": "Explorer des grandeurs : la longueur, la masse",
+            "expectations": [],
+            "skills": [
+              {
+                "id": "skill_1763460404163",
+                "name": "Reconnaitre un objet de même longueur qu’un objet donné",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460412509",
+                "name": "Comparer des objets selon leur longueur",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460419352",
+                "name": "Comparer directement des longueurs d’objets rectilignes et verbaliser le résultat",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460424500",
+                "name": "Comparer directement des longueurs d’objets rectilignes et verbaliser le résultat",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460428969",
+                "name": "Comparer directement des longueurs d’objets rectilignes et verbaliser le résultat",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460450684",
+                "name": "Comparer les masses de deux objets",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460459096",
+                "name": "Comparer indirectement des longueurs d’objets rectilignes.",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460464878",
+                "name": "Ordonner des objets rectilignes selon leur longueur (au maximum cinq)",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460471217",
+                "name": "Produire un objet rectiligne de même longueur qu’un objet donné",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460479179",
+                "name": "Ordonner les masses de trois objets. Verbaliser les résultats.",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460522242",
+                "name": "Reconnaitre l’égalité de deux masses et verbaliser le résultat",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              }
+            ],
+            "subDomains": []
+          },
+          {
+            "id": "dom_1763455073021",
+            "name": "Se familiariser avec les motifs organisés",
+            "expectations": [],
+            "skills": [
+              {
+                "id": "skill_1763460549150",
+                "name": "Mémoriser un motif répétitif très simple",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460554660",
+                "name": "Reproduire un motif répétitif à l’identique",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460567497",
+                "name": "Mémoriser un motif répétitif simple",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460577786",
+                "name": "Reconnaitre un motif répétitif à ses régularités",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460591020",
+                "name": "Décrire oralement des motifs répétitifs simples de différentes natures, sans nécessairement recourir au vocabulaire spécialisé",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460597256",
+                "name": "Prolonger l’amorce d’un motif répétitif et verbaliser la règle de prolongement utilisée",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460607873",
+                "name": "Repérer et décrire oralement la structure d’un motif évolutif (par exemple relevant de la transcription formelle ABAABBAAABBB)",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460616245",
+                "name": "Identifier la structure d’un motif répétitif ou évolutif indépendamment des éléments physiques qui le composent",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763460633568",
+                "name": "Créer des motifs de différentes natures",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              }
+            ],
+            "subDomains": []
+          }
+        ]
+      },
+      {
+        "id": "dom_1763454038927",
+        "name": "D5. Explorer le monde",
+        "expectations": [
+          "Le temps, l’espace : Ce qui est attendu des enfants en fin d’école maternelle",
+          "– Situer des événements vécus les uns par rapport aux autres et en les repérant dans la journée, la semaine, le mois ou une saison.",
+          "– Ordonner une suite de photographies ou d’images, pour rendre compte d’une situation vécue ou d’un récit fictif entendu, en marquant de manière exacte succession et simultanéité.",
+          "– Utiliser des marqueurs temporels adaptés (puis, pendant, avant, après…) dans des récits, descriptions ou explications.",
+          "– Situer des objets par rapport à soi, entre eux, par rapport à des objets repères.",
+          "– Se situer par rapport à d’autres, par rapport à des objets repères.",
+          "– Dans un environnement bien connu, réaliser un trajet, un parcours à partir de sa représentation (dessin ou codage).",
+          "– Élaborer des premiers essais de représentation plane, communicables (construction d’un code commun).",
+          "– Orienter et utiliser correctement une feuille de papier, un livre ou un autre support d’écrit, en fonction de consignes, d’un but ou d’un projet précis.",
+          "– Utiliser des marqueurs spatiaux adaptés (devant, derrière, droite, gauche, dessus, dessous, etc.) dans des récits, descriptions ou explications.",
+          "Explorer le monde du vivant, des objets et de la matière : Ce qui est attendu des enfants en fin d’école maternelle",
+          "– Reconnaître et décrire les principales étapes du développement d'un animal ou d'un végétal, dans une situation d’observation du réel ou sur des images fixes ou animées.",
+          "– Connaître les besoins essentiels de quelques animaux et végétaux.",
+          "– Situer et nommer les différentes parties du corps humain, sur soi ou sur une représentation.",
+          "– Connaître et mettre en œuvre quelques règles d'hygiène corporelle et d’une vie saine.",
+          "– Choisir, utiliser et savoir désigner des outils et des matériaux adaptés à une situation, à des actions techniques spécifiques (plier, couper, coller, assembler, actionner…).",
+          "– Réaliser des constructions ; construire des maquettes simples en fonction de plans ou d’instructions de montage.",
+          "– Utiliser des objets numériques : appareil photo, tablette, ordinateur.",
+          "– Prendre en compte les risques de l'environnement familier proche (objets et comportements dangereux, produits toxiques).",
+          "– Commencer à adopter une attitude responsable en matière de respect des lieux et de protection du vivant."
+        ],
+        "skills": [],
+        "subDomains": [
+          {
+            "id": "dom_1763455125964",
+            "name": "Se repérer dans le temps et l’espace",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763455247119",
+                "name": "Le temps",
+                "expectations": [],
+                "skills": [],
+                "subDomains": [
+                  {
+                    "id": "dom_1763455257313",
+                    "name": "Stabiliser les premiers repères temporels",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763456736065",
+                        "name": "Différencier jour et nuit",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457037999",
+                        "name": "Se repérer dans la journée",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457108748",
+                        "name": "Se repérer dans la semaine à l'aide d'une frise de la semaine",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457457907",
+                        "name": "Utiliser la frise de la journée",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  },
+                  {
+                    "id": "dom_1763455261392",
+                    "name": "Introduire les repères sociaux",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763457501590",
+                        "name": "Connaître le nom des saisons et leurs caractéristiques",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457516306",
+                        "name": "Connaître la suite des jours de la semaine",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457582843",
+                        "name": "Reconstituer, écrire la date",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457594017",
+                        "name": "Nommer quelques mois de l'année",
+                        "referenceAges": [
+                          "A partir de 4 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457608556",
+                        "name": "Se repérer dans un calendrier",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457635727",
+                        "name": "Relier les moments de la journée et les heures",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458108801",
+                        "name": "Comprendre la notion d'anniversaire",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  },
+                  {
+                    "id": "dom_1763455265413",
+                    "name": "Consolider la notion de chronologie",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763457747745",
+                        "name": "Ordonner les étapes d'une sortie, d'un mode d'emploi",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457780691",
+                        "name": "Ordonner des images séquentielles",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457827376",
+                        "name": "Raconter une histoire à l'aide d'images séquentielles",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457847316",
+                        "name": "Utiliser du vocabulaire temporel : avant, après",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457868269",
+                        "name": "Utiliser différents temps de conjugaison dans le langage oral (présent, passé, futur)",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457989657",
+                        "name": "Utiliser une frise historique",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  },
+                  {
+                    "id": "dom_1763455274331",
+                    "name": "Sensibiliser à la notion de durée",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763457932417",
+                        "name": "Utiliser, observer des instruments de mesure du temps (sablier, minuteur, horloge ...)",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763457943711",
+                        "name": "Comparer des durées",
+                        "referenceAges": [
+                          "A partir de 5 ans"
+                        ],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  }
+                ]
+              },
+              {
+                "id": "dom_1763455250710",
+                "name": "L'espace",
+                "expectations": [],
+                "skills": [],
+                "subDomains": [
+                  {
+                    "id": "dom_1763455281855",
+                    "name": "Faire l’expérience de l’espace",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763458287782",
+                        "name": "Se repérer dans la classe",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458296042",
+                        "name": "Se repérer dans l'école",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458317177",
+                        "name": "Orienter un livre, une page, un cahier",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458380266",
+                        "name": "Dessiner en suivant des indications spatiales",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": "Par exemple: Tracer un point au milieu de la feuille puis faire un rond autour."
+                      },
+                      {
+                        "id": "skill_1763458415369",
+                        "name": "Connaître sa droite et sa gauche",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458437715",
+                        "name": "Se situer par rapport à des objets",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458443734",
+                        "name": "Se situer par rapport aux autres",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458456339",
+                        "name": "Situer des objets par rapport à des objets repères",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458467559",
+                        "name": "Situer des objets entre eux, utiliser du vocabulaire spatial",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458484815",
+                        "name": "Se déplacer sur un parcours codé",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458545443",
+                        "name": "Se repérer sur un quadrillage ou un tableau à double entrée",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458558927",
+                        "name": "Se déplacer dans un labyrinthe",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  },
+                  {
+                    "id": "dom_1763455285833",
+                    "name": "Représenter l’espace",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763458250705",
+                        "name": "Reconnaître des représentations de lieux connus (classe, école, quartier ...)",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458272271",
+                        "name": "Coder un déplacement ou un emplacement sur un plan, une photo",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  },
+                  {
+                    "id": "dom_1763455289288",
+                    "name": "Découvrir l’environnement",
+                    "expectations": [],
+                    "skills": [
+                      {
+                        "id": "skill_1763458505594",
+                        "name": "Connaître quelques types de paysages",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      },
+                      {
+                        "id": "skill_1763458520578",
+                        "name": "Découvrir et décrire des paysages nouveaux",
+                        "referenceAges": [],
+                        "image": null,
+                        "description": ""
+                      }
+                    ],
+                    "subDomains": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "dom_1763455148767",
+            "name": "Explorer le monde du vivant, des objets et de la matière",
+            "expectations": [],
+            "skills": [],
+            "subDomains": [
+              {
+                "id": "dom_1763455304846",
+                "name": "Découvrir le monde vivant",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763458824704",
+                    "name": "Observer et décrire les étapes de la vie d'un animal",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763458838507",
+                    "name": "Observer et décrire les étapes de la vie d'un végétal",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763458865609",
+                    "name": "Différencier vivant et non-vivant",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763458880731",
+                    "name": "Reconnaître et nommer quelques animaux",
+                    "referenceAges": [
+                      "Moins de 4 ans"
+                    ],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763458893836",
+                    "name": "Connaître quelques besoins élémentaires du vivant",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763458903143",
+                    "name": "Connaître le régime alimentaire de quelques animaux",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763458937258",
+                    "name": "Connaître le mode de déplacement de quelques animaux",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763458956670",
+                    "name": "Participer à l'entretien des plantations, des élevages de la classe",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763458969483",
+                    "name": "Connaître quelques besoins élémentaires des plantes",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763458986486",
+                    "name": "Reconnaître et nommer quelques plantes",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459036814",
+                    "name": "Faire le lien entre graine et plante",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459065454",
+                    "name": "Connaître la différence entre ovipare et vivipare",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459183217",
+                    "name": "Situer et nommer les parties du corps",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459190303",
+                    "name": "Situer et nommer les parties du corps",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459203531",
+                    "name": "Dessiner un bonhomme",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459210289",
+                    "name": "Manifester ses besoins",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459215546",
+                    "name": "Se laver les mains",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459220344",
+                    "name": "Se moucher",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459236145",
+                    "name": "Connaître quelques règles d'hygiène et leur utilité",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459251084",
+                    "name": "Connaître les cinq sens",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459263945",
+                    "name": "Connaître les bases d'une alimentation équilibrée",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763455309710",
+                "name": "Explorer la matière",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763459308980",
+                    "name": "Agir sur différentes matières",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459347129",
+                    "name": "Comparer les matériaux en fonction de quelques caractéristiques",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459370723",
+                    "name": "Transformer la matière (chauffer, mélanger, mouiller ...)",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459381225",
+                    "name": "Connaître quelques matériaux",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459397034",
+                    "name": "Connaître les propriétés des liquides",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459429242",
+                    "name": "Réaliser une recette",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459485126",
+                    "name": "Plier une feuille",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459495231",
+                    "name": "Découper droit",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459500578",
+                    "name": "Découper une forme complexe",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459509255",
+                    "name": "Coller proprement",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763455315134",
+                "name": "Utiliser, fabriquer, manipuler des objets",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763459541759",
+                    "name": "Nommer les objets de la classe",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459552199",
+                    "name": "Nommer les actions associées aux objets de la classe",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459591864",
+                    "name": "Réaliser une construction libre",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459598705",
+                    "name": "Réaliser une construction en suivant un modèle",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459608771",
+                    "name": "Dessiner ce que l'on a construit",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459630345",
+                    "name": "Utiliser des ustensiles de cuisine",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459648949",
+                    "name": "Boutonner un vêtement",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459654985",
+                    "name": "Utiliser une fermeture éclair",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459659942",
+                    "name": "Faire un lacet",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459685161",
+                    "name": "Identifier quelques règles de sécurité liées aux objets",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459703075",
+                    "name": "Appeler un adulte en cas de danger",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              },
+              {
+                "id": "dom_1763455321423",
+                "name": "Utiliser des outils numériques",
+                "expectations": [],
+                "skills": [
+                  {
+                    "id": "skill_1763459725557",
+                    "name": "Utiliser une tablette",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459734616",
+                    "name": "Utiliser un appareil photo numérique",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459743708",
+                    "name": "Utiliser un tableau numérique",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459754373",
+                    "name": "Utiliser une souris d'ordinateur",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459767558",
+                    "name": "Ecrire quelques mots à l'aide d'un clavier d'ordinateur",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  },
+                  {
+                    "id": "skill_1763459785798",
+                    "name": "Choisir un objet numérique adapté à ses besoins",
+                    "referenceAges": [],
+                    "image": null,
+                    "description": ""
+                  }
+                ],
+                "subDomains": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dom_1763454855418",
+        "name": "Apprendre et vivre ensemble",
+        "expectations": [],
+        "skills": [],
+        "subDomains": [
+          {
+            "id": "dom_1763456112225",
+            "name": "Comprendre la fonction de l'école",
+            "expectations": [],
+            "skills": [
+              {
+                "id": "skill_1763456179667",
+                "name": "Reconnaître, nommer l'enseignant",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456188364",
+                "name": "Nommer quelques camarades",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456198821",
+                "name": "Nommer les adultes de l'école ; connaître leur rôle",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456211768",
+                "name": "Ecouter, être attentif",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456222152",
+                "name": "S'appliquer",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456231800",
+                "name": "Comprendre et respecter les consignes",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456239250",
+                "name": "S'engager dans les activités",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456261879",
+                "name": "Faire des propositions et des choix, prendre des initiatives",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456322288",
+                "name": "Comprendre et dire ce qui a été appris",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456336253",
+                "name": "Identifier ses progrès",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              }
+            ],
+            "subDomains": []
+          },
+          {
+            "id": "dom_1763456123209",
+            "name": "Se construire comme personne au sein d'un groupe",
+            "expectations": [],
+            "skills": [
+              {
+                "id": "skill_1763456374281",
+                "name": "Respecter ses camarades",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456381816",
+                "name": "Respecter les règles de politesse",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456388797",
+                "name": "Respecter les règles de la classe, de l'école",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456397951",
+                "name": "Prendre soin du matériel",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456403276",
+                "name": "Ranger",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456419750",
+                "name": "Lever le doigt, attendre son tour",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456435981",
+                "name": "Exprimer son point de vue",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456444332",
+                "name": "Ecouter, considérer l'avis des autres",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763456469059",
+                "name": "Se ranger deux par deux, tenir sa place dans le rang",
+                "referenceAges": [],
+                "image": null,
+                "description": ""
+              }
+            ],
+            "subDomains": []
+          }
+        ]
+      },
+      {
+        "id": "dom_1763455369211",
+        "name": "Eduquer à la vie affective et relationnelle",
+        "expectations": [],
+        "skills": [],
+        "subDomains": [
+          {
+            "id": "dom_1763455388326",
+            "name": "Se connaître, vivre et grandir avec son corps",
+            "expectations": [],
+            "skills": [
+              {
+                "id": "skill_1763455447604",
+                "name": "Nommer les différentes parties du corps",
+                "referenceAges": [
+                  "Moins de 4 ans",
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455457792",
+                "name": "Prendre conscience de ce qu’est l’intimité : les parties intimes du corps ; les espaces d’intimité ; les mots, les gestes et les conduites associés",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455646101",
+                "name": "Développer sa connaissance de soi",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455662308",
+                "name": "Identifier les espaces où chacune et chacun a droit à son intimité par rapport aux adultes et aux autres élèves",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455782473",
+                "name": "Découvrir ce qu’est une grossesse et la naissance",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455792042",
+                "name": "Découvrir et identifier ses émotions (quatre des émotions de base : joie, tristesse, peur, colère), ses sentiments et les reconnaître quand on les ressent",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455898253",
+                "name": "Identifier ses émotions et sentiments et celles des autres",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455906535",
+                "name": "Prendre conscience de la différence de sensations selon les personnes et du fait qu’un même évènement n’engendre pas la même réaction chez tous",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455913090",
+                "name": "Communiquer de façon efficace et constructive",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              }
+            ],
+            "subDomains": []
+          },
+          {
+            "id": "dom_1763455407985",
+            "name": "Rencontrer les autres et construire des relations, s’y épanouir",
+            "expectations": [],
+            "skills": [
+              {
+                "id": "skill_1763455522302",
+                "name": "Développer la capacité de s’affirmer par le consentement et le refus",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455690053",
+                "name": "Développer la capacité de respecter le refus de l’autre",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455808285",
+                "name": "Définir la notion de confiance",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455818288",
+                "name": "Définir un adulte de confiance comme étant un adulte à qui on peut parler et qui est susceptible d’apporter une aide et avec qui on se sent bien (école, famille, environnement médical, sportif, etc.",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455824575",
+                "name": "Identifier un adulte de confiance",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455831901",
+                "name": "Savoir qu’il existe des comportements interdits même avec un adulte de confiance",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455838423",
+                "name": "Distinguer ce que l’on peut garder pour soi ou entre enfants (un secret), d’une situation de danger ou de violence qu’il est important de partager avec un adulte de confiance",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455844353",
+                "name": "Renforcer son attention à ses sensations",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455850077",
+                "name": "Savoir demander de l’aide pour soi ou pour les autres",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455928566",
+                "name": "Identifier différents types de sentiments (par exemple, l’amitié, l’amour)",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455935184",
+                "name": "Définir et prendre conscience de ce qu’est l’amitié",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455941310",
+                "name": "Développer des liens sociaux positifs (par exemple, aller vers l’autre, entrer en relation, nouer des amitiés",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              }
+            ],
+            "subDomains": []
+          },
+          {
+            "id": "dom_1763455411527",
+            "name": "Trouver sa place dans la société, y être libre et responsable",
+            "expectations": [],
+            "skills": [
+              {
+                "id": "skill_1763455708538",
+                "name": "Comprendre qu’une activité ou un métier peuvent être choisis indifféremment par les filles ou les garçons, en fonction des compétences requises et de l’envie de l’exercer",
+                "referenceAges": [
+                  "Moins de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455866101",
+                "name": "Prendre conscience qu’il est possible d’acquérir et de développer des compétences diversifiées, quel que soit son sexe",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455874029",
+                "name": "Appréhender, comprendre et respecter les différentes structures familiales à partir de ce que l’élève a observé dans son environnement proche à cet âge",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455882315",
+                "name": "Développer des liens sociaux (aller vers l’autre, entrer en relation, etc.",
+                "referenceAges": [
+                  "A partir de 4 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455957107",
+                "name": "Identifier les ressemblances et les différences physiques entre les filles et les garçons",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455962629",
+                "name": "Décrire ce que signifie traiter quelqu’un avec respect et identifier les effets de ses paroles et de ses actes sur les autres",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              },
+              {
+                "id": "skill_1763455966830",
+                "name": "Développer l’empathie et des relations sociales constructives (comportements tels que la collaboration, la coopération, l’entraide)",
+                "referenceAges": [
+                  "A partir de 5 ans"
+                ],
+                "image": null,
+                "description": ""
+              }
+            ],
+            "subDomains": []
+          }
+        ]
+      }
+    ]
+  }
+]

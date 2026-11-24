@@ -1,8 +1,8 @@
 // Interface ordinateur : l'application de bureau (App.tsx), avec le pont web à la place d'Electron.
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from '../../../App';
-import ErrorBoundary, { ErrorPanel } from '../../../components/ErrorBoundary';
+import App from '../../app/App';
+import ErrorBoundary, { ErrorPanel } from '../../app/components/ErrorBoundary';
 import { showMessage } from '../platform/dialogs';
 import { onLaterLaunch, type LaunchedFile } from '../platform/launch';
 import { setLastClassId } from '../platform/library';

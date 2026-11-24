@@ -1,8 +1,8 @@
 // Calculs de l'interface mobile (fonctions pures, testées) : lecture du programme et des acquisitions.
 // Les modifications passent toutes par les modules métier de l'application (domain/…).
-import { isAcquired } from '../../../domain/acquisitions';
-import { eventDay } from '../../../domain/workshops';
-import type { AppData, Domain, SchoolProgram, Skill, Student, Workshop, WorkshopEvent } from '../../../types';
+import { isAcquired } from '../../app/domain/acquisitions';
+import { eventDay } from '../../app/domain/workshops';
+import type { AppData, Domain, SchoolProgram, Skill, Student, Workshop, WorkshopEvent } from '../../app/types';
 
 /** Programmes activés (comme l'application de bureau). */
 export const activePrograms = (data: AppData): SchoolProgram[] => data.schoolPrograms.filter(p => p.enabled !== false);

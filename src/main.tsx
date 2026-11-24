@@ -1,6 +1,6 @@
 // Point d'entrée de la version web.
 import './styles.css';
-import { setImageBackend } from '../../images/imageStore';
+import { setImageBackend } from '../app/images/imageStore';
 import { openDb } from './platform/db';
 import { mountPlatformHost } from './platform/dialogs';
 import { startLaunchQueue } from './platform/launch';

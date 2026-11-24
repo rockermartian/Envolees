@@ -2,10 +2,10 @@
 // Mêmes règles que sur ordinateur (domain/workshops.ts) : refuser un passage ne retire que ce qu'il avait validé.
 import React, { useMemo, useState } from 'react';
 import { Check, Shapes, X } from 'lucide-react';
-import { formatDateFR, todayLocalISO } from '../../../domain/dates';
-import { setEventsOutcome } from '../../../domain/workshops';
-import StoredImage from '../../../images/StoredImage';
-import type { AppData } from '../../../types';
+import { formatDateFR, todayLocalISO } from '../../app/domain/dates';
+import { setEventsOutcome } from '../../app/domain/workshops';
+import StoredImage from '../../app/images/StoredImage';
+import type { AppData } from '../../app/types';
 import { groupBy, isSuccessfulPass, pendingPasses, processedPasses, studentName, type PassItem } from './model';
 import type { ClassDocument } from './useClassDocument';
 import { Avatar, Btn, EmptyState, Segmented, useSnack } from './ui';

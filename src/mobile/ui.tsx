@@ -1,9 +1,9 @@
 // Éléments d'interface de la version mobile (grandes cibles tactiles, zones sûres des écrans à encoche).
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, X } from 'lucide-react';
-import StoredImage from '../../../images/StoredImage';
-import { registerToastListener, type ToastKind } from '../../../utils/toast';
-import type { Student } from '../../../types';
+import StoredImage from '../../app/images/StoredImage';
+import { registerToastListener, type ToastKind } from '../../app/utils/toast';
+import type { Student } from '../../app/types';
 import { initials } from './model';
 
 // ---------------------------------------------------------------------------------------------

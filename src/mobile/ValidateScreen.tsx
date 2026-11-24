@@ -2,11 +2,11 @@
 // Même règle que sur ordinateur : une compétence déjà acquise est conservée telle quelle.
 import React, { useMemo, useState } from 'react';
 import { Check, ListChecks, X } from 'lucide-react';
-import { isAcquired } from '../../../domain/acquisitions';
-import { todayLocalISO } from '../../../domain/dates';
-import { applyMassValidation } from '../../../domain/students';
-import { sectionOrder } from '../../../utils';
-import type { AppData } from '../../../types';
+import { isAcquired } from '../../app/domain/acquisitions';
+import { todayLocalISO } from '../../app/domain/dates';
+import { applyMassValidation } from '../../app/domain/students';
+import { sectionOrder } from '../../app/utils';
+import type { AppData } from '../../app/types';
 import { activePrograms, flattenSkills, matchesQuery, sortStudents, studentName, type FlatSkill } from './model';
 import type { ClassDocument } from './useClassDocument';
 import { Avatar, Btn, Chip, EmptyState, Field, inputClass, SearchInput, Sheet, useSnack } from './ui';

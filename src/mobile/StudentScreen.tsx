@@ -1,12 +1,12 @@
 // Fiche d'un élève : compétences par domaine, validation en un geste, photo de preuve.
 import React, { useMemo, useState } from 'react';
 import { Camera, Check, ChevronDown, ImagePlus, Pencil } from 'lucide-react';
-import { grantSkills, isAcquired } from '../../../domain/acquisitions';
-import { formatDateFR, todayLocalISO } from '../../../domain/dates';
-import { setSkillDetails } from '../../../domain/students';
-import StoredImage from '../../../images/StoredImage';
-import { calculateAge, sectionOrder } from '../../../utils';
-import { Proficiency, type AppData, type Domain, type Section, type Skill, type SkillAcquisitionDetails, type Student } from '../../../types';
+import { grantSkills, isAcquired } from '../../app/domain/acquisitions';
+import { formatDateFR, todayLocalISO } from '../../app/domain/dates';
+import { setSkillDetails } from '../../app/domain/students';
+import StoredImage from '../../app/images/StoredImage';
+import { calculateAge, sectionOrder } from '../../app/utils';
+import { Proficiency, type AppData, type Domain, type Section, type Skill, type SkillAcquisitionDetails, type Student } from '../../app/types';
 import { activePrograms, countAcquired, domainSkillIds, flattenSkills, matchesQuery, studentName } from './model';
 import { pickPhoto } from './photos';
 import type { ClassDocument } from './useClassDocument';

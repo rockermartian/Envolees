@@ -1,7 +1,7 @@
 // Génère les icônes PNG de l'application installable à partir des SVG (rendu par Electron/Chromium).
 // Usage : npm run icons (depuis web_app/). Les PNG produits sont versionnés dans public/icons/.
-import electron from 'electron';
 import { spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -10,13 +10,14 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 
 if (!process.versions.electron) {
-    // Lancé par Node : on relance ce script dans Electron (`electron` = chemin de l'exécutable).
+    // Lancé par Node : on relance ce script dans Electron.
     const env = { ...process.env };
     delete env.ELECTRON_RUN_AS_NODE;
-    const res = spawnSync(electron, [fileURLToPath(import.meta.url)], { stdio: 'inherit', env });
+    const { findElectron } = await import('./find-electron.mjs');
+    const res = spawnSync(findElectron(), [fileURLToPath(import.meta.url)], { stdio: 'inherit', env });
     process.exit(res.status ?? 1);
 } else {
-    const { app, BrowserWindow } = electron;
+    const { app, BrowserWindow } = createRequire(import.meta.url)('electron'); // module intégré d'Electron
     const icons = path.join(here, '../public/icons');
     const jobs = [
         { svg: path.join(icons, 'icon.svg'), out: 'icon-192.png', size: 192 },

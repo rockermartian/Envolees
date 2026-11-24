@@ -1,15 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { fileURLToPath } from 'node:url';
-import { createEmptyAppData } from '../../fileFormat/defaults';
-import { normalizePrograms } from '../../fileFormat/normalize';
-import { loadProgram } from '../../tests/fixtures/syntheticClass';
-import { Proficiency, Section, Sex, type AppData, type Student } from '../../types';
+import { createEmptyAppData } from '../app/fileFormat/defaults';
+import { normalizePrograms } from '../app/fileFormat/normalize';
+import { loadProgram } from './fixtures/syntheticClass';
+import { Proficiency, Section, Sex, type AppData, type Student } from '../app/types';
 import { activePrograms, countAcquired, flattenSkills, fold, groupBy, initials, matchesQuery, pendingPasses, sortStudents } from '../src/mobile/model';
 import { envoleesFileName } from '../src/platform/fileAccess';
 import { imageNamesOf } from '../src/platform/library';
 import { autoUiMode } from '../src/uiMode';
 
-const ROOT = fileURLToPath(new URL('../..', import.meta.url));
+const ROOT = fileURLToPath(new URL('./fixtures', import.meta.url));
 const student = (id: string, firstName: string, extra: Partial<Student> = {}): Student =>
     ({ id, firstName, lastName: 'Martin', photo: null, dob: '2021-01-01', section: Section.MS, sex: Sex.Girl, skills: {}, ...extra });
 

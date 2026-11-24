@@ -1,6 +1,5 @@
 // Version web d'Envolées (PWA) : une seule application, deux interfaces (ordinateur / mobile).
-// Le code de l'application de bureau (App.tsx, components/, domain/, fileFormat/, shared/…) est
-// importé tel quel depuis le dossier parent : il n'est ni copié ni modifié.
+// Projet autonome : le code de l'application de bureau est recopié dans app/ (npm run sync).
 import { createHash } from 'node:crypto'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import path from 'node:path'
@@ -10,20 +9,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/postcss'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
-const ROOT = path.resolve(HERE, '..') // projet Electron (source partagée)
-
-const { version } = JSON.parse(readFileSync(path.join(ROOT, 'package.json'), 'utf8'))
-
-// Fichiers de l'application de bureau servis tels quels par la version web.
-// clé = chemin publié, valeur = fichier source (relatif au projet)
-const ROOT_FILES: Record<string, string> = {
-  'fonts.css': 'public/fonts.css',
-  'Fonts/Poppins-Regular.ttf': 'public/Fonts/Poppins-Regular.ttf',
-  'Fonts/Poppins-Medium.ttf': 'public/Fonts/Poppins-Medium.ttf',
-  'Fonts/Poppins-SemiBold.ttf': 'public/Fonts/Poppins-SemiBold.ttf',
-  'Fonts/Poppins-Bold.ttf': 'public/Fonts/Poppins-Bold.ttf',
-  'guide/index.html': 'guide/index.html',
-}
+const { version } = JSON.parse(readFileSync(path.join(HERE, 'package.json'), 'utf8'))
 
 // Politique de sécurité du contenu (même esprit que l'application de bureau) :
 // aucun script ni ressource venant d'Internet ; images locales, data: et blob: (images des classes).
@@ -41,42 +27,6 @@ const CONTENT_SECURITY_POLICY = [
   "base-uri 'self'",
   "form-action 'none'",
 ].join('; ')
-
-const MIME: Record<string, string> = { '.css': 'text/css', '.ttf': 'font/ttf', '.html': 'text/html; charset=utf-8' }
-
-/** Polices et guide de l'application de bureau : servis en développement, copiés au build. */
-const rootFiles = (): Plugin => ({
-  name: 'envolees-root-files',
-  configureServer(server) {
-    server.middlewares.use((req, res, next) => {
-      const url = decodeURIComponent((req.url ?? '').split('?')[0]).replace(/^\//, '')
-      const source = ROOT_FILES[url]
-      if (!source) return next()
-      res.setHeader('Content-Type', MIME[path.extname(url)] ?? 'application/octet-stream')
-      res.end(readFileSync(path.join(ROOT, source)))
-    })
-  },
-  generateBundle() {
-    for (const [fileName, source] of Object.entries(ROOT_FILES)) {
-      this.emitFile({ type: 'asset', fileName, source: readFileSync(path.join(ROOT, source)) })
-    }
-  },
-})
-
-/**
- * Styles de base de l'interface de bureau (barres de défilement, cases à cocher, impression du
- * livret…) : ils vivent dans le bloc <style> d'index.html de l'application de bureau. On les reprend
- * à la source plutôt que de les recopier.
- */
-const desktopBaseStyles = (): Plugin => ({
-  name: 'envolees-desktop-base-styles',
-  transformIndexHtml() {
-    const html = readFileSync(path.join(ROOT, 'index.html'), 'utf8')
-    const match = /<style>([\s\S]*?)<\/style>/.exec(html)
-    if (!match) throw new Error("Bloc <style> introuvable dans l'index.html de l'application de bureau")
-    return [{ tag: 'style', attrs: { 'data-source': 'desktop' }, children: match[1], injectTo: 'head' }]
-  },
-})
 
 const contentSecurityPolicy = (): Plugin => ({
   name: 'envolees-web-csp',
@@ -129,15 +79,12 @@ export default defineConfig({
   base: './', // fonctionne à la racine d'un domaine comme dans un sous-dossier (GitHub Pages)
   publicDir: path.join(HERE, 'public'),
   define: {
-    __APP_VERSION__: JSON.stringify(version),
+    'import.meta.env.VITE_APP_VERSION': JSON.stringify(version),
   },
-  plugins: [react(), rootFiles(), desktopBaseStyles(), contentSecurityPolicy(), serviceWorker()],
+  plugins: [react(), contentSecurityPolicy(), serviceWorker()],
   css: {
-    // Tailwind analyse tout le projet : classes de l'interface de bureau et de la version web.
-    postcss: { plugins: [tailwindcss({ base: ROOT })] },
-  },
-  server: {
-    fs: { allow: [ROOT] },
+    // Tailwind analyse app/ (interface de bureau) et src/ (version web).
+    postcss: { plugins: [tailwindcss({ base: HERE })] },
   },
   build: {
     outDir: path.join(HERE, 'dist'),

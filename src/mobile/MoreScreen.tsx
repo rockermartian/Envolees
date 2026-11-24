@@ -1,7 +1,7 @@
 // Onglet « Plus » : fichier de la classe, apparence, version ordinateur, stockage, aide.
 import React, { useEffect, useState } from 'react';
 import { BookOpen, Download, FileUp, FolderOpen, HardDrive, Monitor, Moon, Pencil, Share2, Sun } from 'lucide-react';
-import { mergePrograms } from '../../../utils';
+import { mergePrograms } from '../../app/utils';
 import { askName, showMessage } from '../platform/dialogs';
 import { exportClassFile, formatBytes, formatDateTime } from '../platform/exporting';
 import { canShareFile, pickWithInput } from '../platform/fileAccess';
@@ -125,7 +125,7 @@ const MoreScreen: React.FC<Props> = ({ doc, classId, className, onRenamed, onClo
             </Group>
 
             <p className="text-center text-xs text-slate-400 dark:text-zinc-500">
-                Envolées {__APP_VERSION__} · version web<br />
+                Envolées {import.meta.env.VITE_APP_VERSION} · version web<br />
                 Les données restent sur cet appareil ; rien n'est envoyé sur Internet.
                 {doc.lastError && <><br /><span className="text-red-600">Dernier enregistrement en échec : {doc.lastError}</span></>}
             </p>

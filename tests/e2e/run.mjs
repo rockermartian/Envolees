@@ -1,12 +1,11 @@
 // Lance les tests de bout en bout de la version web (après `vite build`) : npm run test:e2e
 //   - sert dist/ sous un sous-chemin, comme GitHub Pages (https://<compte>.github.io/<dépôt>/) ;
 //   - ouvre l'application dans le Chromium d'Electron : interface ordinateur, puis interface mobile.
-// Fichier de classe : E2E_FILE, sinon classe-test-lourde.envolees à la racine du projet s'il existe
+// Fichier de classe : E2E_FILE, sinon ../classe-test-lourde.envolees (projet Electron) s'il existe
 // (vraies photos), sinon une classe synthétique générée.
 // Captures d'écran : E2E_SHOTS=<dossier>.
 import { spawn, spawnSync } from 'node:child_process';
 import { createServer } from 'node:http';
-import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -14,23 +13,25 @@ import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import zlib from 'node:zlib';
 import { build } from 'esbuild';
-import { readArchive } from '../../../shared/envoleesArchive.js';
+import { readArchive } from '../../app/shared/envoleesArchive.js';
+import { findElectron } from '../../scripts/find-electron.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const webApp = path.resolve(here, '../..');
-const root = path.resolve(webApp, '..');
+const fixtures = path.join(webApp, 'tests/fixtures');
 const dist = path.join(webApp, 'dist');
 if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('dist/ absent : lancer `npm run build` d\'abord.'); process.exit(1); }
 
 // --- Fichier de classe de test ---
 const work = fs.mkdtempSync(path.join(os.tmpdir(), 'envolees-web-fixture-'));
-let fixture = process.env.E2E_FILE ?? path.join(root, 'classe-test-lourde.envolees');
+// Classe de test lourde du projet Electron voisin, si web_app est encore à l'intérieur.
+let fixture = process.env.E2E_FILE ?? path.join(webApp, '..', 'classe-test-lourde.envolees');
 let realImages = process.env.E2E_FILE ? process.env.E2E_REAL_IMAGES === '1' : fs.existsSync(fixture);
 if (!fs.existsSync(fixture)) {
     const generator = path.join(work, 'make-class-file.mjs');
-    await build({ entryPoints: [path.join(root, 'tests/smoke/make-class-file.ts')], bundle: true, platform: 'node', format: 'esm', outfile: generator, logLevel: 'error' });
+    await build({ entryPoints: [path.join(fixtures, 'make-class-file.ts')], bundle: true, platform: 'node', format: 'esm', outfile: generator, logLevel: 'error' });
     fixture = path.join(work, 'classe-moyenne.envolees');
-    const gen = spawnSync(process.execPath, [generator, 'moyen', fixture, root], { encoding: 'utf8' });
+    const gen = spawnSync(process.execPath, [generator, 'moyen', fixture, fixtures], { encoding: 'utf8' });
     if (gen.status !== 0) { console.error(gen.stderr); process.exit(1); }
     realImages = false;
 }
@@ -56,7 +57,7 @@ await new Promise(r => server.listen(0, '127.0.0.1', r));
 const url = `http://127.0.0.1:${server.address().port}${BASE}`;
 
 // --- Scénarios ---
-const electronPath = createRequire(path.join(root, 'package.json'))('electron');
+const electronPath = findElectron();
 const env = { ...process.env, E2E_URL: url, E2E_FILE: fixture, E2E_EXPECT: expected, E2E_PNG: path.join(webApp, 'public/icons/icon-512.png'), E2E_REAL_IMAGES: realImages ? '1' : '0' };
 delete env.ELECTRON_RUN_AS_NODE; // défini dans les terminaux VS Code : Electron se comporterait comme Node
 if (env.E2E_SHOTS) fs.mkdirSync(env.E2E_SHOTS, { recursive: true });
