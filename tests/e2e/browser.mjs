@@ -120,7 +120,7 @@ async function setup(width, height) {
 }
 
 const waitDownload = async (count, label) => {
-    await waitFor(label, 'true', 1); // laisse le temps au clic
+    await wait(50); // laisse le temps au clic
     const start = Date.now();
     while (downloads.length < count && Date.now() - start < 60_000) await wait(100);
     const d = downloads[count - 1];
