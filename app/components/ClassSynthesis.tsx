@@ -32,6 +32,8 @@ interface ClassSynthesisProps {
   onUpdateSupportGroups: (groups: SupportGroup[]) => void;
   /** Impression des photos de preuve (toute la classe cochée par défaut). */
   onPrintProofs?: () => void;
+  /** Téléphone : retour à la liste des élèves. */
+  onBack?: () => void;
 }
 
 const chipClass = (type: FilterScope['type']) =>
@@ -45,7 +47,7 @@ function emptyGroup(type: 'suggested' | 'free'): SupportGroup {
   return { id: crypto.randomUUID(), type, name: '', maxStudents: 5, filterIds: [], studentIds: [] };
 }
 
-const ClassSynthesis: React.FC<ClassSynthesisProps> = ({ students, schoolPrograms, supportGroups, onUpdateSupportGroups, onPrintProofs }) => {
+const ClassSynthesis: React.FC<ClassSynthesisProps> = ({ students, schoolPrograms, supportGroups, onUpdateSupportGroups, onPrintProofs, onBack }) => {
   const [selectedFilter, setSelectedFilter] = useState<'all' | Section>('all');
   const [modal, setModal] = useState<{ group: SupportGroup; isNew: boolean } | null>(null);
   const [filterSearch, setFilterSearch] = useState('');
@@ -239,7 +241,7 @@ const ClassSynthesis: React.FC<ClassSynthesisProps> = ({ students, schoolProgram
         </span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2 mb-0.5">
-            <Tooltip content={skill.name} position="bottom">
+            <Tooltip content={skill.name} position="bottom" wrapperClassName="min-w-0">
               <span className="text-xs font-medium text-slate-700 dark:text-zinc-300 truncate">
                 {skill.name}
               </span>
@@ -269,7 +271,14 @@ const ClassSynthesis: React.FC<ClassSynthesisProps> = ({ students, schoolProgram
       <div className="p-4 sm:p-6 lg:p-8 h-full overflow-y-auto bg-slate-50 dark:bg-zinc-900">
         <div className="max-w-4xl mx-auto space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h1 className="text-2xl font-bold text-slate-800 dark:text-zinc-200">Synthèse de la classe</h1>
+            <div className="flex items-center gap-2">
+              {onBack && (
+                <button onClick={onBack} aria-label="Retour à la liste des élèves" className="sm:hidden p-1.5 rounded-md text-slate-500 hover:bg-slate-200 dark:text-zinc-400 dark:hover:bg-zinc-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clipRule="evenodd" /></svg>
+                </button>
+              )}
+              <h1 className="text-2xl font-bold text-slate-800 dark:text-zinc-200">Synthèse de la classe</h1>
+            </div>
             {onPrintProofs && (
               <button onClick={onPrintProofs} className="px-3 py-1.5 flex items-center gap-1.5 text-sm font-medium bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-700 rounded-md">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4" aria-hidden="true"><path fillRule="evenodd" d="M5 2.75C5 1.784 5.784 1 6.75 1h6.5c.966 0 1.75.784 1.75 1.75v3.552c.377.046.752.097 1.126.153A2.212 2.212 0 0118 8.653v4.097A2.25 2.25 0 0115.75 15h-.241l.305 1.984A1.75 1.75 0 0114.084 19H5.915a1.75 1.75 0 01-1.73-2.016L4.492 15H4.25A2.25 2.25 0 012 12.75V8.653c0-1.082.775-2.034 1.874-2.198.374-.056.75-.107 1.127-.153L5 6.25v-3.5zm8.5 3.397a41.533 41.533 0 00-7 0V2.75a.25.25 0 01.25-.25h6.5a.25.25 0 01.25.25v3.397zM6.608 12.5a.25.25 0 00-.247.212l-.693 4.5a.25.25 0 00.247.288h8.17a.25.25 0 00.246-.288l-.692-4.5a.25.25 0 00-.247-.212H6.608z" clipRule="evenodd" /></svg>

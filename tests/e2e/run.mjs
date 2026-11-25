@@ -64,7 +64,7 @@ delete env.ELECTRON_RUN_AS_NODE; // défini dans les terminaux VS Code : Electro
 if (env.E2E_SHOTS) fs.mkdirSync(env.E2E_SHOTS, { recursive: true });
 
 let failed = 0;
-for (const scenario of (process.env.E2E_ONLY ? process.env.E2E_ONLY.split(',') : ['ordinateur', 'tablette'])) {
+for (const scenario of (process.env.E2E_ONLY ? process.env.E2E_ONLY.split(',') : ['ordinateur', 'tablette', 'telephone'])) {
     const res = await new Promise(resolve => {
         const child = spawn(electronPath, [path.join(here, 'browser.mjs'), scenario], { env });
         let out = '';
@@ -74,7 +74,7 @@ for (const scenario of (process.env.E2E_ONLY ? process.env.E2E_ONLY.split(',') :
         const timer = setTimeout(() => { out += '\nKO  délai global dépassé'; child.kill(); }, 300_000);
         child.on('close', status => { clearTimeout(timer); resolve({ status, out }); });
     });
-    const lines = res.out.split(/\r?\n/).filter(l => /^(OK|KO|E2E|--- |    (petite|cachée|déborde))/.test(l));
+    const lines = res.out.split(/\r?\n/).filter(l => /^(OK|KO|E2E|--- |    (petite|cachée|déborde|écran))/.test(l));
     console.log(lines.join('\n') || `E2E ${scenario}: aucun résultat\n${res.out.slice(-3000)}`);
     if (res.status !== 0 || !lines.length) {
         failed++;

@@ -28,18 +28,18 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, onSettingsChange,
     };
 
     return (
-        <div className="p-8 h-full bg-white dark:bg-zinc-900 overflow-y-auto">
+        <div className="p-8 max-sm:p-4 h-full bg-white dark:bg-zinc-900 overflow-y-auto">
             <div className="max-w-2xl mx-auto space-y-6">
                 <h1 className="text-2xl font-bold text-slate-800 dark:text-zinc-200 mb-6 border-b border-slate-200 dark:border-zinc-700 pb-4">
                     Paramètres de l'application
                 </h1>
 
-                <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl p-6 border border-slate-200 dark:border-zinc-700">
+                <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl p-6 max-sm:p-4 border border-slate-200 dark:border-zinc-700">
                     <div className="flex items-start gap-4">
-                        <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                        <div className="max-sm:hidden p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
                             <ClockIcon className="w-6 h-6" />
                         </div>
-                        <div className="flex-grow">
+                        <div className="flex-grow min-w-0">
                             <h3 className="text-lg font-semibold text-slate-800 dark:text-zinc-200">Sauvegarde automatique</h3>
                             <p className="text-slate-500 dark:text-zinc-400 text-sm mt-1 mb-4">
                                 Votre travail est enregistré automatiquement 30 secondes après chaque modification,
@@ -47,7 +47,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, onSettingsChange,
                                 L'enregistrement se fait en arrière-plan : vous pouvez continuer à travailler.
                             </p>
 
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-3 max-sm:flex-col max-sm:items-start max-sm:gap-1">
                                 <label htmlFor="auto-save" className="text-sm font-medium text-slate-700 dark:text-zinc-300">
                                     Au plus tard :
                                 </label>
@@ -55,7 +55,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, onSettingsChange,
                                     id="auto-save"
                                     value={settings.autoSaveInterval}
                                     onChange={handleChangeInterval}
-                                    className="block w-48 rounded-md border-slate-300 dark:border-zinc-600 bg-white dark:bg-zinc-700 text-slate-900 dark:text-zinc-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-3"
+                                    className="block w-48 max-sm:w-full rounded-md border-slate-300 dark:border-zinc-600 bg-white dark:bg-zinc-700 text-slate-900 dark:text-zinc-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-3"
                                 >
                                     <option value={1}>Toutes les minutes</option>
                                     <option value={5}>Toutes les 5 minutes</option>
@@ -82,20 +82,20 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, onSettingsChange,
 
                 <NuageAccountCard />
 
-                <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl p-6 border border-slate-200 dark:border-zinc-700">
+                <div className="bg-slate-50 dark:bg-zinc-800/50 rounded-xl p-6 max-sm:p-4 border border-slate-200 dark:border-zinc-700">
                     <div className="flex items-start gap-4">
-                        <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg">
+                        <div className="max-sm:hidden p-3 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
                             </svg>
                         </div>
-                        <div className="flex-grow">
+                        <div className="flex-grow min-w-0">
                             <h3 className="text-lg font-semibold text-slate-800 dark:text-zinc-200">Mode Élève (Code PIN)</h3>
                             <p className="text-slate-500 dark:text-zinc-400 text-sm mt-1 mb-4">
                                 Code nécessaire pour quitter le mode élève (4 à 8 chiffres). Après 5 erreurs, la saisie est bloquée quelques instants.
                             </p>
 
-                            <div className="flex items-center gap-3">
+                            <div className="flex flex-wrap items-center gap-3">
                                 <span className="text-sm font-medium text-slate-700 dark:text-zinc-300">Code PIN :</span>
                                 {isPinDefined(teacherConfig.studentModePin)
                                     ? <span className="text-sm text-emerald-700 dark:text-emerald-400 font-medium">défini</span>
@@ -154,7 +154,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ settings, onSettingsChange,
                     </div>
                 </div>
 
-                <div className="fixed bottom-4 right-4">
+                <div className="fixed bottom-4 right-4 max-sm:static max-sm:pt-2 max-sm:text-center">
                   <Tooltip content="Créé par Mathilde Tripenne et James Lardeur" position="top-right" className="whitespace-nowrap">
                     <span className="text-xs font-medium text-slate-400 dark:text-zinc-500 cursor-default select-none">
                       Version {import.meta.env.VITE_APP_VERSION}

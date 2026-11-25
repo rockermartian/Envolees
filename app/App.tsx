@@ -10,6 +10,7 @@ import ConfirmationModal from './components/ConfirmationModal';
 import ExportModal from './components/ExportModal';
 import StudentForm from './components/StudentForm';
 import PrintProofsModal from './components/PrintProofsModal';
+import MobileNav from './components/MobileNav';
 import SkillsView from './components/SkillsView';
 import LivretView from './components/LivretView';
 import ReportsView from './components/ReportsView';
@@ -155,6 +156,8 @@ const App: React.FC = () => {
   const [isStudentFormOpen, setIsStudentFormOpen] = useState(false);
   // Impression des photos de preuve : élèves cochés à l'ouverture (null = fenêtre fermée)
   const [printProofsFor, setPrintProofsFor] = useState<string[] | null>(null);
+  // Téléphone, onglet Classe : synthèse affichée à la place de la liste (aucun élève sélectionné)
+  const [phoneSynthesis, setPhoneSynthesis] = useState(false);
   const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
   const [highlightedSkillId, setHighlightedSkillId] = useState<string | null>(null);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -691,6 +694,8 @@ const App: React.FC = () => {
   };
   const handleImportPrograms = (importedPrograms: SchoolProgram[]) => setSchoolPrograms(prev => mergePrograms(prev, importedPrograms));
 
+  // Mode élève : code PIN à définir d'abord, sinon confirmation.
+  const openStudentMode = () => (appData && isPinDefined(appData.teacherConfig.studentModePin) ? setShowStudentModeConfirm(true) : setShowPinSetup(true));
   const TabButton: React.FC<{tabId: AppTab, children: React.ReactNode}> = ({tabId, children}) => ( <button onClick={() => setActiveTab(tabId)} className={`px-3 py-1.5 text-sm font-semibold rounded-md whitespace-nowrap transition-colors ${activeTab === tabId ? 'bg-blue-500 text-white' : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-700'}`}>{children}</button>);
   if (!appData) {
     return (
@@ -735,7 +740,7 @@ const App: React.FC = () => {
       />
 
       <header inert={activeTab === 'student_mode'} style={{ WebkitAppRegion: 'drag' } as React.CSSProperties} className="h-16 bg-white dark:bg-zinc-800 border-b border-slate-200 dark:border-zinc-700 flex-shrink-0 grid grid-cols-[auto_1fr_auto] items-center print:hidden max-lg:h-auto max-lg:py-2 max-lg:gap-y-2">
-            <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-4 justify-self-start pl-3">
+            <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-4 max-sm:gap-2 justify-self-start pl-3">
                 <h1 className="text-xl font-bold text-blue-600 dark:text-blue-400">Envolées</h1>
                 <FileMenu
                     onNewFile={handleNewFile}
@@ -747,7 +752,7 @@ const App: React.FC = () => {
                     isSaveDisabled={!appData}
                     isLoading={isFileOperationLoading}
                 />
-                <div className="flex items-center gap-1 border-l border-slate-200 dark:border-zinc-700 pl-3 ml-2">
+                <div className="flex items-center gap-1 border-l border-slate-200 dark:border-zinc-700 pl-3 ml-2 max-sm:pl-2 max-sm:ml-0">
                   <SaveStatusIndicator status={saveStatus} onClick={handleManualSave} />
                   <div className="flex items-center gap-1 ml-2">
                     <Tooltip content="Annuler (Ctrl+Z)" position="bottom-center">
@@ -759,7 +764,7 @@ const App: React.FC = () => {
                           <UndoIcon className="w-5 h-5" />
                       </button>
                     </Tooltip>
-                    <Tooltip content="Rétablir (Ctrl+Y)" position="bottom-center">
+                    <Tooltip content="Rétablir (Ctrl+Y)" position="bottom-center" wrapperClassName="max-sm:hidden">
                       <button
                         onClick={handleRedo}
                         disabled={!canRedo}
@@ -771,16 +776,16 @@ const App: React.FC = () => {
                   </div>
                 </div>
             </div>
-            <div style={{ WebkitAppRegion: 'no-drag', scrollbarWidth: 'none' } as React.CSSProperties} className="flex items-center gap-1 justify-self-center min-w-0 max-w-full overflow-x-auto max-lg:order-last max-lg:col-span-3">
+            <div style={{ WebkitAppRegion: 'no-drag', scrollbarWidth: 'none' } as React.CSSProperties} className="flex items-center gap-1 justify-self-center min-w-0 max-w-full overflow-x-auto max-lg:order-last max-lg:col-span-3 max-sm:hidden">
                 <TabButton tabId='class'>Classe</TabButton>
                 <TabButton tabId='skills'>Compétences</TabButton>
                 <TabButton tabId='workshops'>Ateliers</TabButton>
-                <button onClick={() => (isPinDefined(appData.teacherConfig.studentModePin) ? setShowStudentModeConfirm(true) : setShowPinSetup(true))} className={`px-3 py-1.5 text-sm font-semibold rounded-md whitespace-nowrap transition-colors ${activeTab === 'student_mode' ? 'bg-blue-500 text-white' : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-700'}`}>Mode Élève</button>
+                <button onClick={openStudentMode} className={`px-3 py-1.5 text-sm font-semibold rounded-md whitespace-nowrap transition-colors ${activeTab === 'student_mode' ? 'bg-blue-500 text-white' : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-700'}`}>Mode Élève</button>
                 <TabButton tabId='reports'>Rapports</TabButton>
                 <TabButton tabId='livret'>Livret</TabButton>
             </div>
             <div className="justify-self-end flex items-center">
-                <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center">
+                <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center max-sm:hidden">
                     <Tooltip content="Changer le thème" position="bottom-center">
                         <button onClick={handleToggleTheme} className="p-2 rounded-full text-slate-500 dark:text-zinc-400 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors" aria-label="Changer le thème">
                             {appData.uiSettings.theme === 'light' ? <MoonIcon className="w-5 h-5" /> : <SunIcon className="w-5 h-5" />}
@@ -814,7 +819,8 @@ const App: React.FC = () => {
 
       {activeTab === 'class' && (
         <div className="flex-grow flex flex-col md:flex-row min-h-0">
-            <aside className="relative flex-shrink-0 h-1/3 md:h-full md:w-80 lg:w-96 w-full">
+            {/* Téléphone : un seul panneau à la fois — la liste, puis la fiche d'un élève (ou la synthèse). */}
+            <aside className={`relative flex-shrink-0 h-1/3 md:h-full md:w-80 lg:w-96 w-full max-sm:h-full ${selectedStudent || phoneSynthesis ? 'max-sm:hidden' : ''}`}>
                 <div className="w-full h-full">
                     <StudentList
                         students={appData.students}
@@ -830,10 +836,11 @@ const App: React.FC = () => {
                         viewMode="class"
                         onOpenMassValidation={() => setIsMassValidationOpen(true)}
                         onPromoteStudents={() => setIsPromoteModalOpen(true)}
+                        onShowSynthesis={() => setPhoneSynthesis(true)}
                     />
                 </div>
             </aside>
-            <main className="flex-grow min-w-0 bg-white dark:bg-zinc-800/50 h-2/3 md:h-full">
+            <main className={`flex-grow min-w-0 bg-white dark:bg-zinc-800/50 h-2/3 md:h-full max-sm:h-full ${selectedStudent || phoneSynthesis ? '' : 'max-sm:hidden'}`}>
                 {selectedStudent ? (
                 <StudentDetail
                     student={selectedStudent}
@@ -842,7 +849,7 @@ const App: React.FC = () => {
                     onBatchUpdateSkills={handleBatchUpdateSkills}
                     highlightedSkillId={highlightedSkillId}
                     onHighlightSkill={handleHighlightSkill}
-                    onDeselectStudent={() => setSelectedStudentId(null)}
+                    onDeselectStudent={() => { setSelectedStudentId(null); setPhoneSynthesis(false); }}
                     schoolYear={appData.teacherConfig.schoolYear}
                     onAddNote={(studentId, note) => updateAppData(d => addNote(d, studentId, note))}
                     onUpdateNote={(studentId, noteId, changes) => updateAppData(d => updateNote(d, studentId, noteId, changes))}
@@ -857,6 +864,7 @@ const App: React.FC = () => {
                     supportGroups={appData.supportGroups ?? []}
                     onUpdateSupportGroups={setSupportGroups}
                     onPrintProofs={() => setPrintProofsFor(appData.students.map(s => s.id))}
+                    onBack={() => setPhoneSynthesis(false)}
                 />
                 )}
             </main>
@@ -984,6 +992,18 @@ const App: React.FC = () => {
         />
       )}
       </ErrorBoundary>
+      {activeTab !== 'student_mode' && (
+        <MobileNav
+          activeTab={activeTab}
+          onSelectTab={setActiveTab}
+          onStudentMode={openStudentMode}
+          theme={appData.uiSettings.theme}
+          onToggleTheme={handleToggleTheme}
+          onOpenGuide={() => window.electronAPI?.openGuide(appData.uiSettings.theme)}
+          canRedo={canRedo}
+          onRedo={handleRedo}
+        />
+      )}
       <ToastHost />
     </div>
   );

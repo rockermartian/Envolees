@@ -7,6 +7,7 @@ import AcquisitionDetailModal from './AcquisitionDetailModal';
 import ConfirmationModal from './ConfirmationModal';
 import Tooltip from './Tooltip';
 import StudentFollowUp from './StudentFollowUp';
+import BottomSheet, { SheetItem } from './BottomSheet';
 import { formatDateFR } from '../domain/dates';
 import { openTodoCount } from '../domain/notes';
 
@@ -159,7 +160,7 @@ const DomainDisplay: React.FC<DomainDisplayProps> = React.memo(({
         {!isCollapsed && (
             <>
                 {skillLayout === 'columns' ? (
-                    <div className="grid grid-cols-5 gap-1.5 p-2">
+                    <div className="grid grid-cols-5 max-sm:grid-cols-2 gap-1.5 p-2">
                         {domain.skills.map(skill => {
                             const details = student.skills[skill.id] || { proficiency: Proficiency.NotAcquired };
                             const isAcquired = details.proficiency === Proficiency.Acquired;
@@ -242,7 +243,7 @@ const DomainDisplay: React.FC<DomainDisplayProps> = React.memo(({
                                                 <button className="flex items-center" aria-label="Voir la description">
                                                     <MagnifyingGlassIcon className="w-4 h-4 text-slate-400 dark:text-zinc-500 cursor-pointer" />
                                                 </button>
-                                                <div className="absolute top-full left-0 mt-2 w-64 p-3 bg-white text-slate-600 dark:bg-zinc-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-600 text-sm rounded-md shadow-lg opacity-0 group-hover/icon:opacity-100 group-focus-within/icon:opacity-100 transition-opacity duration-200 invisible group-hover/icon:visible group-focus-within/icon:visible z-20 pointer-events-none whitespace-normal break-words">
+                                                <div className="absolute top-full left-0 max-sm:left-auto max-sm:right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] p-3 bg-white text-slate-600 dark:bg-zinc-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-600 text-sm rounded-md shadow-lg opacity-0 group-hover/icon:opacity-100 group-focus-within/icon:opacity-100 transition-opacity duration-200 invisible group-hover/icon:visible group-focus-within/icon:visible z-20 pointer-events-none whitespace-normal break-words">
                                                     {skill.description}
                                                 </div>
                                             </div>
@@ -356,6 +357,7 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ student, schoolPrograms, 
   const [filterStatus, setFilterStatus] = useState<'all' | 'acquired' | 'not_acquired'>('all');
   const [sortBy, setSortBy] = useState<'program' | 'name' | 'date'>('program');
   const [skillLayout, setSkillLayout] = useState<'rows' | 'columns'>('rows');
+  const [displaySheetOpen, setDisplaySheetOpen] = useState(false);
 
   const handleContainerClick = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('button, input, a, [data-interactive="true"]')) {
@@ -617,14 +619,74 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ student, schoolPrograms, 
       setDomainDevalidationModalState({ isOpen: false, skillIds: [], domainName: '' });
   };
 
+  // Modes d'affichage et filtres : barre sur grand écran, volet « Affichage » sur téléphone.
+  const displayControls = (
+    <>
+            <div className="flex rounded-lg border border-slate-200 dark:border-zinc-700 overflow-hidden text-xs font-medium">
+              {(['tree', 'list', 'summary'] as const).map((mode, i) => {
+                const labels = { tree: 'Arborescence', list: 'Liste', summary: 'Synthèse' };
+                return (
+                  <button key={mode} onClick={() => setViewMode(mode)} className={`px-3 py-1.5 transition-colors ${i > 0 ? 'border-l border-slate-200 dark:border-zinc-700' : ''} ${viewMode === mode ? 'bg-blue-500 text-white' : 'bg-white dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-700'}`}>
+                    {labels[mode]}
+                  </button>
+                );
+              })}
+            </div>
+
+            {viewMode !== 'summary' && (
+              <div className="flex rounded-lg border border-slate-200 dark:border-zinc-700 overflow-hidden text-xs font-medium">
+                {(['all', 'acquired', 'not_acquired'] as const).map((f, i) => {
+                  const labels = { all: 'Tous', acquired: '✓ Acquis', not_acquired: '✗ Non acquis' };
+                  const activeColors = { all: 'bg-blue-500 text-white', acquired: 'bg-green-500 text-white', not_acquired: 'bg-red-500 text-white' };
+                  return (
+                    <button key={f} onClick={() => setFilterStatus(f)} className={`px-3 py-1.5 transition-colors ${i > 0 ? 'border-l border-slate-200 dark:border-zinc-700' : ''} ${filterStatus === f ? activeColors[f] : 'bg-white dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-700'}`}>
+                      {labels[f]}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {viewMode !== 'summary' && (
+              <div className="flex rounded-lg border border-slate-200 dark:border-zinc-700 overflow-hidden text-xs font-medium">
+                {(['program', 'name', 'date'] as const).map((s, i) => {
+                  const labels = { program: 'Programme', name: 'Nom A-Z', date: 'Date' };
+                  return (
+                    <button key={s} onClick={() => setSortBy(s)} className={`px-3 py-1.5 transition-colors ${i > 0 ? 'border-l border-slate-200 dark:border-zinc-700' : ''} ${sortBy === s ? 'bg-slate-600 text-white dark:bg-zinc-500' : 'bg-white dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-700'}`}>
+                      {labels[s]}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {viewMode === 'tree' && (
+              <div className="flex rounded-lg border border-slate-200 dark:border-zinc-700 overflow-hidden text-xs font-medium">
+                {(['rows', 'columns'] as const).map((layout, i) => {
+                  const labels = { rows: 'Lignes', columns: 'Colonnes' };
+                  return (
+                    <button key={layout} onClick={() => setSkillLayout(layout)} className={`px-3 py-1.5 transition-colors ${i > 0 ? 'border-l border-slate-200 dark:border-zinc-700' : ''} ${skillLayout === layout ? 'bg-slate-600 text-white dark:bg-zinc-500' : 'bg-white dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-700'}`}>
+                      {labels[layout]}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+    </>
+  );
+  const displaySummary = [
+    { tree: 'Arborescence', list: 'Liste', summary: 'Synthèse' }[viewMode],
+    viewMode !== 'summary' ? { all: 'Tous', acquired: 'Acquis', not_acquired: 'Non acquis' }[filterStatus] : null,
+    viewMode !== 'summary' ? { program: 'Programme', name: 'Nom A-Z', date: 'Date' }[sortBy] : null,
+  ].filter(Boolean).join(' · ');
+
   return (
     <>
-      <div className="p-4 sm:p-6 lg:p-8 h-full overflow-y-auto bg-slate-50 dark:bg-zinc-900" onClick={handleContainerClick}>
+      <div className="p-4 sm:p-6 lg:p-8 h-full overflow-y-auto overflow-x-hidden bg-slate-50 dark:bg-zinc-900" onClick={handleContainerClick}>
         <div className="max-w-4xl mx-auto">
           <header className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
               <div className="flex items-center gap-2 min-w-0">
                   {onDeselectStudent && (
-                      <Tooltip content="Retour à la synthèse de la classe" position="bottom-center">
+                      <Tooltip content="Retour à la classe" position="bottom-center">
                           <button
                               onClick={onDeselectStudent}
                               className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 dark:text-zinc-500 dark:hover:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors flex-shrink-0"
@@ -640,7 +702,7 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ student, schoolPrograms, 
                   </h1>
               </div>
               {panel === 'skills' && (
-                  <div className="flex items-center gap-4 flex-shrink-0">
+                  <div className="flex items-center gap-4 flex-shrink-0 max-sm:hidden">
                       {onPrintProofs && (
                           <button
                               onClick={() => onPrintProofs(student.id)}
@@ -709,56 +771,29 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ student, schoolPrograms, 
           </div>
           )}
 
-          <div className="flex flex-wrap items-center gap-2 mb-6">
-            <div className="flex rounded-lg border border-slate-200 dark:border-zinc-700 overflow-hidden text-xs font-medium">
-              {(['tree', 'list', 'summary'] as const).map((mode, i) => {
-                const labels = { tree: 'Arborescence', list: 'Liste', summary: 'Synthèse' };
-                return (
-                  <button key={mode} onClick={() => setViewMode(mode)} className={`px-3 py-1.5 transition-colors ${i > 0 ? 'border-l border-slate-200 dark:border-zinc-700' : ''} ${viewMode === mode ? 'bg-blue-500 text-white' : 'bg-white dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-700'}`}>
-                    {labels[mode]}
-                  </button>
-                );
-              })}
-            </div>
-
-            {viewMode !== 'summary' && (
-              <div className="flex rounded-lg border border-slate-200 dark:border-zinc-700 overflow-hidden text-xs font-medium">
-                {(['all', 'acquired', 'not_acquired'] as const).map((f, i) => {
-                  const labels = { all: 'Tous', acquired: '✓ Acquis', not_acquired: '✗ Non acquis' };
-                  const activeColors = { all: 'bg-blue-500 text-white', acquired: 'bg-green-500 text-white', not_acquired: 'bg-red-500 text-white' };
-                  return (
-                    <button key={f} onClick={() => setFilterStatus(f)} className={`px-3 py-1.5 transition-colors ${i > 0 ? 'border-l border-slate-200 dark:border-zinc-700' : ''} ${filterStatus === f ? activeColors[f] : 'bg-white dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-700'}`}>
-                      {labels[f]}
-                    </button>
-                  );
-                })}
+          {/* Téléphone : modes d'affichage, filtres et actions dans le volet « Affichage » */}
+          <div className="sm:hidden mb-4">
+            <button
+              onClick={() => setDisplaySheetOpen(true)}
+              className="w-full flex items-center justify-between gap-2 px-3 py-2 text-sm bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-slate-700 dark:text-zinc-200"
+            >
+              <span className="font-semibold">Affichage</span>
+              <span className="text-xs text-slate-500 dark:text-zinc-400 truncate">{displaySummary}</span>
+            </button>
+          </div>
+          {displaySheetOpen && (
+            <BottomSheet title="Affichage" onClose={() => setDisplaySheetOpen(false)}>
+              <div className="flex flex-col items-start gap-3 px-2 pb-2">
+                {displayControls}
+                <div className="w-full border-t border-slate-200 dark:border-zinc-700 pt-2 flex flex-col">
+                  {onPrintProofs && <SheetItem label="Imprimer les preuves" detail="Photos de preuve à coller dans un cahier" onClick={() => { setDisplaySheetOpen(false); onPrintProofs(student.id); }} />}
+                  {viewMode === 'tree' && schoolPrograms.length > 0 && <SheetItem label={areAllCollapsed ? 'Tout déplier' : 'Tout replier'} onClick={() => { setDisplaySheetOpen(false); handleToggleAll(); }} />}
+                </div>
               </div>
-            )}
-
-            {viewMode !== 'summary' && (
-              <div className="flex rounded-lg border border-slate-200 dark:border-zinc-700 overflow-hidden text-xs font-medium">
-                {(['program', 'name', 'date'] as const).map((s, i) => {
-                  const labels = { program: 'Programme', name: 'Nom A-Z', date: 'Date' };
-                  return (
-                    <button key={s} onClick={() => setSortBy(s)} className={`px-3 py-1.5 transition-colors ${i > 0 ? 'border-l border-slate-200 dark:border-zinc-700' : ''} ${sortBy === s ? 'bg-slate-600 text-white dark:bg-zinc-500' : 'bg-white dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-700'}`}>
-                      {labels[s]}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-            {viewMode === 'tree' && (
-              <div className="flex rounded-lg border border-slate-200 dark:border-zinc-700 overflow-hidden text-xs font-medium">
-                {(['rows', 'columns'] as const).map((layout, i) => {
-                  const labels = { rows: 'Lignes', columns: 'Colonnes' };
-                  return (
-                    <button key={layout} onClick={() => setSkillLayout(layout)} className={`px-3 py-1.5 transition-colors ${i > 0 ? 'border-l border-slate-200 dark:border-zinc-700' : ''} ${skillLayout === layout ? 'bg-slate-600 text-white dark:bg-zinc-500' : 'bg-white dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-700'}`}>
-                      {labels[layout]}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+            </BottomSheet>
+          )}
+          <div className="flex flex-wrap items-center gap-2 mb-6 max-sm:hidden">
+            {displayControls}
           </div>
 
           {viewMode === 'tree' && (

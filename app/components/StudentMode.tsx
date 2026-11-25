@@ -194,7 +194,7 @@ const StudentMode: React.FC<StudentModeProps> = ({ students, teacherConfig, work
             transition={{ duration: 0.3 }}
             className="flex-grow flex flex-col items-center justify-start overflow-y-auto"
           >
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 md:gap-3 w-full max-w-7xl px-6 pb-4 pt-4">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 md:gap-3 w-full max-w-7xl px-6 pb-4 pt-4 max-sm:pt-20">
               {students.map((student, index) => {
                 const pal = CARD_PALETTES[index % CARD_PALETTES.length];
                 return (

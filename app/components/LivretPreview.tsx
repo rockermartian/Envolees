@@ -19,6 +19,8 @@ interface LivretPreviewProps {
   setIsPaginating: (isPaginating: boolean) => void;
   zoomLevel: number;
   transformOrigin: string;
+  /** Téléphone : la place occupée suit le zoom (page ajustée à la largeur de l'écran). */
+  fitBox?: boolean;
 }
 
 // --- ICONS ---
@@ -372,9 +374,20 @@ const DomainPeriodComment: React.FC<{
 const LivretPreview: React.FC<LivretPreviewProps> = ({
     student, schoolPrograms, teacherConfig, onConfigChange,
     onUpdateStudentComment, onUpdateStudentTeacher2Comment, onUpdateStudentDirectorComment, onUpdateStudentDomainComment,
-    onPaginatedAndReadyForExport, isPaginating, setIsPaginating, zoomLevel, transformOrigin
+    onPaginatedAndReadyForExport, isPaginating, setIsPaginating, zoomLevel, transformOrigin, fitBox = false
 }) => {
     const contentRef = useRef<HTMLDivElement>(null);
+    // Téléphone (fitBox) : la place occupée suit le zoom. Un « transform » ne réduit que l'affichage :
+    // sans cela, la page A4 réduite laisserait un grand vide à droite et en bas.
+    const zoomRef = useRef<HTMLDivElement>(null);
+    const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
+    useEffect(() => {
+        const el = zoomRef.current;
+        if (!fitBox || !el || typeof ResizeObserver === 'undefined') return;
+        const observer = new ResizeObserver(() => setNatural({ w: el.offsetWidth, h: el.offsetHeight }));
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [fitBox]);
     const layoutMode = teacherConfig.livretLayoutMode || 'classic';
 
     const lastPaginatedStudentRef = useRef<string | null>(null);
@@ -536,9 +549,14 @@ const LivretPreview: React.FC<LivretPreviewProps> = ({
 
     return (
         <div className="p-4 sm:p-6 bg-slate-200/50 dark:bg-zinc-900 print-container min-h-full">
+            {/* .zoom-fit-box est neutralisée à l'impression (styles d'impression du livret). */}
+            <div className="zoom-fit-box" style={fitBox && natural ? { width: natural.w * zoomLevel, height: natural.h * zoomLevel, overflow: 'hidden' } : undefined}>
             <div
+                ref={zoomRef}
                 className="zoom-container"
-                style={{ transform: `scale(${zoomLevel})`, transformOrigin, transition: 'transform 150ms ease-in-out' }}
+                style={fitBox
+                    ? { transform: `scale(${zoomLevel})`, transformOrigin: 'top left', width: 'max-content' }
+                    : { transform: `scale(${zoomLevel})`, transformOrigin, transition: 'transform 150ms ease-in-out' }}
             >
                 <div ref={contentRef} className="livret-page force-light relative">
                     {isPaginating && (
@@ -566,6 +584,7 @@ const LivretPreview: React.FC<LivretPreviewProps> = ({
                         <Signatures teacherConfig={teacherConfig} />
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     );

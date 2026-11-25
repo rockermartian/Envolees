@@ -136,7 +136,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ students, onClose, onExport }
             </button>
         </header>
         
-        <div className="px-6 py-4 flex-grow overflow-y-auto">
+        <div className="px-6 max-sm:px-3 py-4 flex-grow overflow-y-auto">
              <p className="text-sm text-slate-600 dark:text-zinc-300 mb-3">
                Crée un fichier <code>.eleves</code> (par exemple pour transmettre les élèves à l'enseignant(e) de l'année suivante).
                « Promouvoir » change la section <strong>dans le fichier exporté uniquement</strong> : votre classe n'est pas modifiée.
@@ -221,7 +221,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ students, onClose, onExport }
             >
               Promouvoir/Annuler la sélection
             </button>
-            <div className="flex justify-end gap-4">
+            <div className="flex justify-end gap-4 max-sm:flex-wrap max-sm:gap-2">
                 <button
                 type="button"
                 onClick={onClose}

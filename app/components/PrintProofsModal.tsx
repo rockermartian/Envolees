@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import useIsPhone from '../hooks/useIsPhone';
 import { createPortal } from 'react-dom';
 import { PrinterIcon, XIcon } from 'lucide-react';
 import { SchoolProgram, Section, Student } from '../types';
@@ -24,7 +25,7 @@ const A4_H_MM = 297;
 const MARGIN_MM = 10;
 const GAP_MM = 3;
 const MM_TO_PX = 96 / 25.4;
-const PREVIEW_W = 520; // largeur de l'aperçu d'une page, en px
+const PREVIEW_W_MAX = 520; // largeur de l'aperçu d'une page, en px (téléphone : largeur de l'écran)
 const SECTION_ORDER: Section[] = [Section.TPS, Section.PS, Section.MS, Section.GS];
 
 const shortDate = (date?: string) => (date ? formatDateFR(date, { day: '2-digit', month: '2-digit', year: 'numeric' }) : '');
@@ -147,6 +148,8 @@ const PrintProofsModal: React.FC<PrintProofsModalProps> = ({ students, schoolPro
     return () => { window.removeEventListener('afterprint', cleanup); style.remove(); };
   }, [printing]);
 
+  const isPhone = useIsPhone();
+  const PREVIEW_W = isPhone ? Math.min(PREVIEW_W_MAX, window.innerWidth - 32) : PREVIEW_W_MAX;
   const scale = PREVIEW_W / (A4_W_MM * MM_TO_PX);
   const checkbox = 'w-4 h-4 accent-blue-600';
 
@@ -237,7 +240,7 @@ const PrintProofsModal: React.FC<PrintProofsModalProps> = ({ students, schoolPro
             </div>
 
             {/* Aperçu */}
-            <div className="flex-1 overflow-auto bg-slate-100 dark:bg-zinc-900/50 p-6 min-w-0" aria-label="Aperçu">
+            <div className="flex-1 overflow-auto bg-slate-100 dark:bg-zinc-900/50 p-6 max-sm:p-4 min-w-0" aria-label="Aperçu">
               {groups.length === 0 ? (
                 <p className="text-center text-sm text-slate-500 dark:text-zinc-400 mt-10">
                   {selected.size === 0 ? 'Cochez un ou plusieurs élèves.' : 'Aucune photo de preuve pour ces élèves' + (period ? ' sur cette période' : '') + '.'}

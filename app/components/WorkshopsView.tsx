@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
+import useIsPhone from '../hooks/useIsPhone';
 import { createPortal } from 'react-dom';
 import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react';
 import { Workshop, SchoolProgram, Domain, Skill } from '../types';
@@ -140,7 +141,7 @@ const WorkshopsView: React.FC<WorkshopsViewProps> = ({ workshops, setWorkshops, 
   };
 
   return (
-    <div className="p-6 h-full flex flex-col overflow-y-auto">
+    <div className="p-6 max-sm:p-4 h-full flex flex-col overflow-y-auto">
       {/* Hidden canvases for ZIP export */}
       <div style={{ display: 'none' }}>
           {workshops.map(w => (
@@ -148,12 +149,12 @@ const WorkshopsView: React.FC<WorkshopsViewProps> = ({ workshops, setWorkshops, 
           ))}
       </div>
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center gap-4 mb-6 max-sm:flex-col max-sm:items-stretch">
         <div>
            <h2 className="text-2xl font-bold text-slate-800 dark:text-zinc-100">Gestion des Ateliers Autonomes</h2>
            <p className="text-slate-500 dark:text-zinc-400 mt-1">Créez des ateliers, associez-y des compétences et générez des QR codes.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 max-sm:flex-wrap">
           <input ref={importInputRef} type="file" accept=".atelier" onChange={handleImportFile} className="hidden" />
           <Tooltip content="Importer des ateliers" position="bottom-center">
             <button onClick={() => importInputRef.current?.click()} className="p-2 rounded-md text-slate-600 dark:text-zinc-300 bg-slate-200 hover:bg-slate-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 transition-colors">
@@ -171,7 +172,7 @@ const WorkshopsView: React.FC<WorkshopsViewProps> = ({ workshops, setWorkshops, 
           <button onClick={handleExportAllQR} disabled={isExporting} className="px-4 py-2 flex items-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-slate-700 dark:text-zinc-200 rounded-md transition-colors font-medium text-sm disabled:opacity-50">
             <DownloadIcon className="w-4 h-4" /> {isExporting ? 'Export en cours...' : 'Exporter tous les QR codes'}
           </button>
-          <button onClick={() => { setEditingWorkshop(null); setIsFormOpen(true); }} className="px-4 py-2 flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors font-medium text-sm">
+          <button onClick={() => { setEditingWorkshop(null); setIsFormOpen(true); }} className="max-sm:order-first max-sm:w-full max-sm:justify-center px-4 py-2 flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors font-medium text-sm">
             <PlusIcon className="w-4 h-4" /> Nouvel atelier
           </button>
         </div>
@@ -716,7 +717,9 @@ const PrintQRModal: React.FC<{ workshops: Workshop[]; onClose: () => void }> = (
   const handleBackdropClick = useModalDismiss(onClose);
 
   const A4_PX_W = Math.round(A4_W_MM * MM_TO_PX_96);   // ~794
-  const PREVIEW_W = 500;
+  // Téléphone : réglages au-dessus de l'aperçu, page à la largeur de l'écran.
+  const isPhone = useIsPhone();
+  const PREVIEW_W = isPhone ? Math.min(500, window.innerWidth - 32) : 500;
   const scale = PREVIEW_W / A4_PX_W;
 
   const marginPx = A4_MARGIN_MM * MM_TO_PX_96;
@@ -808,10 +811,10 @@ const PrintQRModal: React.FC<{ workshops: Workshop[]; onClose: () => void }> = (
           </div>
 
           {/* Body */}
-          <div className="flex flex-1 overflow-hidden min-h-0">
+          <div className="flex flex-1 overflow-hidden min-h-0 max-sm:flex-col max-sm:overflow-y-auto">
 
             {/* ── Left panel: controls ── */}
-            <div className="w-72 flex-shrink-0 border-r border-slate-200 dark:border-zinc-700 p-5 overflow-y-auto flex flex-col gap-5">
+            <div className="w-72 flex-shrink-0 border-r border-slate-200 dark:border-zinc-700 p-5 overflow-y-auto flex flex-col gap-5 max-sm:w-full max-sm:border-r-0 max-sm:border-b max-sm:overflow-visible">
 
               {/* Global size slider */}
               <div>
@@ -875,7 +878,7 @@ const PrintQRModal: React.FC<{ workshops: Workshop[]; onClose: () => void }> = (
             </div>
 
             {/* ── Right panel: A4 preview ── */}
-            <div className="flex-1 overflow-auto bg-slate-100 dark:bg-zinc-900/50 flex items-start justify-center p-6 min-w-0">
+            <div className="flex-1 overflow-auto bg-slate-100 dark:bg-zinc-900/50 flex items-start justify-center p-6 max-sm:p-4 min-w-0 max-sm:overflow-visible max-sm:flex-none">
               <div className="flex flex-col items-center">
                 {pageCount > 1 && (
                   <p className="text-xs text-slate-400 dark:text-zinc-500 mb-3 text-center">

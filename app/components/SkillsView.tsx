@@ -1,4 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { PhoneActions } from './BottomSheet';
+import useIsPhone from '../hooks/useIsPhone';
 import JSZip from 'jszip';
 import { addImageToZip, importImageFromZip } from '../images/imageArchive';
 import { normalizePrograms } from '../fileFormat/normalize';
@@ -462,12 +464,13 @@ const SkillsView: React.FC<SkillsViewProps> = ({ programs, setPrograms, onDelete
 
   return (
     <>
-      <div className="p-4 sm:p-6 lg:p-8 h-full overflow-y-auto bg-white dark:bg-zinc-900">
+      {/* Téléphone : actions de chaque élément dans un volet « ⋯ », arbre peu décalé (useIsPhone). */}
+      <div className="p-4 sm:p-6 lg:p-8 h-full overflow-y-auto overflow-x-hidden bg-white dark:bg-zinc-900">
         <div className="max-w-6xl mx-auto pb-20">
           <header className="mb-6">
-            <div className="flex justify-between items-center mb-1">
-                <div className="flex items-center gap-4">
-                    <h1 className="text-3xl font-bold text-slate-800 dark:text-zinc-200">Gestion des Compétences</h1>
+            <div className="flex justify-between items-center gap-3 mb-1 max-sm:flex-col max-sm:items-stretch">
+                <div className="flex items-center gap-4 max-sm:justify-between">
+                    <h1 className="text-3xl max-sm:text-2xl font-bold text-slate-800 dark:text-zinc-200">Gestion des Compétences</h1>
                     {programs.length > 0 && ( <button onClick={handleToggleAllCollapse} className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"> {allCollapsibleIds.every(id => collapsedIds.has(id)) ? 'Tout déplier' : 'Tout replier'} </button> )}
                 </div>
                 <div className="flex items-center gap-2">
@@ -477,10 +480,10 @@ const SkillsView: React.FC<SkillsViewProps> = ({ programs, setPrograms, onDelete
                     <Tooltip content="Exporter" position="bottom-center">
                         <button onClick={() => setModal({ type: 'export' })} className="p-2 rounded-md text-slate-600 dark:text-zinc-300 bg-slate-200 hover:bg-slate-300 dark:bg-zinc-700 dark:hover:bg-zinc-600 disabled:opacity-50" disabled={selectedIds.size === 0}><ExportIcon className="w-5 h-5" /></button>
                     </Tooltip>
-                    <button onClick={() => setModal({type: 'addProgram'})} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg flex items-center"><FolderPlusIcon className="w-5 h-5 mr-2" />Ajouter un programme</button>
+                    <button onClick={() => setModal({type: 'addProgram'})} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg flex items-center max-sm:flex-grow max-sm:justify-center"><FolderPlusIcon className="w-5 h-5 mr-2" />Ajouter un programme</button>
                 </div>
             </div>
-            <p className="text-slate-500 dark:text-zinc-400">Gérez les programmes scolaires, domaines et compétences. Glissez-déposez pour réorganiser.</p>
+            <p className="text-slate-500 dark:text-zinc-400">Gérez les programmes scolaires, domaines et compétences.<span className="max-sm:hidden"> Glissez-déposez pour réorganiser.</span></p>
           </header>
 
           <div className="mb-6 flex gap-4 items-center flex-wrap">
@@ -586,10 +589,17 @@ const ProgramEditor: React.FC<EditorProps & { program: SchoolProgram; onDuplicat
                 <div className="flex items-center gap-2 flex-grow min-w-0">
                     <input type="checkbox" aria-label={`Sélectionner le programme ${program.name}`} checked={selectedIds.has(program.id)} onChange={() => toggleSelection(program.id, childrenIds)} className={`h-5 w-5 rounded transition-opacity ${isBatchModeActive || selectedIds.size > 0 ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 pointer-coarse:opacity-100'}`} />
                     <button onClick={toggleCollapse} aria-expanded={!isCollapsed} aria-label={`${isCollapsed ? 'Déplier' : 'Replier'} ${program.name}`} className="p-1 rounded-full"><ChevronIcon className={`w-5 h-5 ${isDisabled ? 'text-red-400 dark:text-red-500' : 'text-slate-500'}`} isCollapsed={isCollapsed} /></button>
-                    <h2 className={`text-xl font-bold truncate select-none ${isDisabled ? 'text-red-600 dark:text-red-400' : 'text-slate-800 dark:text-zinc-200'}`}>{program.name}</h2>
+                    <h2 className={`text-xl max-sm:text-base font-bold truncate select-none ${isDisabled ? 'text-red-600 dark:text-red-400' : 'text-slate-800 dark:text-zinc-200'}`}>{program.name}</h2>
                     {isDisabled && <span className="flex-shrink-0 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/40 px-2 py-0.5 rounded-full">Désactivé</span>}
                 </div>
-                <div className="flex items-center gap-1">
+                <PhoneActions title={program.name} actions={[
+                    { label: 'Ajouter un domaine', onClick: () => setModal({ type: 'addDomain', programId: program.id, isSubDomain: false }) },
+                    { label: 'Renommer le programme', onClick: () => setModal({ type: 'editProgram', program }) },
+                    { label: 'Dupliquer le programme', onClick: onDuplicate },
+                    { label: isDisabled ? 'Activer le programme' : 'Désactiver le programme', detail: isDisabled ? undefined : 'Ses compétences ne sont plus proposées', onClick: onToggleEnabled },
+                    { label: 'Supprimer le programme', danger: true, onClick: () => setModal({ type: 'deleteProgram', program }) },
+                ]} />
+                <div className="flex items-center gap-1 max-sm:hidden">
                     <Tooltip content="Dupliquer le programme" position="bottom-center">
                         <button onClick={onDuplicate} className="p-2 text-slate-500 hover:text-blue-600 dark:hover:text-blue-400"><CopyIcon className="w-5 h-5"/></button>
                     </Tooltip>
@@ -613,7 +623,7 @@ const ProgramEditor: React.FC<EditorProps & { program: SchoolProgram; onDuplicat
                 </div>
             </header>
             {!isCollapsed && (
-                <div className="p-4 space-y-4">
+                <div className="p-4 max-sm:p-1.5 space-y-4 max-sm:space-y-2">
                     {(program.domains || []).map(domain => (
                         <DomainEditor
                             key={domain.id}
@@ -644,6 +654,8 @@ const DomainEditor: React.FC<EditorProps & { domain: Domain, level: number, prog
     const isCollapsed = collapsedIds.has(domain.id);
     const toggleCollapse = () => setCollapsedIds(p => { const n = new Set(p); if (n.has(domain.id)) n.delete(domain.id); else n.add(domain.id); return n; });
     const childrenIds = useMemo(() => getDescendantIds(domain), [domain]);
+    // Téléphone : les cadres imbriqués suffisent à montrer la profondeur, on ne décale presque pas.
+    const isPhone = useIsPhone();
     const [areExpectationsCollapsed, setAreExpectationsCollapsed] = useState(true);
 
     const [dropPosition, setDropPosition] = useState<DropPosition>(null);
@@ -692,7 +704,7 @@ const DomainEditor: React.FC<EditorProps & { domain: Domain, level: number, prog
         >
             <header
                 className="group p-2 flex justify-between items-center cursor-grab active:cursor-grabbing"
-                style={{ paddingLeft: `${0.5 + level * 1}rem`}}
+                style={{ paddingLeft: isPhone ? '0.25rem' : `${0.5 + level * 1}rem`}}
                 draggable
                 onDragStart={(e) => onDragStart(e, { id: domain.id, type: 'domain' })}
             >
@@ -704,7 +716,16 @@ const DomainEditor: React.FC<EditorProps & { domain: Domain, level: number, prog
                         <h3 className="font-semibold text-slate-700 dark:text-zinc-200 truncate select-none">{domain.name}</h3>
                     </div>
                 </div>
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 pointer-coarse:opacity-100 transition-opacity pointer-events-auto">
+                <PhoneActions className="pointer-events-auto" title={domain.name} actions={[
+                    { label: 'Ajouter une compétence', onClick: () => setModal({ type: 'addSkill', domainId: domain.id }) },
+                    { label: 'Ajouter un sous-domaine', onClick: () => setModal({ type: 'addDomain', programId, parentDomainId: domain.id, isSubDomain: true }) },
+                    { label: 'Monter', onClick: () => moveBy(domain.id, -1) },
+                    { label: 'Descendre', onClick: () => moveBy(domain.id, 1) },
+                    { label: 'Déplacer vers…', detail: 'Dans un autre domaine ou programme', onClick: () => openMoveModal([{ id: domain.id, type: 'domain' }]) },
+                    { label: 'Modifier', detail: 'Nom et attendus', onClick: () => setModal({ type: 'editDomain', domain, isSubDomain: level > 0 }) },
+                    { label: 'Supprimer', danger: true, onClick: () => setModal({ type: 'deleteDomain', domain }) },
+                ]} />
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 pointer-coarse:opacity-100 transition-opacity pointer-events-auto max-sm:hidden">
                     <Tooltip content="Ajouter une compétence" position="top-center">
                         <button onClick={() => setModal({ type: 'addSkill', domainId: domain.id })} className="p-2 text-slate-500 hover:text-blue-600"><PlusIcon className="w-4 h-4"/></button>
                     </Tooltip>
@@ -726,7 +747,7 @@ const DomainEditor: React.FC<EditorProps & { domain: Domain, level: number, prog
                 </div>
             </header>
             {!isCollapsed && (
-                <div className="pb-2 pointer-events-auto" style={{ paddingLeft: `${1.5 + level * 1}rem`, paddingRight: `0.5rem`}}>
+                <div className="pb-2 pointer-events-auto" style={{ paddingLeft: isPhone ? '0.5rem' : `${1.5 + level * 1}rem`, paddingRight: isPhone ? '0.25rem' : '0.5rem'}}>
                      {/* stopPropagation on inner content so dragging over children doesn't trigger parent drop logic incorrectly */}
                     {(domain.expectations || []).length > 0 && (
                         <div className="mb-2 bg-slate-50 dark:bg-zinc-700/50 rounded-md" onDragOver={e => e.stopPropagation()}>
@@ -745,7 +766,7 @@ const DomainEditor: React.FC<EditorProps & { domain: Domain, level: number, prog
                         </div>
                     )}
                     {skillLayout === 'columns' ? (
-                        <ul className="grid grid-cols-5 gap-1.5 py-2">
+                        <ul className="grid grid-cols-5 max-sm:grid-cols-2 gap-1.5 py-2">
                             {(domain.skills || []).map(skill => (
                                 <SkillItem
                                     key={skill.id}
@@ -855,6 +876,14 @@ const SkillItem: React.FC<{
         onDrop(e, skill.id, 'skill', dropPosition);
     };
 
+    const phoneActions = [
+        { label: 'Monter', onClick: () => moveBy(skill.id, -1) },
+        { label: 'Descendre', onClick: () => moveBy(skill.id, 1) },
+        { label: 'Déplacer vers…', detail: 'Dans un autre domaine', onClick: () => openMoveModal([{ id: skill.id, type: 'skill' }]) },
+        { label: 'Modifier', onClick: () => setModal({ type: 'editSkill', domainId, skill }) },
+        { label: 'Supprimer', danger: true, onClick: () => setModal({ type: 'deleteSkill', domainId, skill }) },
+    ];
+
     if (layoutMode === 'columns') {
         return (
             <li
@@ -876,7 +905,7 @@ const SkillItem: React.FC<{
                     aria-label={`Sélectionner ${skill.name}`}
                     checked={selectedIds.has(skill.id)}
                     onChange={() => toggleSelection(skill.id, [])}
-                    className={`absolute top-0.5 left-0.5 h-4 w-4 rounded transition-opacity ${isBatchModeActive || selectedIds.size > 0 ? 'opacity-100' : 'opacity-0 group-hover/skill:opacity-100 group-focus-within/skill:opacity-100'}`}
+                    className={`absolute top-0.5 left-0.5 h-4 w-4 rounded transition-opacity ${isBatchModeActive || selectedIds.size > 0 ? 'opacity-100' : 'opacity-0 group-hover/skill:opacity-100 group-focus-within/skill:opacity-100 pointer-coarse:opacity-100'}`}
                 />
                 {skill.image ? (
                     <StoredImage src={skill.image} alt="" className="w-8 h-8 object-cover rounded-md mx-auto flex-shrink-0" />
@@ -889,7 +918,8 @@ const SkillItem: React.FC<{
                         <div key={age} className={`w-1.5 h-1.5 rounded-full ${REFERENCE_AGE_DOT_COLORS[age]}`} />
                     ))}
                 </div>
-                <div className="absolute top-0.5 right-0.5 flex gap-0.5 opacity-0 group-hover/skill:opacity-100 group-focus-within/skill:opacity-100 transition-opacity">
+                <PhoneActions className="absolute top-0 right-0" title={skill.name} actions={phoneActions} />
+                <div className="absolute top-0.5 right-0.5 flex gap-0.5 opacity-0 group-hover/skill:opacity-100 group-focus-within/skill:opacity-100 pointer-coarse:opacity-100 transition-opacity max-sm:hidden">
                     <Tooltip content="Monter" position="top-center">
                         <button onClick={() => moveBy(skill.id, -1)} className="p-0.5 bg-white dark:bg-zinc-800 rounded shadow text-slate-400 hover:text-blue-600"><ArrowUpIcon className="w-3 h-3"/></button>
                     </Tooltip>
@@ -912,7 +942,7 @@ const SkillItem: React.FC<{
     }
 
     // Visual feedback styles using shadows to avoid layout shifts
-    let itemClasses = `group/skill relative flex justify-between items-center py-2 px-3 transition-all rounded-md`;
+    let itemClasses = `group/skill relative flex justify-between items-center py-2 px-3 max-sm:px-1 transition-all rounded-md`;
 
     if (dropPosition === 'top') {
         itemClasses += ` bg-blue-50 dark:bg-blue-900/20 shadow-[inset_0_3px_0_0_#3b82f6]`;
@@ -936,21 +966,21 @@ const SkillItem: React.FC<{
         >
             <div className="flex items-center gap-3 flex-grow min-w-0">
                 <div className="flex items-center gap-3 flex-grow min-w-0">
-                    <input type="checkbox" aria-label={`Sélectionner ${skill.name}`} checked={selectedIds.has(skill.id)} onChange={() => toggleSelection(skill.id, [])} className={`h-5 w-5 rounded transition-opacity ${isBatchModeActive || selectedIds.size > 0 ? 'opacity-100' : 'opacity-0 group-hover/skill:opacity-100 group-focus-within/skill:opacity-100'}`} />
+                    <input type="checkbox" aria-label={`Sélectionner ${skill.name}`} checked={selectedIds.has(skill.id)} onChange={() => toggleSelection(skill.id, [])} className={`h-5 w-5 rounded transition-opacity flex-shrink-0 ${isBatchModeActive || selectedIds.size > 0 ? 'opacity-100' : 'opacity-0 group-hover/skill:opacity-100 group-focus-within/skill:opacity-100 pointer-coarse:opacity-100'}`} />
                     {skill.image ? (
-                        <StoredImage src={skill.image} alt="" className="w-10 h-10 object-cover rounded-md flex-shrink-0 bg-slate-100" />
+                        <StoredImage src={skill.image} alt="" className="w-10 h-10 max-sm:w-8 max-sm:h-8 object-cover rounded-md flex-shrink-0 bg-slate-100" />
                     ) : (
-                        <div className="w-10 h-10 bg-slate-200 dark:bg-zinc-700 rounded-md flex-shrink-0" />
+                        <div className="w-10 h-10 max-sm:hidden bg-slate-200 dark:bg-zinc-700 rounded-md flex-shrink-0" />
                     )}
                     <div className="flex-grow min-w-0">
                         <div className="flex items-start gap-2">
-                            <span className="text-slate-600 dark:text-zinc-300 truncate select-none cursor-grab active:cursor-grabbing">{skill.name}</span>
+                            <span className="text-slate-600 dark:text-zinc-300 truncate max-sm:whitespace-normal max-sm:text-sm select-none cursor-grab active:cursor-grabbing">{skill.name}</span>
                             {skill.description && (
                                 <div className="relative group/desc flex items-center">
                                     <button className="flex items-center" aria-label="Voir la description">
                                         <MagnifyingGlassIcon className="w-4 h-4 text-slate-400 dark:text-zinc-500 cursor-pointer" />
                                     </button>
-                                    <div className="absolute top-full left-0 mt-2 w-64 p-3 bg-white dark:bg-zinc-700 text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-zinc-600 text-sm rounded-md shadow-lg opacity-0 group-hover/desc:opacity-100 group-focus-within/desc:opacity-100 transition-opacity duration-200 invisible group-hover/desc:visible group-focus-within/desc:visible z-20 pointer-events-none whitespace-normal break-words">
+                                    <div className="absolute top-full left-0 max-sm:left-auto max-sm:right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] p-3 bg-white dark:bg-zinc-700 text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-zinc-600 text-sm rounded-md shadow-lg opacity-0 group-hover/desc:opacity-100 group-focus-within/desc:opacity-100 transition-opacity duration-200 invisible group-hover/desc:visible group-focus-within/desc:visible z-20 pointer-events-none whitespace-normal break-words">
                                         {skill.description}
                                     </div>
                                 </div>
@@ -966,7 +996,8 @@ const SkillItem: React.FC<{
                     </div>
                 </div>
             </div>
-            <div className="flex items-center gap-1 opacity-0 group-hover/skill:opacity-100 group-focus-within/skill:opacity-100 transition-opacity">
+            <PhoneActions title={skill.name} actions={phoneActions} />
+            <div className="flex items-center gap-1 opacity-0 group-hover/skill:opacity-100 group-focus-within/skill:opacity-100 pointer-coarse:opacity-100 transition-opacity max-sm:hidden">
                 <Tooltip content="Monter" position="top-center">
                     <button onClick={() => moveBy(skill.id, -1)} className="p-2 text-slate-500 hover:text-blue-600"><ArrowUpIcon className="w-4 h-4"/></button>
                 </Tooltip>

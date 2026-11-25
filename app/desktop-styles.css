@@ -255,6 +255,13 @@
         /* Disable the zoom effect for printing */
         .zoom-container {
           transform: none !important;
+          width: auto !important;
+        }
+        /* Téléphone : boîte à la taille de l'aperçu réduit, sans effet à l'impression */
+        .zoom-fit-box {
+          width: auto !important;
+          height: auto !important;
+          overflow: visible !important;
         }
 
         /* Single document — @page handles margins and page breaks */

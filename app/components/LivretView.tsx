@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
+import useIsPhone from '../hooks/useIsPhone';
 import { Student, SchoolProgram, AppUISettings } from '../types';
 import { TeacherConfig } from '../types';
 import LivretConfig from './LivretConfig';
@@ -92,6 +93,11 @@ const LivretView: React.FC<LivretViewProps> = ({
   const [isAnnexMode, setIsAnnexMode] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1.0);
   const [transformOrigin, setTransformOrigin] = useState('top center');
+  // Téléphone : trois volets (Élèves, Réglages, Aperçu) au lieu de trois colonnes. L'aperçu reste
+  // toujours affiché dessous : la pagination et l'export PDF en ont besoin.
+  const isPhone = useIsPhone();
+  const [phonePanel, setPhonePanel] = useState<'students' | 'config' | 'preview'>(selectedStudentId ? 'preview' : 'students');
+  const minZoom = isPhone ? 0.25 : 0.5;
 
   const previewContainerRef = useRef<HTMLDivElement>(null);
   const isBatchExporting = useRef(false);
@@ -112,8 +118,20 @@ const LivretView: React.FC<LivretViewProps> = ({
         const y = container.clientHeight / 2 + container.scrollTop;
         setTransformOrigin(`${x}px ${y}px`);
     }
-    setZoomLevel(prev => Math.max(prev - 0.1, 0.5));
+    setZoomLevel(prev => Math.max(prev - 0.1, minZoom));
   };
+
+  // Téléphone : page ajustée à la largeur de l'écran (21 cm = 793,7 px), recalculée à la rotation.
+  useEffect(() => {
+    if (!isPhone) { setZoomLevel(1.0); return; }
+    const fit = () => {
+      const width = previewContainerRef.current?.clientWidth ?? window.innerWidth;
+      setZoomLevel(Math.max(0.25, Math.min(1, (width - 32) / 793.7)));
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, [isPhone]);
 
   useEffect(() => {
     const container = previewContainerRef.current;
@@ -132,7 +150,7 @@ const LivretView: React.FC<LivretViewProps> = ({
             if (event.deltaY < 0) {
                 setZoomLevel(prev => Math.min(prev + zoomStep, 2));
             } else {
-                setZoomLevel(prev => Math.max(prev - zoomStep, 0.5));
+                setZoomLevel(prev => Math.max(prev - zoomStep, 0.25));
             }
         }
     };
@@ -349,16 +367,25 @@ const LivretView: React.FC<LivretViewProps> = ({
                 onClose={() => setInfoModalState(null)}
             />
         )}
-      <div className="livret-view flex h-full w-full bg-slate-100 dark:bg-zinc-900">
-          {/* Student List Panel */}
-          <aside className={`transition-all duration-300 flex-shrink-0 h-full ${isStudentListCollapsed ? 'w-0' : 'w-64'}`}>
-              <div className={`w-full h-full transition-opacity overflow-hidden ${isStudentListCollapsed ? 'opacity-0' : 'opacity-100'}`}>
+      <div className="livret-view relative flex max-sm:flex-col h-full w-full bg-slate-100 dark:bg-zinc-900">
+          {/* Téléphone : Élèves / Réglages / Aperçu */}
+          <div className="sm:hidden flex-shrink-0 flex p-2 gap-1 bg-white dark:bg-zinc-800 border-b border-slate-200 dark:border-zinc-700 print-hidden" role="tablist" aria-label="Livret">
+              {([['students', 'Élèves'], ['config', 'Réglages'], ['preview', 'Aperçu']] as const).map(([id, label]) => (
+                  <button key={id} role="tab" aria-selected={phonePanel === id} onClick={() => setPhonePanel(id)}
+                      className={`flex-1 py-1.5 text-sm font-semibold rounded-md transition-colors ${phonePanel === id ? 'bg-blue-500 text-white' : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-700'}`}>
+                      {label}
+                  </button>
+              ))}
+          </div>
+          {/* Student List Panel (téléphone : plein écran par-dessus l'aperçu) */}
+          <aside className={`transition-all duration-300 flex-shrink-0 h-full ${isStudentListCollapsed ? 'w-0' : 'w-64'} max-sm:absolute max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-14 max-sm:z-20 max-sm:w-full max-sm:h-auto ${phonePanel === 'students' ? '' : 'max-sm:hidden'}`}>
+              <div className={`w-full h-full transition-opacity overflow-hidden ${isStudentListCollapsed ? 'opacity-0' : 'opacity-100'} max-sm:opacity-100`}>
                   <StudentList
                       students={students}
                       selectedStudentId={selectedStudentId}
                       schoolPrograms={schoolPrograms}
                       highlightedSkillId={null}
-                      onSelectStudent={onSelectStudent}
+                      onSelectStudent={id => { onSelectStudent(id); if (isPhone) setPhonePanel('preview'); }}
                       onAddStudent={() => {}}
                       onEditStudent={onEditStudent}
                       onDeleteStudent={onDeleteStudent}
@@ -372,7 +399,7 @@ const LivretView: React.FC<LivretViewProps> = ({
           </aside>
 
           {/* Student List Toggle Handle */}
-          <Tooltip content={isStudentListCollapsed ? "Afficher les élèves" : "Masquer les élèves"} position="right" wrapperClassName="flex-shrink-0">
+          <Tooltip content={isStudentListCollapsed ? "Afficher les élèves" : "Masquer les élèves"} position="right" wrapperClassName="flex-shrink-0 max-sm:hidden">
           <button
               onClick={handleToggleStudentList}
               className="w-6 pointer-coarse:w-10 bg-slate-200 dark:bg-zinc-800 flex flex-col items-center justify-between gap-4 py-4 cursor-pointer group print-hidden hover:bg-slate-300 dark:hover:bg-zinc-700 transition-colors"
@@ -385,8 +412,8 @@ const LivretView: React.FC<LivretViewProps> = ({
           </Tooltip>
 
           {/* Config Panel */}
-          <aside className={`transition-all duration-300 flex-shrink-0 h-full print-hidden ${isConfigCollapsed ? 'w-0' : 'w-80 lg:w-96'}`}>
-              <div className={`w-full h-full transition-opacity overflow-hidden ${isConfigCollapsed ? 'opacity-0' : 'opacity-100'}`}>
+          <aside className={`transition-all duration-300 flex-shrink-0 h-full print-hidden ${isConfigCollapsed ? 'w-0' : 'w-80 lg:w-96'} max-sm:absolute max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-14 max-sm:z-20 max-sm:w-full max-sm:h-auto ${phonePanel === 'config' ? '' : 'max-sm:hidden'}`}>
+              <div className={`w-full h-full transition-opacity overflow-hidden ${isConfigCollapsed ? 'opacity-0' : 'opacity-100'} max-sm:opacity-100`}>
                   <LivretConfig
                     config={teacherConfig}
                     onConfigChange={onConfigChange}
@@ -402,7 +429,7 @@ const LivretView: React.FC<LivretViewProps> = ({
           </aside>
 
           {/* Config Toggle Handle */}
-          <Tooltip content={isConfigCollapsed ? "Afficher la configuration" : "Masquer la configuration"} position="left" wrapperClassName="flex-shrink-0">
+          <Tooltip content={isConfigCollapsed ? "Afficher la configuration" : "Masquer la configuration"} position="left" wrapperClassName="flex-shrink-0 max-sm:hidden">
           <button
               onClick={handleToggleConfig}
               className="w-6 pointer-coarse:w-10 bg-slate-200 dark:bg-zinc-800 flex flex-col items-center justify-between gap-4 py-4 cursor-pointer group print-hidden hover:bg-slate-300 dark:hover:bg-zinc-700 transition-colors"
@@ -415,7 +442,7 @@ const LivretView: React.FC<LivretViewProps> = ({
           </Tooltip>
               
           {/* Preview */}
-          <main className="relative flex-grow min-w-0">
+          <main className="relative flex-grow min-w-0 max-sm:min-h-0">
                 <div ref={previewContainerRef} className="print-container h-full w-full overflow-auto">
                     {isAnnexMode ? (
                         <AnnexePreview
@@ -438,6 +465,7 @@ const LivretView: React.FC<LivretViewProps> = ({
                         setIsPaginating={setIsPaginating}
                         zoomLevel={zoomLevel}
                         transformOrigin={transformOrigin}
+                        fitBox={isPhone}
                         />
                     ) : (
                         <div className="flex h-full items-center justify-center text-center p-8">

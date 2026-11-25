@@ -130,6 +130,8 @@ const touchDefects = () => js(`(() => {
     const label = e => (e.getAttribute('aria-label') || e.innerText || e.getAttribute('title') || e.getAttribute('placeholder') || e.type || e.tagName).trim().replace(/\\s+/g, ' ').slice(0, 28);
     const small = [...document.querySelectorAll('button, [role=button], a[href], input:not([type=hidden]), select, textarea')]
         .filter(visible)
+        // Champs d'une page A4 affichée réduite (aperçu du livret sur téléphone) : on zoome pour les modifier.
+        .filter(e => { const z = e.closest('.zoom-container'); const m = z && getComputedStyle(z).transform; return !(m && m !== 'none' && new DOMMatrix(m).a < 0.99); })
         .filter(e => { const r = e.getBoundingClientRect(); const min = e.type === 'checkbox' || e.type === 'radio' ? 24 : 40; return r.height < min - 0.5 || r.width < min - 0.5; })
         .map(e => label(e) + ' ' + Math.round(e.getBoundingClientRect().width) + '×' + Math.round(e.getBoundingClientRect().height));
     const hidden = [...document.querySelectorAll('[class*="group-hover:"]')]
@@ -390,7 +392,9 @@ async function ordinateur() {
 }
 
 async function tablette() {
-    await setup(1180, 820, { touch: process.env.E2E_TOUCH !== '0' }); // iPad Air, paysage (E2E_TOUCH=0 : souris, pour comparer)
+    // E2E_PHONE=1 : écran de téléphone (390 × 844) au lieu de la tablette, pour l'audit
+    const PHONE = process.env.E2E_PHONE === '1';
+    await setup(PHONE ? 390 : 1180, PHONE ? 844 : 820, { touch: process.env.E2E_TOUCH !== '0' }); // iPad Air, paysage (E2E_TOUCH=0 : souris, pour comparer)
     await win.loadURL(URL_BASE);
     await waitFor('écran d\'accueil', `document.body.innerText.includes('Bienvenue sur Envolées')`);
     check('écran tactile détecté (pointer: coarse)', await js(`matchMedia('(pointer: coarse)').matches`));
@@ -481,7 +485,7 @@ async function tablette() {
 
     // Portrait
     await tap('Classe', 'header button');
-    await resize(820, 1180);
+    await resize(PHONE ? 390 : 820, PHONE ? 844 : 1180);
     await shot('4-classe-portrait');
     check('pas de défilement horizontal (portrait)', await js('document.documentElement.scrollWidth <= window.innerWidth'));
     check('portrait : tous les onglets visibles sans faire défiler', await js(`${JSON.stringify([...TABS, 'Mode Élève'])}.every(t => { const b = [...document.querySelectorAll('header button')].find(x => x.innerText.trim() === t); const r = b?.getBoundingClientRect(); return r && r.left >= 0 && r.right <= innerWidth; })`));
@@ -525,9 +529,313 @@ async function tablette() {
     }
 }
 
+// ---------------------------------------------------------------------------------------------
+// Téléphone : la même application, présentation « téléphone » sous 640 px de large.
+// Deux tailles : iPhone (390 × 844) et petit Android (360 × 780). Vrais évènements tactiles.
+
+/** Rien ne fait défiler la page horizontalement (ni la page, ni le conteneur de l'application). */
+const pageFits = () => js(`(() => {
+    const root = document.querySelector('#root > div') || document.querySelector('#root');
+    return document.documentElement.scrollWidth <= innerWidth && document.body.scrollWidth <= innerWidth && (!root || root.scrollLeft === 0);
+})()`);
+/** Éléments visibles qui dépassent à droite de l'écran. */
+const overflowing = () => js(`[
+    // éléments visibles qui sortent de l'écran à droite
+    ...[...document.querySelectorAll('body *')]
+        .filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && r.right > innerWidth + 1 && e.checkVisibility({ opacityProperty: true, visibilityProperty: true }); })
+        .map(e => e.tagName + '.' + String(e.className).split(' ').slice(0, 3).join('.') + ' → ' + Math.round(e.getBoundingClientRect().right) + 'px'),
+    // zones qui défilent sur le côté (contenu, même invisible, plus large qu'elles)
+    ...[...document.querySelectorAll('body *')]
+        .filter(e => e && e.checkVisibility() && /(auto|scroll)/.test(getComputedStyle(e).overflowX) && e.scrollWidth > e.clientWidth + 1)
+        .map(e => 'défilement horizontal ' + e.tagName + '.' + String(e.className).split(' ').slice(0, 3).join('.') + ' ' + e.clientWidth + '/' + e.scrollWidth),
+].slice(0, 4)`);
+
+/** Écrans dont la mise en page téléphone reste à faire (étape du chantier) : relevé, sans échec. */
+const PHONE_LATER = {};
+
+async function telephone() {
+    const sizes = [[390, 844, 'iPhone'], [360, 780, 'Android']];
+    const nav = 'nav[aria-label="Navigation principale"]';
+    await setup(sizes[0][0], sizes[0][1], { touch: true });
+    await win.loadURL(URL_BASE);
+    await waitFor("écran d'accueil", `document.body.innerText.includes('Bienvenue sur Envolées')`);
+    check('accueil sans débordement', await pageFits());
+    await openFixture(tap);
+    check("message d'attente refermé", await noProgress());
+
+    for (const [w, h, device] of sizes) {
+        await resize(w, h);
+        check(`${device} (${w} px) : barre d'onglets en bas, onglets de l'en-tête masqués`, await js(`(() => {
+            const nav = document.querySelector('${nav}');
+            const r = nav?.getBoundingClientRect();
+            const headerTabs = [...document.querySelectorAll('header button')].filter(b => b.innerText.trim() === 'Ateliers' && b.checkVisibility());
+            return !!r && r.width > 0 && Math.abs(r.bottom - innerHeight) < 2 && nav.querySelectorAll('button').length === 5 && headerTabs.length === 0
+                && [...nav.querySelectorAll('span')].every(t => t.scrollWidth <= t.clientWidth + 1); // libellés entiers
+        })()`));
+        check(`${device} : en-tête sur une ligne, rien de coupé`, await js(`(() => {
+            const h = document.querySelector('header').getBoundingClientRect();
+            return h.height <= 72 && [...document.querySelectorAll('header button')].filter(b => b.checkVisibility()).every(b => b.getBoundingClientRect().right <= innerWidth);
+        })()`));
+
+        for (const [tab, label] of [['class', 'Classe'], ['skills', 'Compétences'], ['workshops', 'Ateliers'], ['reports', 'Rapports']]) {
+            await tap(label, `${nav} button`);
+            await wait(900);
+            const ok = await js(`document.querySelector('${nav} [aria-current="page"]')?.innerText.trim() === ${JSON.stringify(label)}`);
+            check(`${device} : onglet ${label} ouvert depuis la barre du bas`, ok);
+            if (w === 390) { await shot(tab); await auditScreen(`${label} (téléphone)`); }
+            const over = await overflowing();
+            if (PHONE_LATER[label]) console.log(`    écran ${label} (${w} px) : ${over.length ? 'dépasse : ' + over.join(' | ') : 'rien ne dépasse'} — mise en page : étape ${PHONE_LATER[label]}`);
+            else check(`${device} : ${label}, rien ne dépasse de l'écran`, over.length === 0, over.join(' | '));
+            check(`${device} : ${label}, la page ne se décale pas`, await pageFits());
+            if (label === 'Rapports') {
+                await tap('Journal', 'button');
+                await wait(800);
+                if (w === 390) { await shot('journal'); await auditScreen('Rapports › Journal (téléphone)'); }
+                const overJ = await overflowing();
+                check(`${device} : Rapports › Journal, rien ne dépasse de l'écran`, overJ.length === 0, overJ.join(' | '));
+                await tap('À traiter', 'button');
+                await wait(300);
+            }
+        }
+
+        // Volet « Plus » : Livret, Paramètres, thème, Mode élève
+        for (const [label, title] of [['Livret', 'Réglages'], ['Paramètres', 'Paramètres']]) {
+            await tap('Plus', `${nav} button`);
+            await waitFor('volet Plus', `!!document.querySelector('.bottom-sheet')`);
+            if (w === 390 && label === 'Livret') { await shot('plus'); await auditScreen('Volet « Plus »'); }
+            await tap(label, '.bottom-sheet button');
+            await wait(900);
+            check(`${device} : ${label} ouvert depuis « Plus » (volet refermé)`, await js(`!document.querySelector('.bottom-sheet') && document.body.innerText.includes(${JSON.stringify(title)})`));
+            if (w === 390) { await shot(label); await auditScreen(`${label} (téléphone)`); }
+            const over = await overflowing();
+            if (PHONE_LATER[label]) console.log(`    écran ${label} (${w} px) : ${over.length ? 'dépasse : ' + over.join(' | ') : 'rien ne dépasse'} — mise en page : étape ${PHONE_LATER[label]}`);
+            else check(`${device} : ${label}, rien ne dépasse de l'écran`, over.length === 0, over.join(' | '));
+            check(`${device} : ${label}, la page ne se décale pas`, await pageFits());
+        }
+        const dark = await js(`document.documentElement.classList.contains('dark')`);
+        await tap('Plus', `${nav} button`);
+        await waitFor('volet Plus', `!!document.querySelector('.bottom-sheet')`);
+        await tap(dark ? 'Thème clair' : 'Thème sombre', '.bottom-sheet button');
+        await wait(300);
+        check(`${device} : thème changé depuis « Plus »`, (await js(`document.documentElement.classList.contains('dark')`)) !== dark);
+        await tap('Plus', `${nav} button`);
+        await waitFor('volet Plus', `!!document.querySelector('.bottom-sheet')`);
+        await tap('Mode Élève', '.bottom-sheet button');
+        check(`${device} : Mode élève proposé depuis « Plus » (code PIN ou confirmation)`,
+            await waitFor('mode élève', `document.body.innerText.includes('Code PIN du mode élève') || document.body.innerText.includes('Entrer en Mode Élève')`, 5000).then(() => true, () => false));
+        await tap('Annuler', '[role=dialog] button');
+        await wait(300);
+
+        // Classe (étape 2) : liste plein écran → synthèse ; liste → fiche → retour
+        await tap('Classe', `${nav} button`);
+        await wait(600);
+        const visible = sel => js(`!!document.querySelector(${JSON.stringify(sel)})?.checkVisibility()`);
+        check(`${device} : Classe, la liste des élèves seule à l'écran`, (await visible('aside')) && !(await visible('main')));
+        await tap('Synthèse de la classe', 'aside button');
+        await wait(600);
+        check(`${device} : synthèse de la classe à la place de la liste, rien ne dépasse`, !(await visible('aside')) && (await visible('main')) && (await overflowing()).length === 0, (await overflowing()).join(' | '));
+        if (w === 390) { await shot('synthese'); await auditScreen('Synthèse de la classe (téléphone)'); }
+        await tap('Retour à la liste des élèves', 'main button');
+        await wait(400);
+        await tapSelector('aside [role="button"]');
+        await wait(800);
+        check(`${device} : fiche de l'élève seule à l'écran, rien ne dépasse`, !(await visible('aside')) && (await visible('main')) && (await overflowing()).length === 0 && (await pageFits()), (await overflowing()).join(' | '));
+        if (w === 390) {
+            await shot('fiche');
+            await auditScreen('Fiche élève (téléphone)');
+            // Valider une compétence au doigt (fenêtre plein écran), puis enregistrer
+            const before = (await readDb()).classes[0].acquired;
+            await tapSelector('main button.rounded-full.w-32');
+            await waitFor('fenêtre de validation', `document.body.innerText.includes('Valider la compétence') || document.body.innerText.includes('Dévalider')`);
+            const validating = await js(`document.body.innerText.includes('Valider la compétence')`);
+            await tap(validating ? 'Enregistrer' : 'Confirmer', '[role=dialog] button');
+            await waitFor('modification signalée', `!!document.querySelector('button[aria-label^="Modifications non enregistrées"]')`);
+            await tapSelector('button[aria-label^="Modifications non enregistrées"]');
+            await waitFor('enregistré', `!!document.querySelector('button[aria-label="Tout est enregistré"]')`, 60_000);
+            const after = (await readDb()).classes[0].acquired;
+            check('téléphone : compétence validée au doigt et enregistrée', after === before + (validating ? 1 : -1), `${before} → ${after}`);
+            // Volet « Affichage » : vue Liste, puis retour à l'arborescence
+            await tap('Affichage', 'main button');
+            await waitFor('volet Affichage', `!!document.querySelector('.bottom-sheet')`);
+            await shot('affichage');
+            await auditScreen('Volet « Affichage » (téléphone)');
+            await tap('Liste', '.bottom-sheet button');
+            await tap('Fermer', '.bottom-sheet button');
+            await wait(300);
+            check('téléphone : vue Liste choisie dans le volet « Affichage »', await js(`[...document.querySelectorAll('main button')].some(b => b.innerText.includes('Affichage') && b.innerText.includes('Liste'))`));
+            await tap('Affichage', 'main button');
+            await tap('Arborescence', '.bottom-sheet button');
+            await tap('Fermer', '.bottom-sheet button');
+            await wait(300);
+            await tap('Suivi', '[role=tab]');
+            await wait(400);
+            check('téléphone : onglet Suivi, rien ne dépasse', (await overflowing()).length === 0, (await overflowing()).join(' | '));
+            await shot('suivi');
+            await auditScreen('Suivi (téléphone)');
+            await tap('Compétences', '[role=tab]');
+        }
+        await tap('Retour à la classe', 'main button');
+        await wait(400);
+        check(`${device} : retour de la fiche à la liste`, (await visible('aside')) && !(await visible('main')));
+
+        // Compétences (étape 4) : actions « ⋯ » d'un domaine et d'une compétence, au doigt
+        if (w === 390) {
+            await tap('Compétences', `${nav} button`);
+            await wait(800);
+            await tap('Actions : ', '[aria-label^="Actions : D"]');
+            await waitFor('volet du domaine', `!!document.querySelector('.bottom-sheet')`);
+            await shot('competences-actions');
+            await auditScreen('Actions d\'un domaine (téléphone)');
+            await tap('Ajouter une compétence', '.bottom-sheet button');
+            await waitFor('fiche compétence', `!!document.querySelector('#skill-name')`);
+            await typeInto('#skill-name', 'Compétence ajoutée au téléphone');
+            await tapSelector('[role=dialog] button[type="submit"]');
+            const added = await waitFor('compétence ajoutée', `[...document.querySelectorAll('li')].some(li => li.innerText.includes('Compétence ajoutée au téléphone'))`, 5000).then(() => true, () => false);
+            await tap('Actions : Compétence ajoutée au téléphone', 'button');
+            await waitFor('volet de la compétence', `!!document.querySelector('.bottom-sheet')`);
+            const labels = await js(`[...document.querySelectorAll('.bottom-sheet button')].map(b => b.innerText.split('\\n')[0]).join('|')`);
+            await tap('Supprimer', '.bottom-sheet button');
+            await waitFor('confirmation', `document.body.innerText.includes('Supprimer la compétence')`);
+            await tap('Confirmer', '[role=dialog] button');
+            const removed = await waitFor('compétence supprimée', `![...document.querySelectorAll('li')].some(li => li.innerText.includes('Compétence ajoutée au téléphone'))`, 5000).then(() => true, () => false);
+            check('téléphone : Compétences, ajouter puis supprimer une compétence par le menu « ⋯ »',
+                added && removed && /Monter\|Descendre\|Déplacer vers…\|Modifier\|Supprimer/.test(labels), labels);
+        }
+
+        // Livret (étape 5) : Élèves → aperçu ajusté à l'écran ; Réglages ; rendu d'impression en A4
+        await tap('Plus', `${nav} button`);
+        await waitFor('volet Plus', `!!document.querySelector('.bottom-sheet')`);
+        await tap('Livret', '.bottom-sheet button');
+        await wait(800);
+        const livretTab = label => tap(label, '[aria-label="Livret"] [role=tab]');
+        await livretTab('Élèves');
+        await wait(400);
+        check(`${device} : Livret › Élèves, liste en plein écran`, await js(`!!document.querySelector('.livret-view aside [role="button"]')?.checkVisibility()`));
+        await tapSelector('.livret-view aside [role="button"]');
+        await waitFor('aperçu du livret', `!!document.querySelector('.livret-page')?.checkVisibility() && document.querySelector('[aria-label="Livret"] [aria-selected="true"]')?.innerText.trim() === 'Aperçu'`, 10_000);
+        await wait(2500); // pagination
+        const page = await js(`(() => { const r = document.querySelector('.livret-page').getBoundingClientRect(); return { left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width) }; })()`);
+        const overL = await overflowing();
+        check(`${device} : Livret, élève choisi → aperçu ajusté à la largeur, rien ne dépasse`, page.left >= 0 && page.right <= w && page.width > w * 0.7 && overL.length === 0, `page ${page.left}–${page.right} px ; ${overL.join(' | ')}`);
+        if (w === 390) { await shot('livret-apercu'); await auditScreen('Livret › Aperçu (téléphone)'); }
+        await livretTab('Réglages');
+        await wait(400);
+        const overC = await overflowing();
+        check(`${device} : Livret › Réglages, rien ne dépasse`, (await js(`document.body.innerText.includes('Configuration du Livret')`)) && overC.length === 0, overC.join(' | '));
+        if (w === 390) { await shot('livret-reglages'); await auditScreen('Livret › Réglages (téléphone)'); }
+        await livretTab('Aperçu');
+        await wait(300);
+        if (w === 390) {
+            await dbg.sendCommand('Emulation.setEmulatedMedia', { media: 'print' });
+            // À l'impression, le zoom de l'écran et la boîte réduite sont neutralisés (mise en page = ordinateur).
+            const printed = await js(`(() => {
+                const page = document.querySelector('.livret-page');
+                const box = document.querySelector('.zoom-fit-box');
+                const zoom = document.querySelector('.zoom-container');
+                return { transform: getComputedStyle(zoom).transform, overflow: getComputedStyle(box).overflow, boxH: box.offsetHeight, pageH: page.offsetHeight };
+            })()`);
+            await dbg.sendCommand('Emulation.setEmulatedMedia', { media: '' });
+            check("téléphone : livret imprimé sans le zoom de l'écran (comme sur ordinateur)", printed.transform === 'none' && printed.overflow === 'visible' && printed.boxH >= printed.pageH - 1, JSON.stringify(printed));
+        }
+
+        // Assistants et fenêtres (étape 6) : rien ne dépasse, commandes assez grandes au doigt
+        const escape = () => js(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); true`);
+        const dialogCheck = async (name, open) => {
+            await open();
+            await waitFor(name, `!!document.querySelector('[role=dialog]')`, 5000).catch(() => undefined);
+            await wait(700);
+            const over = await overflowing();
+            check(`${device} : ${name}, rien ne dépasse`, over.length === 0, over.join(' | '));
+            if (w === 390) { await shot(`fenetre-${name}`); await auditScreen(`${name} (téléphone)`); }
+            await escape();
+            await wait(400);
+        };
+        await tap('Classe', `${nav} button`);
+        await wait(500);
+        if (await visible('main')) { await tap('Retour à la classe', 'main button'); await wait(400); }
+        await dialogCheck('Validation en masse', async () => {
+            await tap('Valider en masse', 'aside button');
+            await wait(600);
+            check(`${device} : validation en masse, contenu visible sous l'en-tête`, await js(`(() => {
+                const d = document.querySelector('[role=dialog][aria-label="Validation en masse"]');
+                const kids = [...d.children].filter(c => c.checkVisibility());
+                return kids.length >= 2 && kids[0].getBoundingClientRect().height < 120 && kids.some(c => c.getBoundingClientRect().top < innerHeight - 100 && c.getBoundingClientRect().height > 100);
+            })()`));
+        });
+        await dialogCheck('Promotion', () => tap('Promouvoir', 'aside button'));
+        await dialogCheck('Export des élèves', () => tap('Exporter les élèves', 'aside button'));
+        await tapSelector('aside [role="button"]');
+        await wait(600);
+        await dialogCheck('Impression des preuves', async () => {
+            await tap('Affichage', 'main button');
+            await waitFor('volet Affichage', `!!document.querySelector('.bottom-sheet')`);
+            await tap('Imprimer les preuves', '.bottom-sheet button');
+        });
+        await tap('Retour à la classe', 'main button');
+        await tap('Ateliers', `${nav} button`);
+        await wait(600);
+        await dialogCheck('Nouvel atelier', () => tap('Nouvel atelier', 'button'));
+        await dialogCheck('Impression des QR codes', () => tap('Imprimer les QR codes', 'button'));
+        await dialogCheck('Export des ateliers', () => tap('Exporter des ateliers', 'button'));
+        // Menu Fichier
+        await tap('Menu', 'header button');
+        await wait(300);
+        const menu = await js(`(() => { const m = [...document.querySelectorAll('header div.absolute')].find(e => e.checkVisibility()); if (!m) return null; const r = m.getBoundingClientRect(); return { left: Math.round(r.left), right: Math.round(r.right) }; })()`);
+        check(`${device} : menu Fichier dans l'écran`, !!menu && menu.left >= 0 && menu.right <= w, JSON.stringify(menu));
+        if (w === 390) { await shot('menu-fichier'); await auditScreen('Menu Fichier (téléphone)'); }
+        await tap('Menu', 'header button');
+        await wait(300);
+        // Mode élève : code PIN, écran des élèves, sortie. Le plein écran demandé par le mode élève
+        // agrandirait la fenêtre de test (1920 px) : neutralisé pour mesurer à la taille du téléphone.
+        if (w === 390) {
+            await js(`document.documentElement.requestFullscreen = () => Promise.resolve(); true`);
+            await tap('Plus', `${nav} button`);
+            await waitFor('volet Plus', `!!document.querySelector('.bottom-sheet')`);
+            await tap('Mode Élève', '.bottom-sheet button');
+            await waitFor('code PIN ou confirmation', `document.body.innerText.includes('Code PIN du mode élève') || document.body.innerText.includes('Entrer en Mode Élève')`);
+            if (await js(`document.body.innerText.includes('Code PIN du mode élève')`)) {
+                await auditScreen('Code PIN (téléphone)');
+                await typeInto('[aria-labelledby="pin-setup-title"] input', '2580', 0);
+                await typeInto('[aria-labelledby="pin-setup-title"] input', '2580', 1);
+                await tap('Enregistrer et entrer');
+            } else {
+                await tap('Entrer', 'button');
+            }
+            await waitFor('mode élève', `!!document.querySelector('.fixed.inset-0.z-50') && !document.querySelector('[aria-labelledby="pin-setup-title"]')`);
+            await wait(800);
+            const overS = await js(`[...document.querySelectorAll('.fixed.inset-0.z-50 *')].filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.right > innerWidth + 1 && e.checkVisibility(); }).slice(0, 3).map(e => e.tagName + '.' + String(e.className).split(' ').slice(0, 3).join('.'))`);
+            check('téléphone : mode élève, rien ne dépasse', overS.length === 0, overS.join(' | '));
+            await shot('mode-eleve');
+            await auditScreen('Mode élève (téléphone)');
+            await tapSelector('.fixed.inset-0.z-50 button');
+            await waitFor('code de sortie', `!!document.querySelector('input[aria-label="Code PIN"]')`);
+            await shot('mode-eleve-sortie');
+            await auditScreen('Sortie du mode élève (téléphone)');
+            await typeInto('input[aria-label="Code PIN"]', '2580');
+            check('téléphone : mode élève, entrée et sortie au toucher', await waitFor('sortie', `!document.querySelector('.fixed.inset-0.z-50')`, 5000).then(() => true, () => false));
+        }
+
+        // Une fenêtre (« Ajouter un élève ») occupe tout l'écran
+        await tap('Classe', `${nav} button`);
+        await wait(600);
+        if (await visible('main')) { await tap('Retour à la classe', 'main button'); await wait(400); } // élève choisi dans le livret
+        await tap('Ajouter un élève', 'aside button');
+        await waitFor('fiche élève', `!!document.querySelector('[role=dialog] input')`);
+        if (w === 390) await shot('fenetre');
+        check(`${device} : fenêtre en plein écran`, await js(`(() => {
+            const panel = document.querySelector('[role=dialog][aria-modal=true].fixed > :first-child');
+            const r = panel.getBoundingClientRect();
+            return r.left <= 0.5 && Math.abs(r.width - innerWidth) < 1 && r.height >= innerHeight - 40;
+        })()`));
+        await tap('Fermer', '[role=dialog] button');
+        await wait(300);
+    }
+}
+
 app.whenReady().then(async () => {
     try {
         if (scenario === 'ordinateur') await ordinateur();
+        else if (scenario === 'telephone') await telephone();
         else await tablette();
     } catch (error) {
         check('scénario complet', false, error.message);

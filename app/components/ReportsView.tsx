@@ -74,7 +74,7 @@ const ReportsView: React.FC<ReportsViewProps> = ({ events, students, workshops, 
   };
 
   return (
-    <div className="p-6 h-full flex flex-col overflow-hidden">
+    <div className="p-6 max-sm:p-4 h-full flex flex-col overflow-hidden max-sm:overflow-y-auto">
       {purgeDay !== null && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="purge-title">
           <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-xl max-w-md w-full p-6">
@@ -192,7 +192,7 @@ const ReportsView: React.FC<ReportsViewProps> = ({ events, students, workshops, 
          )}
       </div>
 
-      <div className="flex-grow overflow-y-auto bg-slate-50 dark:bg-zinc-900/50 rounded-xl border border-slate-200 dark:border-zinc-700 p-1">
+      <div className="flex-grow overflow-y-auto max-sm:flex-grow-0 max-sm:overflow-visible bg-slate-50 dark:bg-zinc-900/50 rounded-xl border border-slate-200 dark:border-zinc-700 p-1">
           {activeSubTab === 'pending' && (
               <div className="flex flex-col gap-2">
                  {filteredPending.length === 0 ? (
@@ -255,18 +255,19 @@ const ReportsView: React.FC<ReportsViewProps> = ({ events, students, workshops, 
                          Alléger le journal…
                      </button>
                  </div>
-                 <table className="w-full text-left border-collapse">
-                     <thead>
+                 <table className="w-full text-left border-collapse max-sm:block">
+                     <thead className="max-sm:hidden">
                          <tr className="bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 text-sm border-b border-slate-200 dark:border-zinc-700 sticky top-0 z-10">
-                             <th className="p-4 font-semibold rounded-tl-xl">Élève</th>
-                             <th className="p-4 font-semibold">Section</th>
-                             <th className="p-4 font-semibold">Atelier</th>
-                             <th className="p-4 font-semibold">Date & Heure</th>
-                             <th className="p-4 font-semibold">Résultat</th>
-                             <th className="p-4 font-semibold rounded-tr-xl">Type</th>
+                             <th className="p-4 max-sm:p-2 font-semibold rounded-tl-xl">Élève</th>
+                             <th className="p-4 max-sm:p-2 font-semibold max-sm:hidden">Section</th>
+                             <th className="p-4 max-sm:p-2 font-semibold">Atelier</th>
+                             <th className="p-4 max-sm:p-2 font-semibold">Date & Heure</th>
+                             <th className="p-4 max-sm:p-2 font-semibold">Résultat</th>
+                             <th className="p-4 max-sm:p-2 font-semibold rounded-tr-xl max-sm:hidden">Type</th>
                          </tr>
                      </thead>
-                     <tbody>
+                     {/* Téléphone : chaque passage devient une petite carte (élève, atelier, date, résultat). */}
+                     <tbody className="max-sm:block">
                          {filteredJournal.length === 0 ? (
                              <tr><td colSpan={6} className="p-8 text-center text-slate-500 dark:text-zinc-400">Aucun historique disponible.</td></tr>
                          ) : (
@@ -278,8 +279,8 @@ const ReportsView: React.FC<ReportsViewProps> = ({ events, students, workshops, 
                                  const isSuccess = event.type === 'validation' || event.type === 'auto_validation';
                                  
                                  return (
-                                     <tr key={event.id} className="border-b border-slate-100 dark:border-zinc-800/50 hover:bg-white dark:hover:bg-zinc-800 transition-colors">
-                                         <td className="p-4">
+                                     <tr key={event.id} className="border-b border-slate-100 dark:border-zinc-800/50 hover:bg-white dark:hover:bg-zinc-800 transition-colors max-sm:flex max-sm:flex-wrap max-sm:items-center max-sm:gap-x-3 max-sm:py-2">
+                                         <td className="p-4 max-sm:p-2 max-sm:basis-full max-sm:pb-0">
                                             <div className="flex items-center gap-3">
                                                <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 dark:bg-zinc-700 flex-shrink-0">
                                                    {student.photo ? <StoredImage src={student.photo} className="w-full h-full object-cover"/> : <UserIcon className="w-full h-full p-1.5 text-slate-300"/>}
@@ -287,16 +288,16 @@ const ReportsView: React.FC<ReportsViewProps> = ({ events, students, workshops, 
                                                <span className="font-medium text-slate-800 dark:text-zinc-200">{student.firstName}</span>
                                             </div>
                                          </td>
-                                         <td className="p-4 text-slate-500 dark:text-zinc-400 font-medium text-sm">
+                                         <td className="p-4 max-sm:p-2 text-slate-500 dark:text-zinc-400 font-medium text-sm max-sm:hidden">
                                             {student.section}
                                          </td>
-                                         <td className="p-4 font-medium text-slate-700 dark:text-zinc-300">
+                                         <td className="p-4 max-sm:p-2 font-medium text-slate-700 dark:text-zinc-300">
                                             {workshop.name}
                                          </td>
-                                         <td className="p-4 text-slate-500 dark:text-zinc-400 text-sm">
+                                         <td className="p-4 max-sm:p-2 text-slate-500 dark:text-zinc-400 text-sm">
                                             {formatDateTime(event.timestamp)}
                                          </td>
-                                         <td className="p-4">
+                                         <td className="p-4 max-sm:p-2">
                                             {isSuccess ? (
                                                 <button onClick={() => onSetOutcome([event.id], false)} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors cursor-pointer">
                                                     <CheckIcon className="w-3.5 h-3.5"/> Réussi
@@ -307,7 +308,7 @@ const ReportsView: React.FC<ReportsViewProps> = ({ events, students, workshops, 
                                                 </button>
                                             )}
                                          </td>
-                                         <td className="p-4 text-sm text-slate-500 dark:text-zinc-400">
+                                         <td className="p-4 max-sm:p-2 text-sm text-slate-500 dark:text-zinc-400 max-sm:hidden">
                                             {event.type === 'auto_validation' ? 'Automatique (2ᵉ scan)' : 'Manuel'}
                                          </td>
                                      </tr>

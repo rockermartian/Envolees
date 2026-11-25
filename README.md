@@ -1,6 +1,6 @@
-# Envolées — version web (ordinateur et tablette)
+# Envolées — version web (ordinateur, tablette et téléphone)
 
-La version web **est l'application Envolées**. Elle a les mêmes écrans et les mêmes fonctions que l'application de bureau : classe, compétences, ateliers et QR codes, mode élève, rapports, livret, paramètres. Elle fonctionne dans un navigateur, sur ordinateur comme sur tablette (Android, iPad), et s'installe comme une application (PWA). Elle fonctionne hors ligne. Les données restent sur l'appareil.
+La version web **est l'application Envolées**. Elle a les mêmes écrans et les mêmes fonctions que l'application de bureau : classe, compétences, ateliers et QR codes, mode élève, rapports, livret, paramètres. Elle fonctionne dans un navigateur, sur ordinateur, sur tablette (Android, iPad) et sur téléphone, et s'installe comme une application (PWA). Elle fonctionne hors ligne. Les données restent sur l'appareil.
 
 Elle ouvre les mêmes fichiers `.envolees` que l'application de bureau, dans les deux sens.
 
@@ -21,6 +21,18 @@ Seule la façon d'utiliser l'application s'adapte au toucher, sans fonction ajou
 - **Réorganisation des compétences :** au doigt, on utilise les boutons Monter / Descendre et « Déplacer vers… » plutôt que le glisser-déposer.
 
 Ces adaptations sont faites dans le code de l'application de bureau, avec les variantes Tailwind `pointer-coarse:` et `max-lg:`. Elles profitent aussi aux ordinateurs à écran tactile.
+
+## Sur téléphone
+
+Une seule application : sous 640 px de large, la présentation devient « téléphone », avec toutes les fonctions (la fenêtre de bureau ne descend jamais sous 800 px, elle n'est pas concernée). Variante Tailwind `max-sm:`, crochet `useIsPhone`.
+
+- **Navigation :** barre d'onglets en bas (Classe, Compétences, Ateliers, Rapports, « Plus »). « Plus » ouvre un volet : Livret, Mode élève, Paramètres, Rétablir, thème, aide. En haut : titre, Menu, enregistrement, Annuler.
+- **Fenêtres :** en plein écran (sauf les petites confirmations) ; menus et options dans des volets qui montent du bas (`BottomSheet`).
+- **Classe :** la liste des élèves, puis la fiche d'un élève (bouton retour) ; la synthèse s'ouvre depuis la liste. Modes d'affichage, filtres et « Imprimer les preuves » dans le volet « Affichage ».
+- **Compétences :** arbre peu décalé ; chaque programme, domaine et compétence a un bouton « ⋯ » avec ses actions (dont « Déplacer vers… »).
+- **Ateliers, Rapports, Paramètres :** une colonne ; Journal des rapports en cartes.
+- **Livret :** onglets Élèves / Réglages / Aperçu ; aperçu ajusté à la largeur de l'écran (boutons de zoom pour modifier un texte). L'impression et le PDF sont ceux de l'ordinateur.
+- **Mode élève :** cartes des élèves sur trois colonnes.
 
 ## Ce qui diffère de l'application de bureau
 
@@ -72,6 +84,11 @@ Ce dossier se publie seul : son contenu devient la racine du dépôt GitHub. Le 
   - rien de coupé à droite ;
   - tous les onglets visibles.
 
-Le scénario `audit` (`E2E_ONLY=audit`) liste les défauts tactiles sans échouer. Ajoutez `E2E_TOUCH=0` pour comparer avec l'utilisation à la souris.
+**Scénario téléphone (390 et 360 px de large, événements tactiles réels) :**
+- barre d'onglets, volet « Plus », en-tête sur une ligne ;
+- sur chaque écran et chaque fenêtre : rien ne dépasse ni ne défile sur le côté, cibles tactiles assez grandes ;
+- parcours : fiche élève et validation au doigt enregistrée, volet « Affichage », Suivi, ajout et suppression d'une compétence par « ⋯ », livret (aperçu ajusté, impression sans zoom), validation en masse, impressions (QR codes, preuves), mode élève (code PIN, entrée, sortie).
 
-Restent à vérifier sur un vrai iPad et une vraie tablette Android : la caméra du mode élève, le partage vers Nextcloud, le glisser-déposer.
+Le scénario `audit` (`E2E_ONLY=audit`) liste les défauts tactiles sans échouer (`E2E_PHONE=1` : à la taille d'un téléphone). Ajoutez `E2E_TOUCH=0` pour comparer avec l'utilisation à la souris.
+
+Restent à vérifier sur de vrais appareils (iPad, tablette Android, téléphones) : la caméra du mode élève, le partage vers Nextcloud, le glisser-déposer, la zone de l'encoche et de la barre d'accueil de l'iPhone.

@@ -33,3 +33,24 @@
     width: 1.5rem;
   }
 }
+
+/* ── Téléphone (écran de moins de 640 px : variante Tailwind max-sm:) ─────────────────────────────
+   La fenêtre de bureau ne descend jamais sous 800 px : ces règles ne la concernent pas.
+   Les fenêtres (modales) occupent tout l'écran, sauf les petites confirmations (max-w-sm / max-w-xs)
+   et les volets (BottomSheet). Une modale = un fond [role=dialog].fixed.inset-0 qui contient UN seul
+   panneau ; les écrans déjà plein écran (validation en masse : en-tête, contenu, pied) ne sont pas touchés. */
+@media (max-width: 639.98px) {
+  [role="dialog"][aria-modal="true"].fixed.inset-0:has(> :only-child):not(.bottom-sheet):not(:has(> .max-w-sm, > .max-w-xs)) {
+    padding: 0 0 env(safe-area-inset-bottom);
+    align-items: stretch;
+    justify-content: stretch;
+  }
+  [role="dialog"][aria-modal="true"].fixed.inset-0:has(> :only-child):not(.bottom-sheet):not(:has(> .max-w-sm, > .max-w-xs)) > :first-child {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    border-radius: 0;
+    overflow-y: auto;
+  }
+}
