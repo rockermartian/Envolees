@@ -1,5 +1,6 @@
 import { AppData, Domain, Proficiency, ReferenceAge, SchoolProgram, Skill, Student, StudentSkill } from '../types';
 import { createDefaultTeacherConfig, createDefaultUiSettings, DATA_VERSION } from './defaults';
+import { normalizeNeeds, normalizeNotes } from '../domain/notes';
 
 /**
  * Acquisitions creuses : seules les compétences acquises sont stockées.
@@ -47,6 +48,8 @@ const normalizeStudent = (s: Student): Student => ({
     photo: s.photo ?? null,
     skills: sparseSkills(s.skills),
     domainComments: s.domainComments ?? {},
+    notes: normalizeNotes(s.notes),
+    needs: normalizeNeeds(s.needs),
 });
 
 /**

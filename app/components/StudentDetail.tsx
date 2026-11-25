@@ -1,12 +1,14 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Student, Proficiency, SchoolProgram, Skill, SkillAcquisitionDetails, ReferenceAge, Domain } from '../types';
+import { Student, Proficiency, SchoolProgram, Skill, SkillAcquisitionDetails, ReferenceAge, Domain, StudentNeed, StudentNote } from '../types';
 import { PROFICIENCY_COLORS, REFERENCE_AGE_DOT_COLORS } from '../constants';
 import { getAllSkillIdsInDomain } from '../utils';
 import { grantSkills, isAcquired } from '../domain/acquisitions';
 import AcquisitionDetailModal from './AcquisitionDetailModal';
 import ConfirmationModal from './ConfirmationModal';
 import Tooltip from './Tooltip';
+import StudentFollowUp from './StudentFollowUp';
 import { formatDateFR } from '../domain/dates';
+import { openTodoCount } from '../domain/notes';
 
 interface StudentDetailProps {
   student: Student;
@@ -16,6 +18,14 @@ interface StudentDetailProps {
   highlightedSkillId: string | null;
   onHighlightSkill: (skillId: string | null) => void;
   onDeselectStudent?: () => void;
+  // Onglet « Suivi » (notes datées, besoins particuliers)
+  schoolYear?: string;
+  onAddNote: (studentId: string, note: StudentNote) => void;
+  onUpdateNote: (studentId: string, noteId: string, changes: Partial<Omit<StudentNote, 'id'>>) => void;
+  onDeleteNote: (studentId: string, noteId: string) => void;
+  onToggleNeed: (studentId: string, need: StudentNeed) => void;
+  /** Impression des photos de preuve (cet élève coché par défaut). */
+  onPrintProofs?: (studentId: string) => void;
 }
 
 const CalendarIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -314,7 +324,9 @@ const formatDate = (dateStr: string) => {
   return `${d}/${m}/${y}`;
 };
 
-const StudentDetail: React.FC<StudentDetailProps> = ({ student, schoolPrograms, onUpdateSkill, onBatchUpdateSkills, highlightedSkillId, onHighlightSkill, onDeselectStudent }) => {
+const StudentDetail: React.FC<StudentDetailProps> = ({ student, schoolPrograms, onUpdateSkill, onBatchUpdateSkills, highlightedSkillId, onHighlightSkill, onDeselectStudent, schoolYear, onAddNote, onUpdateNote, onDeleteNote, onToggleNeed, onPrintProofs }) => {
+  // Compétences ou suivi : le choix reste quand on passe d'un élève à l'autre.
+  const [panel, setPanel] = useState<'skills' | 'followup'>('skills');
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     skill: Skill | null;
@@ -624,19 +636,66 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ student, schoolPrograms, 
                       </Tooltip>
                   )}
                   <h1 className="text-2xl font-bold text-slate-800 dark:text-zinc-200 truncate">
-                      Compétences de {student.firstName}
+                      {panel === 'skills' ? 'Compétences' : 'Suivi'} de {student.firstName}
                   </h1>
               </div>
-              {viewMode === 'tree' && schoolPrograms.length > 0 && (
-                  <button
-                      onClick={handleToggleAll}
-                      className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex-shrink-0"
-                  >
-                      {areAllCollapsed ? 'Tout déplier' : 'Tout replier'}
-                  </button>
+              {panel === 'skills' && (
+                  <div className="flex items-center gap-4 flex-shrink-0">
+                      {onPrintProofs && (
+                          <button
+                              onClick={() => onPrintProofs(student.id)}
+                              className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-800 dark:text-zinc-300 dark:hover:text-zinc-100"
+                          >
+                              <PhotoIcon className="w-4 h-4" /> Imprimer les preuves
+                          </button>
+                      )}
+                      {viewMode === 'tree' && schoolPrograms.length > 0 && (
+                          <button
+                              onClick={handleToggleAll}
+                              className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                          >
+                              {areAllCollapsed ? 'Tout déplier' : 'Tout replier'}
+                          </button>
+                      )}
+                  </div>
               )}
           </header>
 
+          <div className="flex rounded-lg border border-slate-200 dark:border-zinc-700 overflow-hidden text-sm font-semibold mb-6 w-fit" role="tablist" aria-label="Fiche de l'élève">
+            {([['skills', 'Compétences'], ['followup', 'Suivi']] as const).map(([id, label], i) => {
+              const todos = id === 'followup' ? openTodoCount(student) : 0;
+              const needs = id === 'followup' ? (student.needs ?? []).length : 0;
+              return (
+                <button
+                  key={id}
+                  role="tab"
+                  aria-selected={panel === id}
+                  onClick={() => setPanel(id)}
+                  className={`px-4 py-1.5 flex items-center gap-2 transition-colors ${i > 0 ? 'border-l border-slate-200 dark:border-zinc-700' : ''} ${panel === id ? 'bg-blue-500 text-white' : 'bg-white dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-700'}`}
+                >
+                  {label}
+                  {id === 'followup' && (student.notes ?? []).length > 0 && (
+                    <span className={`text-xs font-medium ${panel === id ? 'text-blue-100' : 'text-slate-400 dark:text-zinc-500'}`}>{(student.notes ?? []).length}</span>
+                  )}
+                  {todos > 0 && <span className="px-1.5 rounded-full text-xs bg-red-500 text-white" aria-label={`${todos} à faire`}>{todos}</span>}
+                  {needs > 0 && todos === 0 && <span className={`w-2 h-2 rounded-full ${panel === id ? 'bg-amber-200' : 'bg-amber-400'}`} aria-hidden="true" />}
+                </button>
+              );
+            })}
+          </div>
+
+          {panel === 'followup' && (
+            <StudentFollowUp
+              student={student}
+              schoolYear={schoolYear}
+              onAddNote={note => onAddNote(student.id, note)}
+              onUpdateNote={(noteId, changes) => onUpdateNote(student.id, noteId, changes)}
+              onDeleteNote={noteId => onDeleteNote(student.id, noteId)}
+              onToggleNeed={need => onToggleNeed(student.id, need)}
+            />
+          )}
+
+          {panel === 'skills' && (<>
           {viewMode !== 'summary' && (
           <div className="mb-4 relative">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-zinc-500 pointer-events-none" />
@@ -846,6 +905,7 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ student, schoolPrograms, 
               </div>
             </div>
           )}
+          </>)}
         </div>
       </div>
       {modalState.isOpen && modalState.skill && (

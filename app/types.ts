@@ -90,6 +90,20 @@ export interface WorkshopEvent {
   grantedSkillIds?: string[];
 }
 
+// Suivi individuel (onglet « Suivi » de la fiche élève) : voir domain/notes.ts.
+export type StudentNoteKind = 'observation' | 'parents' | 'equipe' | 'aide' | 'exterieur' | 'todo';
+export type StudentNeed = 'pai' | 'allergie' | 'pps' | 'aesh' | 'pap' | 'rased' | 'allophone' | 'sieste';
+
+export interface StudentNote {
+  id: string;
+  date: string; // YYYY-MM-DD
+  kind: StudentNoteKind;
+  text: string;
+  pinned?: boolean;
+  done?: boolean;      // notes « À faire »
+  createdAt?: string;  // ISO, départage deux notes du même jour
+}
+
 export interface Student {
   id: string;
   firstName: string;
@@ -107,6 +121,8 @@ export interface Student {
   directorComment?: string;
   domainComments?: StudentDomainComments;
   livretProcessed?: boolean;
+  notes?: StudentNote[];
+  needs?: StudentNeed[];
 }
 
 export interface AppUISettings {

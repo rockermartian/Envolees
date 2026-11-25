@@ -95,6 +95,8 @@ const shot = async name => {
     if (!SHOTS) return;
     win.webContents.invalidate();
     await wait(600);
+    await win.webContents.capturePage(); // fenêtre masquée : la 1re capture rend encore l'écran précédent
+    await wait(300);
     fs.writeFileSync(path.join(SHOTS, `${scenario}-${name}.png`), (await win.webContents.capturePage()).toPNG());
 };
 
@@ -106,7 +108,12 @@ const readDb = () => js(`new Promise((resolve, reject) => {
         const classes = tx.objectStore('classes').getAll();
         const images = tx.objectStore('images').getAllKeys();
         tx.oncomplete = () => resolve({
-            classes: classes.result.map(c => ({ id: c.id, name: c.name, updatedAt: c.updatedAt, acquired: (c.dataJson.match(/"proficiency":"Acquis"/g) || []).length })),
+            classes: classes.result.map(c => ({
+                id: c.id, name: c.name, updatedAt: c.updatedAt, acquired: (c.dataJson.match(/"proficiency":"Acquis"/g) || []).length,
+                // Suivi individuel : notes (type connu) et besoins particuliers
+                notes: (c.dataJson.match(/"kind":"(observation|parents|equipe|aide|exterieur|todo)"/g) || []).length,
+                needs: (c.dataJson.match(/"needs":.{2,80}?]/g) || []).join(' '),
+            })),
             images: images.result.length,
         });
     };
@@ -191,7 +198,7 @@ async function setup(width, height, { touch = false } = {}) {
 const typeInto = (selector, value, index = 0) => js(`(() => {
     const el = document.querySelectorAll(${JSON.stringify(selector)})[${index}];
     if (!el) return false;
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(el, ${JSON.stringify(value)});
+    Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), 'value').set.call(el, ${JSON.stringify(value)}); // champ ou zone de texte
     el.dispatchEvent(new Event('input', { bubbles: true }));
     return true;
 })()`);
@@ -273,6 +280,75 @@ async function ordinateur() {
     db = await readDb();
     check('enregistrement dans le navigateur', db.classes[0].updatedAt > before);
 
+    // Suivi individuel : besoin particulier + note « À faire », visibles dans la liste et enregistrés
+    await click(EXPECT, 'aside [role=button]');
+    await click('Suivi', '[role=tab]');
+    await waitFor('onglet Suivi', `document.body.innerText.includes('Journal de suivi')`);
+    await shot('2b-suivi-vide');
+    await click('PAI', '[aria-label="Besoins particuliers"] button');
+    await click('À faire', '[aria-label="Type de note"] button');
+    await typeInto('#note-new-text', 'Appeler la PMI pour le bilan de 4 ans');
+    await click('Ajouter la note');
+    await waitFor('note ajoutée', `[...document.querySelectorAll('main li')].some(li => li.innerText.includes('Appeler la PMI'))`);
+    const listed = await js(`[...document.querySelectorAll('aside [role=button]')].find(e => e.innerText.includes(${JSON.stringify(EXPECT)}))?.innerText ?? ''`);
+    await shot('2c-suivi-note');
+    await click('Modifications non enregistrées');
+    await waitFor('enregistré', `!!document.querySelector('button[aria-label="Tout est enregistré"]')`, 60_000);
+    db = await readDb();
+    check('suivi : besoin et note « À faire » enregistrés, rappelés dans la liste des élèves',
+        db.classes[0].notes >= 1 && /"pai"/.test(db.classes[0].needs) && /PAI/.test(listed) && /1 à faire/.test(listed), `${db.classes[0].notes} note(s), liste : ${listed.replace(/\s+/g, ' ')}`);
+    // Impression du suivi : rendu « print » de la page, seule la fiche de suivi doit apparaître
+    await js(`window.__savedPrint = window.print; window.print = () => {}; true`);
+    await click('Imprimer', 'main button');
+    await dbg.sendCommand('Emulation.setEmulatedMedia', { media: 'print' });
+    const printed = await js(`(() => {
+        const shown = [...document.body.children].filter(e => getComputedStyle(e).display !== 'none');
+        return { ids: shown.map(e => e.id || e.tagName).join(','), text: document.getElementById('followup-print-area')?.innerText ?? '' };
+    })()`);
+    await dbg.sendCommand('Emulation.setEmulatedMedia', { media: '' });
+    await js(`window.print = window.__savedPrint; window.dispatchEvent(new Event('afterprint')); true`);
+    check('suivi : impression de la seule fiche (nom, besoins, notes)',
+        printed.ids === 'followup-print-area' && printed.text.includes(`Suivi de ${EXPECT}`) && /PAI/.test(printed.text) && /Appeler la PMI/.test(printed.text),
+        `${printed.ids} — ${printed.text.replace(/\s+/g, ' ').slice(0, 160)}`);
+    await click('Compétences', '[role=tab]');
+
+    // Photos de preuve : fenêtre d'impression, aperçu, options, rendu « print »
+    await click('Imprimer les preuves', 'main button');
+    await waitFor('fenêtre des preuves', `document.body.innerText.includes('Imprimer les photos de preuve')`);
+    const proofs = await js(`(() => {
+        const dialog = document.querySelector('[aria-labelledby="print-proofs-title"]');
+        const checked = [...dialog.querySelectorAll('[aria-label="Élèves à imprimer"] input:checked')].map(i => i.closest('label').innerText.trim());
+        const preview = [...dialog.querySelectorAll('[aria-label="Aperçu"] img')];
+        return { checked, count: Number((dialog.innerText.match(/([0-9]+) photos?/) || [])[1] || 0), preview: preview.length, previewLoaded: preview.filter(i => i.complete && i.naturalWidth > 0).length };
+    })()`);
+    await waitFor('aperçu chargé', `[...document.querySelectorAll('[aria-label="Aperçu"] img')].every(i => i.complete && i.naturalWidth > 0)`, 10_000).catch(() => undefined);
+    const previewLoaded = await js(`[...document.querySelectorAll('[aria-label="Aperçu"] img')].filter(i => i.complete && i.naturalWidth > 0).length`);
+    check('preuves : aperçu (1re page) avec ses photos affichées', proofs.preview > 0 && proofs.preview < proofs.count && (!REAL_IMAGES || previewLoaded === proofs.preview), `${previewLoaded}/${proofs.preview} photos dans l'aperçu`);
+    await shot('2d-preuves');
+    await click('Date de validation', '[aria-labelledby="print-proofs-title"] label');
+    await js(`window.__savedPrint = window.print; window.print = () => {}; true`);
+    await click('Imprimer', '[aria-labelledby="print-proofs-title"] button');
+    await waitFor("zone d'impression prête", `[...document.querySelectorAll('style')].some(s => s.textContent.includes('#proofs-print-area'))`, 30_000);
+    await dbg.sendCommand('Emulation.setEmulatedMedia', { media: 'print' });
+    const proofPrint = await js(`(() => {
+        const area = document.getElementById('proofs-print-area');
+        const imgs = [...area.querySelectorAll('img')];
+        return {
+            shown: [...document.body.children].filter(e => getComputedStyle(e).display !== 'none').map(e => e.id || e.tagName).join(','),
+            imgs: imgs.length, loaded: imgs.filter(i => i.complete && i.naturalWidth > 0).length,
+            dates: (area.innerText.match(/[0-9]{2}.[0-9]{2}.[0-9]{4}/g) || []).length,
+            text: area.innerText.slice(0, 200),
+        };
+    })()`);
+    await dbg.sendCommand('Emulation.setEmulatedMedia', { media: '' });
+    await js(`window.print = window.__savedPrint; window.dispatchEvent(new Event('afterprint')); true`);
+    check('preuves : élève coché, seules ses photos imprimées et chargées, sans date (option décochée)',
+        proofs.checked.length === 1 && proofs.checked[0].includes(EXPECT) && proofPrint.shown === 'proofs-print-area'
+        && proofPrint.imgs === proofs.count && proofPrint.imgs > 0 && (!REAL_IMAGES || proofPrint.loaded === proofPrint.imgs) && proofPrint.dates === 0
+        && proofPrint.text.includes(EXPECT),
+        `${proofs.count} photo(s), ${proofPrint.loaded}/${proofPrint.imgs} chargées, ${proofPrint.dates} date(s), visible : ${proofPrint.shown}`);
+    await click('Annuler', '[aria-labelledby="print-proofs-title"] button');
+
     // Menu › Envoyer vers Nuage (assisté : téléchargement + onglet Nuage)
     await click('Menu');
     await click('Envoyer vers Nuage');
@@ -345,6 +421,29 @@ async function tablette() {
         check("validation d'une compétence au toucher, enregistrée", after === before + (validating ? 1 : -1), `${before} → ${after}`);
     }
 
+    // Suivi individuel au doigt : note ajoutée, écran sans défaut tactile
+    if (scenario !== 'audit') {
+        await tap('Suivi', '[role=tab]');
+        await waitFor('onglet Suivi', `document.body.innerText.includes('Journal de suivi')`);
+        await tap('Parents', '[aria-label="Type de note"] button');
+        await tapSelector('#note-new-text');
+        await typeInto('#note-new-text', 'Rendez-vous de rentrée : tout va bien.');
+        await tap('Ajouter la note');
+        check('suivi : note ajoutée au toucher', await waitFor('note', `[...document.querySelectorAll('main li')].some(li => li.innerText.includes('Rendez-vous de rentrée'))`, 5000).then(() => true, () => false));
+    } else {
+        await tap('Suivi', '[role=tab]');
+        await wait(500);
+    }
+    await shot('1b-suivi');
+    await auditScreen('Suivi élève');
+    await tap('Compétences', '[role=tab]');
+    await tap('Imprimer les preuves', 'main button');
+    await waitFor('fenêtre des preuves', `document.body.innerText.includes('Imprimer les photos de preuve')`);
+    await wait(500);
+    await shot('1c-preuves');
+    await auditScreen('Impression des photos de preuve');
+    await tap('Annuler', '[aria-labelledby="print-proofs-title"] button');
+
     for (const tab of TABS.slice(1)) {
         await tap(tab, 'header button');
         await wait(1500);
@@ -387,6 +486,13 @@ async function tablette() {
     check('pas de défilement horizontal (portrait)', await js('document.documentElement.scrollWidth <= window.innerWidth'));
     check('portrait : tous les onglets visibles sans faire défiler', await js(`${JSON.stringify([...TABS, 'Mode Élève'])}.every(t => { const b = [...document.querySelectorAll('header button')].find(x => x.innerText.trim() === t); const r = b?.getBoundingClientRect(); return r && r.left >= 0 && r.right <= innerWidth; })`));
     await auditScreen('Classe (portrait)');
+    await tapSelector('main [role="button"], aside [role="button"]');
+    await tap('Suivi', '[role=tab]');
+    await wait(500);
+    await shot('4b-suivi-portrait');
+    check('Suivi (portrait) : rien de coupé à droite', await js(`[...document.querySelectorAll('main, main section, main li')].every(e => e.getBoundingClientRect().right <= innerWidth + 1)`));
+    await auditScreen('Suivi (portrait)');
+    await tap('Compétences', '[role=tab]');
     for (const tab of TABS.slice(1)) {
         await tap(tab, 'header button');
         await wait(1200);

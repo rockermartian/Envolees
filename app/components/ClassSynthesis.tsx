@@ -30,6 +30,8 @@ interface ClassSynthesisProps {
   schoolPrograms: SchoolProgram[];
   supportGroups: SupportGroup[];
   onUpdateSupportGroups: (groups: SupportGroup[]) => void;
+  /** Impression des photos de preuve (toute la classe cochée par défaut). */
+  onPrintProofs?: () => void;
 }
 
 const chipClass = (type: FilterScope['type']) =>
@@ -43,7 +45,7 @@ function emptyGroup(type: 'suggested' | 'free'): SupportGroup {
   return { id: crypto.randomUUID(), type, name: '', maxStudents: 5, filterIds: [], studentIds: [] };
 }
 
-const ClassSynthesis: React.FC<ClassSynthesisProps> = ({ students, schoolPrograms, supportGroups, onUpdateSupportGroups }) => {
+const ClassSynthesis: React.FC<ClassSynthesisProps> = ({ students, schoolPrograms, supportGroups, onUpdateSupportGroups, onPrintProofs }) => {
   const [selectedFilter, setSelectedFilter] = useState<'all' | Section>('all');
   const [modal, setModal] = useState<{ group: SupportGroup; isNew: boolean } | null>(null);
   const [filterSearch, setFilterSearch] = useState('');
@@ -266,7 +268,15 @@ const ClassSynthesis: React.FC<ClassSynthesisProps> = ({ students, schoolProgram
     <>
       <div className="p-4 sm:p-6 lg:p-8 h-full overflow-y-auto bg-slate-50 dark:bg-zinc-900">
         <div className="max-w-4xl mx-auto space-y-6">
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-zinc-200">Synthèse de la classe</h1>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-zinc-200">Synthèse de la classe</h1>
+            {onPrintProofs && (
+              <button onClick={onPrintProofs} className="px-3 py-1.5 flex items-center gap-1.5 text-sm font-medium bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-700 rounded-md">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4" aria-hidden="true"><path fillRule="evenodd" d="M5 2.75C5 1.784 5.784 1 6.75 1h6.5c.966 0 1.75.784 1.75 1.75v3.552c.377.046.752.097 1.126.153A2.212 2.212 0 0118 8.653v4.097A2.25 2.25 0 0115.75 15h-.241l.305 1.984A1.75 1.75 0 0114.084 19H5.915a1.75 1.75 0 01-1.73-2.016L4.492 15H4.25A2.25 2.25 0 012 12.75V8.653c0-1.082.775-2.034 1.874-2.198.374-.056.75-.107 1.127-.153L5 6.25v-3.5zm8.5 3.397a41.533 41.533 0 00-7 0V2.75a.25.25 0 01.25-.25h6.5a.25.25 0 01.25.25v3.397zM6.608 12.5a.25.25 0 00-.247.212l-.693 4.5a.25.25 0 00.247.288h8.17a.25.25 0 00.246-.288l-.692-4.5a.25.25 0 00-.247-.212H6.608z" clipRule="evenodd" /></svg>
+                Imprimer les photos de preuve
+              </button>
+            )}
+          </div>
 
           {/* Filtre section */}
           <div className="flex flex-wrap gap-2">

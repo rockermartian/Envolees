@@ -3,6 +3,7 @@ import { Student, Section, SchoolProgram, Proficiency } from '../types';
 import { calculateAge, getAgeColorClasses, sectionNames } from '../utils';
 import Tooltip from './Tooltip';
 import StoredImage from '../images/StoredImage';
+import { needLabel, openTodoCount } from '../domain/notes';
 
 
 interface StudentListProps {
@@ -242,7 +243,15 @@ const StudentList: React.FC<StudentListProps> = ({ students, selectedStudentId, 
                                                 <div className="min-w-0">
                                                     <span className={`font-semibold text-slate-700 dark:text-zinc-200 block truncate ${viewMode === 'livret' ? 'text-sm' : ''}`}>{`${student.firstName} ${student.lastName}`}</span>
                                                     {viewMode === 'class' && (
-                                                        <div className="text-xs text-slate-500 dark:text-zinc-400">{age} ans</div>
+                                                        <div className="text-xs text-slate-500 dark:text-zinc-400 truncate">
+                                                            {age} ans
+                                                            {(student.needs ?? []).length > 0 && (
+                                                                <span className="text-amber-700 dark:text-amber-400"> · {(student.needs ?? []).map(needLabel).join(' · ')}</span>
+                                                            )}
+                                                            {openTodoCount(student) > 0 && (
+                                                                <span className="text-red-600 dark:text-red-400 font-medium"> · ⚑ {openTodoCount(student)} à faire</span>
+                                                            )}
+                                                        </div>
                                                     )}
                                                 </div>
                                             </div>

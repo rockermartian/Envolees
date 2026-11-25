@@ -9,6 +9,7 @@ import ClassSynthesis from './components/ClassSynthesis';
 import ConfirmationModal from './components/ConfirmationModal';
 import ExportModal from './components/ExportModal';
 import StudentForm from './components/StudentForm';
+import PrintProofsModal from './components/PrintProofsModal';
 import SkillsView from './components/SkillsView';
 import LivretView from './components/LivretView';
 import ReportsView from './components/ReportsView';
@@ -30,6 +31,7 @@ import PinSetupModal from './components/PinSetupModal';
 import NuageModal, { NuageEntry, NuageStatus } from './components/NuageModal';
 import { isPinDefined } from './domain/studentMode';
 import { deleteTreeItems } from './domain/skillTree';
+import { addNote, deleteNote, toggleNeed, updateNote } from './domain/notes';
 import { addStudent, applyMassValidation, applyStudentImport, classifyImportedStudents, deleteDomainPeriod, deleteStudent, promoteStudents, setDomainComment, setSkillDetails, setStudentComment, toggleAllLivretProcessed, toggleLivretProcessed, unmatchedSkillPrograms, updateStudentFields } from './domain/students';
 import { buildStudentsArchive, readStudentsArchive } from './fileFormat/studentsArchive';
 import { toast } from './utils/toast';
@@ -151,6 +153,8 @@ const App: React.FC = () => {
 
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const [isStudentFormOpen, setIsStudentFormOpen] = useState(false);
+  // Impression des photos de preuve : élèves cochés à l'ouverture (null = fenêtre fermée)
+  const [printProofsFor, setPrintProofsFor] = useState<string[] | null>(null);
   const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
   const [highlightedSkillId, setHighlightedSkillId] = useState<string | null>(null);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -839,6 +843,12 @@ const App: React.FC = () => {
                     highlightedSkillId={highlightedSkillId}
                     onHighlightSkill={handleHighlightSkill}
                     onDeselectStudent={() => setSelectedStudentId(null)}
+                    schoolYear={appData.teacherConfig.schoolYear}
+                    onAddNote={(studentId, note) => updateAppData(d => addNote(d, studentId, note))}
+                    onUpdateNote={(studentId, noteId, changes) => updateAppData(d => updateNote(d, studentId, noteId, changes))}
+                    onDeleteNote={(studentId, noteId) => updateAppData(d => deleteNote(d, studentId, noteId))}
+                    onToggleNeed={(studentId, need) => updateAppData(d => toggleNeed(d, studentId, need))}
+                    onPrintProofs={studentId => setPrintProofsFor([studentId])}
                 />
                 ) : (
                 <ClassSynthesis
@@ -846,6 +856,7 @@ const App: React.FC = () => {
                     schoolPrograms={activeSchoolPrograms}
                     supportGroups={appData.supportGroups ?? []}
                     onUpdateSupportGroups={setSupportGroups}
+                    onPrintProofs={() => setPrintProofsFor(appData.students.map(s => s.id))}
                 />
                 )}
             </main>
@@ -931,6 +942,14 @@ const App: React.FC = () => {
           />
       )}
 
+      {printProofsFor && appData && (
+        <PrintProofsModal
+          students={appData.students}
+          schoolPrograms={appData.schoolPrograms}
+          initialStudentIds={printProofsFor}
+          onClose={() => setPrintProofsFor(null)}
+        />
+      )}
       {isStudentFormOpen && ( <StudentForm onSave={handleSaveStudent} onClose={() => setIsStudentFormOpen(false)} studentToEdit={studentToEdit} /> )}
       {deleteConfirmation && ( <ConfirmationModal title="Confirmer la suppression" message={`Êtes-vous sûr de vouloir supprimer ${deleteConfirmation.studentName} ? Cette action est irréversible.`} onConfirm={handleConfirmDelete} onCancel={() => setDeleteConfirmation(null)} confirmText="Supprimer" /> )}
       {isExportModalOpen && appData && ( <ExportModal students={appData.students} onClose={() => setIsExportModalOpen(false)} onExport={handleConfirmAndDownloadExport} /> )}

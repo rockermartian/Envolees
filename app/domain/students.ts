@@ -210,6 +210,9 @@ export function applyStudentImport(data: AppData, decisions: StudentImportDecisi
                 skills: mergeImportedSkills(s.skills, student.skills),
                 teacherComment: student.teacherComment || s.teacherComment,
                 domainComments: { ...(s.domainComments ?? {}), ...(student.domainComments ?? {}) },
+                // Suivi : notes de la classe conservées, celles du fichier ajoutées (sans doublon) ; besoins réunis.
+                notes: [...(s.notes ?? []), ...(student.notes ?? []).filter(n => !(s.notes ?? []).some(m => m.id === n.id))],
+                needs: [...new Set([...(s.needs ?? []), ...(student.needs ?? [])])],
             }));
             merged++;
         }
