@@ -25,7 +25,8 @@ if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('dist/ absent
 // --- Fichier de classe de test ---
 const work = fs.mkdtempSync(path.join(os.tmpdir(), 'envolees-web-fixture-'));
 // Classe de test lourde du projet Electron voisin, si web_app est encore à l'intérieur.
-let fixture = process.env.E2E_FILE ?? path.join(webApp, '..', 'classe-test-lourde.envolees');
+// Chemin absolu : le sélecteur de fichiers du navigateur ignore sans erreur un chemin relatif.
+let fixture = path.resolve(process.env.E2E_FILE ?? path.join(webApp, '..', 'classe-test-lourde.envolees'));
 let realImages = process.env.E2E_FILE ? process.env.E2E_REAL_IMAGES === '1' : fs.existsSync(fixture);
 if (!fs.existsSync(fixture)) {
     const generator = path.join(work, 'make-class-file.mjs');

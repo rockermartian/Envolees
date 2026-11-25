@@ -213,7 +213,14 @@ async function openFixture(act) {
     await waitFor('boîte « Ouvrir »', `!!document.querySelector('#platform-root [role=dialog]')`);
     fileQueue.push(FIXTURE);
     await act('Ouvrir un fichier .envolees', '#platform-root button');
-    await waitFor('classe affichée', `document.body.innerText.includes(${JSON.stringify(EXPECT)}) && !document.querySelector('#platform-root [role=dialog]')`, 120_000);
+    try {
+        await waitFor('classe affichée', `document.body.innerText.includes(${JSON.stringify(EXPECT)}) && !document.querySelector('#platform-root [role=dialog]')`, 120_000);
+    } catch (error) {
+        // Où l'ouverture s'est-elle arrêtée ? Étapes terminées et texte affiché.
+        const phases = await js(`performance.getEntriesByType('measure').filter(m => m.name.startsWith('envolees:')).map(m => m.name.slice(9) + ' ' + Math.round(m.duration) + ' ms').join(', ')`).catch(() => '?');
+        const screen = await text().catch(() => '?');
+        throw new Error(`${error.message} — étapes terminées : ${phases || 'aucune'} — écran : ${screen.replace(/\s+/g, ' ').slice(0, 300)}`);
+    }
 }
 
 const TABS = ['Classe', 'Compétences', 'Ateliers', 'Rapports', 'Livret'];
