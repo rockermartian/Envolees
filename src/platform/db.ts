@@ -1,14 +1,16 @@
 // Base IndexedDB de la version web : tout ce qui, dans l'application de bureau, vit sur le disque.
 //
-//   images    clé = nom de fichier "<empreinte>.<ext>" → { blob, crc32 }   (partagées entre classes)
+//   images    clé = nom de fichier "<empreinte>.<ext>" → { blob, crc32 } ou { archive, start, size, crc32 }
+//             (partagées entre classes)
+//   archives  clé = id → fichier .envolees ouvert, rangé en un bloc (ses images en sont des tranches)
 //   classes   clé = id → ClassRecord (data.json de la classe + liste de ses images)
 //   backups   clé = id → copies de sécurité (data.json + images, comme userData/backups)
 //   settings  clé = nom → valeur (dernière classe ouverte…)
 
 const DB_NAME = 'envolees';
-const DB_VERSION = 1;
+const DB_VERSION = 2; // 2 : magasin « archives »
 
-export const STORES = { images: 'images', classes: 'classes', backups: 'backups', settings: 'settings' } as const;
+export const STORES = { images: 'images', archives: 'archives', classes: 'classes', backups: 'backups', settings: 'settings' } as const;
 type StoreName = typeof STORES[keyof typeof STORES];
 
 let dbPromise: Promise<IDBDatabase> | null = null;
@@ -23,6 +25,7 @@ export function openDb(): Promise<IDBDatabase> {
         request.onupgradeneeded = () => {
             const db = request.result;
             if (!db.objectStoreNames.contains(STORES.images)) db.createObjectStore(STORES.images);
+            if (!db.objectStoreNames.contains(STORES.archives)) db.createObjectStore(STORES.archives);
             if (!db.objectStoreNames.contains(STORES.classes)) db.createObjectStore(STORES.classes, { keyPath: 'id' });
             if (!db.objectStoreNames.contains(STORES.backups)) {
                 db.createObjectStore(STORES.backups, { keyPath: 'id' }).createIndex('classId', 'classId');

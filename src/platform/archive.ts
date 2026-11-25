@@ -15,6 +15,9 @@ export interface ArchiveImageBlob {
     name: string;   // "<empreinte>.<ext>"
     blob: Blob;
     crc32: number;
+    /** Position dans le fichier lu (images stockées telles quelles) : début et taille. */
+    start?: number;
+    size?: number;
 }
 
 /** Lit un fichier .envolees (erreurs : ArchiveError de shared/envoleesArchive.js, messages en français). */
@@ -26,10 +29,11 @@ export async function readEnvoleesFile(file: Blob): Promise<{ dataJson: string; 
     for (const [name, { bytes, crc32 }] of images) {
         const type = mimeFromName(name);
         // Image stockée telle quelle : vue sur le fichier → tranche du fichier d'origine.
-        const blob = bytes.buffer === buffer
-            ? file.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength, type)
-            : new Blob([bytes as BlobPart], { type });
-        result.push({ name, blob, crc32 });
+        if (bytes.buffer === buffer) {
+            result.push({ name, crc32, start: bytes.byteOffset, size: bytes.byteLength, blob: file.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength, type) });
+        } else {
+            result.push({ name, crc32, blob: new Blob([bytes as BlobPart], { type }) });
+        }
     }
     return { dataJson, images: result };
 }

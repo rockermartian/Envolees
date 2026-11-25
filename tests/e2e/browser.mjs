@@ -232,6 +232,8 @@ async function ordinateur() {
     await openFixture(click);
     const original = await readEnvolees(FIXTURE);
     check('fichier .envolees ouvert', true, `${(fs.statSync(FIXTURE).size / 1e6).toFixed(0)} Mo, ${original.images.size} images, ${Date.now() - t} ms`);
+    const phases = await js(`performance.getEntriesByType('measure').filter(m => m.name.startsWith('envolees:')).map(m => m.name.slice(9) + ' ' + Math.round(m.duration) + ' ms').join(', ')`);
+    check('ouverture : détail des étapes', true, phases);
     check("message d'attente refermé", await noProgress());
     if (REAL_IMAGES) {
         await waitFor('photos', `[...document.images].some(i => i.src.startsWith('blob:') && i.complete && i.naturalWidth > 0)`, 20_000).catch(() => null);

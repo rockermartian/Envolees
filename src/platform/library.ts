@@ -150,8 +150,13 @@ export async function deleteClass(id: string): Promise<void> {
 
 /** Lit un fichier .envolees et range ses images dans le navigateur. */
 export async function readClassFile(file: Blob): Promise<{ dataJson: string; images: string[] }> {
+    // Mesures (Outils de développement › Performance, ou performance.getEntriesByType('measure')).
+    performance.mark('envolees:lecture');
     const { dataJson, images } = await readEnvoleesFile(file);
-    await webImages.storeMany(images);
+    performance.measure('envolees:lecture du fichier', 'envolees:lecture');
+    performance.mark('envolees:stockage');
+    await webImages.storeArchive(file, images);
+    performance.measure('envolees:rangement des images', 'envolees:stockage');
     return { dataJson, images: images.map(i => i.name) };
 }
 
@@ -221,6 +226,7 @@ export async function collectUnusedImages(): Promise<number> {
     const [classes, backups] = await Promise.all([getAllValues<ClassRecord>(STORES.classes), getAllValues<BackupRecord>(STORES.backups)]);
     const used = new Set<string>([...classes, ...backups].flatMap(r => r.images));
     const removed: string[] = [];
+    const keptArchives = new Set<string>();
     await transaction([STORES.images], 'readwrite', tx => new Promise<void>((resolve, reject) => {
         const request = tx.objectStore(STORES.images).openCursor();
         request.onerror = () => reject(request.error);
@@ -228,13 +234,20 @@ export async function collectUnusedImages(): Promise<number> {
             const cursor = request.result;
             if (!cursor) return resolve();
             const name = String(cursor.key);
-            const value = cursor.value as { addedAt?: number };
+            const value = cursor.value as { addedAt?: number; archive?: string };
             const recent = (value.addedAt ?? 0) > Date.now() - IMAGE_GRACE_MS;
             if (!used.has(name) && !recent) { cursor.delete(); removed.push(name); }
+            else if (value.archive) keptArchives.add(value.archive);
             cursor.continue();
         };
     }));
     removed.forEach(name => webImages.forget(name));
+    // Fichiers rangés dont plus aucune image ne dépend.
+    await transaction([STORES.archives], 'readwrite', async tx => {
+        const store = tx.objectStore(STORES.archives);
+        const ids = await promisify(store.getAllKeys());
+        for (const id of ids) if (!keptArchives.has(String(id))) { store.delete(id); webImages.forgetArchive(String(id)); }
+    });
     return removed.length;
 }
 
