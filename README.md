@@ -15,7 +15,7 @@ Seule la façon d'utiliser l'application s'adapte au toucher, sans fonction ajou
   - les actions de l'arbre des compétences ;
   - les cases de sélection ;
   - la suppression de la photo d'un atelier.
-- **Infobulles :** après un toucher, elles s'affichent brièvement puis disparaissent.
+- **Infobulles :** jamais au doigt ; elles restent affichées au survol de la souris (ou du stylet) et au clavier.
 - **Taille des QR codes :** la poignée de redimensionnement se manipule au doigt.
 - **Tablette en portrait :** les onglets passent sur une deuxième ligne. La fiche élève s'adapte à la largeur de l'écran.
 - **Réorganisation des compétences :** au doigt, on utilise les boutons Monter / Descendre et « Déplacer vers… » plutôt que le glisser-déposer.

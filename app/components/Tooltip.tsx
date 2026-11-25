@@ -11,6 +11,15 @@ interface TooltipProps {
 
 const GAP = 6;
 
+// Dernier moyen d'interaction utilisé (toucher, souris/stylet, clavier), suivi pour toute la page.
+// Au doigt, l'infobulle ne s'affiche jamais : le navigateur simule un « survol » après chaque toucher,
+// sans le « départ » correspondant, et l'infobulle restait affichée.
+let lastInput: 'touch' | 'pointer' | 'keyboard' = 'pointer';
+if (typeof document !== 'undefined') {
+  document.addEventListener('pointerdown', e => { lastInput = e.pointerType === 'touch' ? 'touch' : 'pointer'; }, true);
+  document.addEventListener('keydown', () => { lastInput = 'keyboard'; }, true);
+}
+
 /** Le nœud contient-il du texte visible (et donc déjà un nom accessible) ? */
 function hasText(node: React.ReactNode): boolean {
   if (typeof node === 'string') return node.trim().length > 0;
@@ -61,19 +70,17 @@ const Tooltip: React.FC<TooltipProps> = ({
 
   const hide = useCallback(() => setStyle(null), []);
 
-  // Au doigt, le survol « reste collé » après un toucher : l'infobulle s'affiche brièvement puis disparaît.
-  const touchTimer = useRef<number | undefined>(undefined);
-  const onPointerDown = useCallback((e: React.PointerEvent) => {
-    if (e.pointerType !== 'touch') return;
-    window.clearTimeout(touchTimer.current);
-    touchTimer.current = window.setTimeout(() => { touchTimer.current = undefined; setStyle(null); }, 1500);
-  }, []);
-  useEffect(() => () => window.clearTimeout(touchTimer.current), []);
+  // Survol : souris ou stylet seulement (événements « pointer », qui disent d'où vient le survol).
+  const onPointerEnter = useCallback((e: React.PointerEvent) => { if (e.pointerType !== 'touch') show(); }, [show]);
+  // Focus : au clavier ou après un clic, pas après un toucher.
+  const onFocus = useCallback(() => { if (lastInput !== 'touch') show(); }, [show]);
+  // Un toucher ferme toute infobulle encore ouverte.
+  const onPointerDown = useCallback((e: React.PointerEvent) => { if (e.pointerType === 'touch') hide(); }, [hide]);
 
   // Guard against missed mouseleave events (race between React re-renders and browser event delivery)
   useEffect(() => {
     const el = wrapperRef.current;
-    if (style && el && !el.matches(':hover') && !el.contains(document.activeElement) && touchTimer.current === undefined) {
+    if (style && el && !el.matches(':hover') && !el.contains(document.activeElement)) {
       setStyle(null);
     }
   });
@@ -89,9 +96,9 @@ const Tooltip: React.FC<TooltipProps> = ({
     <div
       ref={wrapperRef}
       className={`inline-flex ${wrapperClassName}`}
-      onMouseEnter={show}
-      onMouseLeave={hide}
-      onFocus={show}
+      onPointerEnter={onPointerEnter}
+      onPointerLeave={hide}
+      onFocus={onFocus}
       onBlur={hide}
       onPointerDown={onPointerDown}
     >

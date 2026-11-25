@@ -81,6 +81,16 @@ const tapSelector = async selector => {
     await js(`document.querySelector('[data-e2e-tap="1"]')?.removeAttribute('data-e2e-tap')`);
 };
 
+/** Infobulle affichée (composant Tooltip : boîte fixe ajoutée à <body>). */
+const tooltipShown = () => js(`[...document.body.children].some(e => e.style && e.style.position === 'fixed' && e.style.zIndex === '99999')`);
+/** Survol à la souris (vrais évènements) du centre d'un élément, ou d'un point. */
+const hover = async (label, selector = DEFAULT_SELECTOR) => {
+    const at = typeof label === 'object' ? label : await js(`(() => { const el = ${FIND(label, selector)}; if (!el) return null; const r = el.getBoundingClientRect(); return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) }; })()`);
+    if (!at) throw new Error(`introuvable (survol) : « ${label} »`);
+    await dbg.sendCommand('Input.dispatchMouseEvent', { type: 'mouseMoved', x: at.x, y: at.y });
+    await wait(200);
+};
+
 const shot = async name => {
     if (!SHOTS) return;
     win.webContents.invalidate();
@@ -252,6 +262,10 @@ async function ordinateur() {
     // Modification + enregistrement (indicateur)
     let db = await readDb();
     const before = db.classes[0].updatedAt;
+    await hover('Changer le thème');
+    const shownOnHover = await tooltipShown();
+    await hover({ x: 600, y: 500 });
+    check('infobulle au survol de la souris, refermée en partant', shownOnHover && !(await tooltipShown()));
     await click('Changer le thème');
     await waitFor('modification signalée', `!!document.querySelector('button[aria-label^="Modifications non enregistrées"]')`);
     await click('Modifications non enregistrées');
@@ -326,6 +340,7 @@ async function tablette() {
         await waitFor('modification signalée', `!!document.querySelector('button[aria-label^="Modifications non enregistrées"]')`);
         await tapSelector('button[aria-label^="Modifications non enregistrées"]');
         await waitFor('enregistré', `!!document.querySelector('button[aria-label="Tout est enregistré"]')`, 60_000);
+        if (process.env.E2E_TOUCH !== '0') check("aucune infobulle après un toucher (indicateur d'enregistrement)", !(await tooltipShown()));
         const after = (await readDb()).classes[0].acquired;
         check("validation d'une compétence au toucher, enregistrée", after === before + (validating ? 1 : -1), `${before} → ${after}`);
     }
@@ -380,6 +395,12 @@ async function tablette() {
         await auditScreen(`${tab} (portrait)`);
     }
     await tap('Classe', 'header button');
+    if (scenario !== 'audit' && process.env.E2E_TOUCH !== '0') {
+        await tap('Changer le thème');
+        const afterTap = await tooltipShown();
+        await tap('Changer le thème');
+        check('aucune infobulle au doigt (bouton du thème touché deux fois)', !afterTap && !(await tooltipShown()));
+    }
     if (scenario === 'audit') {
         // Ce qui déborde horizontalement (éléments plus larges que leur zone défilante)
         const overflow = await js(`(() => {
